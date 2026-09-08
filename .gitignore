@@ -1,0 +1,34 @@
+# ---- secrets (never commit) ----
+.kaggle/
+*.kaggle
+.env
+.env.*
+!.env.example
+!ARC-AGI-3-Agents/.env.example
+*token*
+
+# ---- python ----
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ---- nested git metadata (snapshot repo; upstream history on GitHub) ----
+**/.git/
+
+# ---- heavy / reproducible artifacts ----
+arc_agi_3_wheels/
+recordings/
+recordings_explorer/
+sweep_recordings/
+ARC-AGI-3-Kaggle-Starter/vendor/
+kaggle_local_run/
+logs.log
+*.log
+.DS_Store
+
+# ---- keep the public games (small, needed to run sweeps) ----
+!environment_files/

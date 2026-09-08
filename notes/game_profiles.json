@@ -1,0 +1,4915 @@
+{
+  "generated_by": "static analysis (regex/AST-free text parsing; no game code executed)",
+  "source_root": "environment_files/<game_id>/<hash>/",
+  "n_games": 25,
+  "aggregates": {
+    "n_games": 25,
+    "total_levels_all_games": 183,
+    "baseline_levels_per_game": {
+      "min": 6,
+      "max": 10,
+      "mean": 7.32,
+      "median": 7,
+      "distribution": {
+        "6": 9,
+        "7": 5,
+        "8": 6,
+        "9": 4,
+        "10": 1
+      }
+    },
+    "baseline_total_actions_per_game": {
+      "min": 171,
+      "max": 1843,
+      "mean": 685.4,
+      "median": 638
+    },
+    "games_ranked_by_baseline_effort": [
+      [
+        "wa30",
+        1843
+      ],
+      [
+        "lf52",
+        1339
+      ],
+      [
+        "re86",
+        1255
+      ],
+      [
+        "dc22",
+        1228
+      ],
+      [
+        "m0r0",
+        1107
+      ]
+    ],
+    "games_by_tag": {
+      "(none)": [
+        "ft09"
+      ],
+      "click": [
+        "lf52",
+        "lp85",
+        "r11l",
+        "s5i5",
+        "su15",
+        "tn36",
+        "vc33"
+      ],
+      "keyboard": [
+        "g50t",
+        "ls20",
+        "tr87",
+        "wa30"
+      ],
+      "keyboard_click": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ka59",
+        "m0r0",
+        "re86",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "tu93"
+      ]
+    },
+    "games_by_input_type": {
+      "click_only": [
+        "ft09",
+        "lp85",
+        "r11l",
+        "s5i5",
+        "su15",
+        "tn36",
+        "vc33"
+      ],
+      "keyboard_only": [
+        "g50t",
+        "ls20",
+        "re86",
+        "tr87",
+        "tu93",
+        "wa30"
+      ],
+      "mixed_click_keyboard": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ka59",
+        "lf52",
+        "m0r0",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80"
+      ]
+    },
+    "action_space_size_distribution": {
+      "1": 6,
+      "2": 1,
+      "3": 1,
+      "4": 3,
+      "5": 6,
+      "6": 5,
+      "7": 3
+    },
+    "games_by_action_set": {
+      "[1, 2, 3, 4]": [
+        "ls20",
+        "tr87",
+        "tu93"
+      ],
+      "[1, 2, 3, 4, 5]": [
+        "g50t",
+        "re86",
+        "wa30"
+      ],
+      "[1, 2, 3, 4, 5, 6]": [
+        "cd82",
+        "cn04",
+        "m0r0",
+        "sp80"
+      ],
+      "[1, 2, 3, 4, 5, 6, 7]": [
+        "ar25",
+        "bp35",
+        "lf52"
+      ],
+      "[1, 2, 3, 4, 6]": [
+        "dc22",
+        "ka59",
+        "sc25"
+      ],
+      "[1, 2, 3, 4, 6, 7]": [
+        "sk48"
+      ],
+      "[5, 6, 7]": [
+        "sb26"
+      ],
+      "[6]": [
+        "ft09",
+        "lp85",
+        "r11l",
+        "s5i5",
+        "tn36",
+        "vc33"
+      ],
+      "[6, 7]": [
+        "su15"
+      ]
+    },
+    "grid_size_overview": {
+      "min_dim_seen": 8,
+      "max_dim_seen": 64,
+      "games_all_square_grids": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "largest_grid_games": [
+        [
+          "cd82",
+          64
+        ],
+        [
+          "dc22",
+          64
+        ],
+        [
+          "g50t",
+          64
+        ],
+        [
+          "lp85",
+          64
+        ],
+        [
+          "ls20",
+          64
+        ]
+      ]
+    },
+    "default_fps_distribution": {
+      "3": 1,
+      "5": 2,
+      "6": 1,
+      "7": 1,
+      "8": 1,
+      "10": 3,
+      "15": 2,
+      "20": 5,
+      "25": 1,
+      "30": 8
+    },
+    "games_with_step_counter_budgets": {
+      "ar25": {
+        "n_levels_with_budget": 8,
+        "min": 64,
+        "max": 320
+      },
+      "dc22": {
+        "n_levels_with_budget": 6,
+        "min": 128,
+        "max": 1024
+      },
+      "ka59": {
+        "n_levels_with_budget": 7,
+        "min": 100,
+        "max": 200
+      },
+      "lp85": {
+        "n_levels_with_budget": 8,
+        "min": 13,
+        "max": 150
+      },
+      "ls20": {
+        "n_levels_with_budget": 7,
+        "min": 42,
+        "max": 42
+      },
+      "re86": {
+        "n_levels_with_budget": 8,
+        "min": 100,
+        "max": 400
+      },
+      "s5i5": {
+        "n_levels_with_budget": 8,
+        "min": 50,
+        "max": 200
+      },
+      "tu93": {
+        "n_levels_with_budget": 9,
+        "min": 20,
+        "max": 60
+      },
+      "vc33": {
+        "n_levels_with_budget": 7,
+        "min": 50,
+        "max": 200
+      },
+      "wa30": {
+        "n_levels_with_budget": 9,
+        "min": 70,
+        "max": 200
+      }
+    },
+    "games_with_get_valid_actions_override": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "ft09",
+      "lf52",
+      "r11l",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15"
+    ],
+    "games_using_RESET": [
+      "bp35",
+      "dc22",
+      "g50t",
+      "lf52",
+      "sc25",
+      "sp80"
+    ],
+    "click_vs_keyboard": {
+      "games_with_ACTION6": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "ka59",
+        "lf52",
+        "lp85",
+        "m0r0",
+        "r11l",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "vc33"
+      ],
+      "keyboard_only": [
+        "g50t",
+        "ls20",
+        "re86",
+        "tr87",
+        "tu93",
+        "wa30"
+      ],
+      "click_only": [
+        "ft09",
+        "lp85",
+        "r11l",
+        "s5i5",
+        "su15",
+        "tn36",
+        "vc33"
+      ],
+      "mixed": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ka59",
+        "lf52",
+        "m0r0",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80"
+      ]
+    }
+  },
+  "games": {
+    "ar25": {
+      "game_id": "ar25-0c556536",
+      "short_id": "ar25",
+      "title": "AR25",
+      "default_fps": 6,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "ar25.py",
+      "path": "environment_files/ar25/0c556536/ar25.py",
+      "file_lines": 1839,
+      "file_bytes": 75395,
+      "n_level_definitions": 8,
+      "n_baseline_levels": 8,
+      "baseline_actions": [
+        32,
+        50,
+        75,
+        37,
+        89,
+        159,
+        233,
+        73
+      ],
+      "baseline_total_actions": 748,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 7,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 51,
+      "n_sys_click_sprites": 16,
+      "n_classes": 4,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 2,
+        "complete_action_calls": 10,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          21,
+          21
+        ]
+      ],
+      "min_grid_dim": 21,
+      "max_grid_dim": 21,
+      "level_step_counters": [
+        64,
+        64,
+        128,
+        128,
+        128,
+        320,
+        320,
+        320
+      ],
+      "level_data_keys": [
+        "0003uqrdzdofso",
+        "StepCounter"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              21,
+              21
+            ]
+          ],
+          "sprite_instances": 7,
+          "step_counter": 64,
+          "data_keys": [
+            "0003uqrdzdofso",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              21,
+              21
+            ]
+          ],
+          "sprite_instances": 10,
+          "step_counter": 64,
+          "data_keys": [
+            "0003uqrdzdofso",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              21,
+              21
+            ]
+          ],
+          "sprite_instances": 29,
+          "step_counter": 128,
+          "data_keys": [
+            "0003uqrdzdofso",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              21,
+              21
+            ]
+          ],
+          "sprite_instances": 27,
+          "step_counter": 128,
+          "data_keys": [
+            "0003uqrdzdofso",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              21,
+              21
+            ]
+          ],
+          "sprite_instances": 26,
+          "step_counter": 128,
+          "data_keys": [
+            "0003uqrdzdofso",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              21,
+              21
+            ]
+          ],
+          "sprite_instances": 56,
+          "step_counter": 320,
+          "data_keys": [
+            "0003uqrdzdofso",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              21,
+              21
+            ]
+          ],
+          "sprite_instances": 46,
+          "step_counter": 320,
+          "data_keys": [
+            "0003uqrdzdofso",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              21,
+              21
+            ]
+          ],
+          "sprite_instances": 64,
+          "step_counter": 320,
+          "data_keys": [
+            "0003uqrdzdofso",
+            "StepCounter"
+          ]
+        }
+      ]
+    },
+    "bp35": {
+      "game_id": "bp35-0a0ad940",
+      "short_id": "bp35",
+      "title": "BP35",
+      "default_fps": 20,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "bp35.py",
+      "path": "environment_files/bp35/0a0ad940/bp35.py",
+      "file_lines": 4589,
+      "file_bytes": 166618,
+      "n_level_definitions": 9,
+      "n_baseline_levels": 9,
+      "baseline_actions": [
+        21,
+        48,
+        44,
+        38,
+        33,
+        87,
+        86,
+        131,
+        163
+      ],
+      "baseline_total_actions": 651,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "available_actions_source": "inferred_from_GameAction_usage",
+      "n_available_actions": 7,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "uses_RESET_action": true,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 1,
+      "n_sys_click_sprites": 0,
+      "n_classes": 62,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 9,
+        "complete_action_calls": 1,
+        "has_def_win": true,
+        "has_def_lose": true,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          8,
+          8
+        ]
+      ],
+      "min_grid_dim": 8,
+      "max_grid_dim": 8,
+      "level_step_counters": [],
+      "level_data_keys": [],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 8,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        }
+      ]
+    },
+    "cd82": {
+      "game_id": "cd82-fb555c5d",
+      "short_id": "cd82",
+      "title": "CD82",
+      "default_fps": 30,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "cd82.py",
+      "path": "environment_files/cd82/fb555c5d/cd82.py",
+      "file_lines": 782,
+      "file_bytes": 34273,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        55,
+        8,
+        41,
+        21,
+        23,
+        23
+      ],
+      "baseline_total_actions": 171,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 6,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 13,
+      "n_sys_click_sprites": 0,
+      "n_classes": 2,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 11,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 7,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 8,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": []
+        }
+      ]
+    },
+    "cn04": {
+      "game_id": "cn04-2fe56bfb",
+      "short_id": "cn04",
+      "title": "CN04",
+      "default_fps": 5,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "cn04.py",
+      "path": "environment_files/cn04/2fe56bfb/cn04.py",
+      "file_lines": 1174,
+      "file_bytes": 39405,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        29,
+        54,
+        85,
+        300,
+        208,
+        113
+      ],
+      "baseline_total_actions": 789,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "available_actions_source": "inferred_from_GameAction_usage",
+      "n_available_actions": 6,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 48,
+      "n_sys_click_sprites": 47,
+      "n_classes": 2,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 3,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          20,
+          20
+        ]
+      ],
+      "min_grid_dim": 20,
+      "max_grid_dim": 20,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "BackgroundColour",
+        "GreyMasking",
+        "MaxSteps"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 2,
+          "step_counter": null,
+          "data_keys": [
+            "BackgroundColour",
+            "MaxSteps"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 4,
+          "step_counter": null,
+          "data_keys": [
+            "BackgroundColour",
+            "MaxSteps"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 3,
+          "step_counter": null,
+          "data_keys": [
+            "BackgroundColour",
+            "GreyMasking",
+            "MaxSteps"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 4,
+          "step_counter": null,
+          "data_keys": [
+            "BackgroundColour",
+            "GreyMasking",
+            "MaxSteps"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 8,
+          "step_counter": null,
+          "data_keys": [
+            "BackgroundColour",
+            "GreyMasking",
+            "MaxSteps"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": [
+            "BackgroundColour",
+            "GreyMasking",
+            "MaxSteps"
+          ]
+        }
+      ]
+    },
+    "dc22": {
+      "game_id": "dc22-fdcac232",
+      "short_id": "dc22",
+      "title": "DC22",
+      "default_fps": 15,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "dc22.py",
+      "path": "environment_files/dc22/fdcac232/dc22.py",
+      "file_lines": 10876,
+      "file_bytes": 255706,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        59,
+        102,
+        67,
+        98,
+        324,
+        578
+      ],
+      "baseline_total_actions": 1228,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 5,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "uses_RESET_action": true,
+      "has_get_valid_actions_override": false,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 99,
+      "n_sys_click_sprites": 19,
+      "n_classes": 3,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 5,
+        "complete_action_calls": 12,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 2
+      },
+      "grid_sizes": [
+        [
+          64,
+          44
+        ],
+        [
+          64,
+          48
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 44,
+      "max_grid_dim": 64,
+      "level_step_counters": [
+        128,
+        192,
+        192,
+        192,
+        512,
+        1024
+      ],
+      "level_data_keys": [
+        "StepCounter"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              44
+            ]
+          ],
+          "sprite_instances": 14,
+          "step_counter": 128,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              48
+            ]
+          ],
+          "sprite_instances": 19,
+          "step_counter": 192,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              48
+            ]
+          ],
+          "sprite_instances": 24,
+          "step_counter": 192,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              48
+            ]
+          ],
+          "sprite_instances": 26,
+          "step_counter": 192,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 37,
+          "step_counter": 512,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 72,
+          "step_counter": 1024,
+          "data_keys": [
+            "StepCounter"
+          ]
+        }
+      ]
+    },
+    "ft09": {
+      "game_id": "ft09-0d8bbf25",
+      "short_id": "ft09",
+      "title": "FT09",
+      "default_fps": 8,
+      "tags": [],
+      "file": "ft09.py",
+      "path": "environment_files/ft09/0d8bbf25/ft09.py",
+      "file_lines": 2518,
+      "file_bytes": 64236,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        43,
+        12,
+        23,
+        28,
+        65,
+        37
+      ],
+      "baseline_total_actions": 208,
+      "available_actions": [
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 1,
+      "gameaction_ids_used": [
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "click_only",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": false,
+      "n_sprite_definitions": 181,
+      "n_sys_click_sprites": 0,
+      "n_classes": 2,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 5,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          32,
+          32
+        ]
+      ],
+      "min_grid_dim": 32,
+      "max_grid_dim": 32,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "cwU",
+        "elp",
+        "kCv"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              32,
+              32
+            ]
+          ],
+          "sprite_instances": 19,
+          "step_counter": null,
+          "data_keys": [
+            "cwU",
+            "elp",
+            "kCv"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              32,
+              32
+            ]
+          ],
+          "sprite_instances": 17,
+          "step_counter": null,
+          "data_keys": [
+            "cwU",
+            "elp",
+            "kCv"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              32,
+              32
+            ]
+          ],
+          "sprite_instances": 28,
+          "step_counter": null,
+          "data_keys": [
+            "cwU",
+            "elp",
+            "kCv"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              32,
+              32
+            ]
+          ],
+          "sprite_instances": 24,
+          "step_counter": null,
+          "data_keys": [
+            "cwU",
+            "elp",
+            "kCv"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              32,
+              32
+            ]
+          ],
+          "sprite_instances": 39,
+          "step_counter": null,
+          "data_keys": [
+            "cwU",
+            "elp",
+            "kCv"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              32,
+              32
+            ]
+          ],
+          "sprite_instances": 28,
+          "step_counter": null,
+          "data_keys": [
+            "cwU",
+            "elp",
+            "kCv"
+          ]
+        }
+      ]
+    },
+    "g50t": {
+      "game_id": "g50t-5849a774",
+      "short_id": "g50t",
+      "title": "G50T",
+      "default_fps": 30,
+      "tags": [
+        "keyboard"
+      ],
+      "file": "g50t.py",
+      "path": "environment_files/g50t/5849a774/g50t.py",
+      "file_lines": 2840,
+      "file_bytes": 192353,
+      "n_level_definitions": 7,
+      "n_baseline_levels": 7,
+      "baseline_actions": [
+        78,
+        175,
+        179,
+        230,
+        96,
+        54,
+        67
+      ],
+      "baseline_total_actions": 879,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 5,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "uses_RESET_action": true,
+      "has_get_valid_actions_override": false,
+      "input_type": "keyboard_only",
+      "has_click_ACTION6": false,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 56,
+      "n_sys_click_sprites": 0,
+      "n_classes": 19,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 3,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 18,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 22,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 20,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 29,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 33,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 32,
+          "step_counter": null,
+          "data_keys": []
+        }
+      ]
+    },
+    "ka59": {
+      "game_id": "ka59-38d34dbb",
+      "short_id": "ka59",
+      "title": "KA59",
+      "default_fps": 10,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "ka59.py",
+      "path": "environment_files/ka59/38d34dbb/ka59.py",
+      "file_lines": 41447,
+      "file_bytes": 831580,
+      "n_level_definitions": 7,
+      "n_baseline_levels": 7,
+      "baseline_actions": [
+        28,
+        109,
+        51,
+        51,
+        33,
+        132,
+        326
+      ],
+      "baseline_total_actions": 730,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 5,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 35,
+      "n_sys_click_sprites": 4,
+      "n_classes": 2,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 2,
+        "complete_action_calls": 1,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          45,
+          45
+        ],
+        [
+          54,
+          54
+        ],
+        [
+          63,
+          63
+        ]
+      ],
+      "min_grid_dim": 45,
+      "max_grid_dim": 63,
+      "level_step_counters": [
+        100,
+        127,
+        100,
+        127,
+        100,
+        150,
+        200
+      ],
+      "level_data_keys": [
+        "StepCounter"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              45,
+              45
+            ]
+          ],
+          "sprite_instances": 6,
+          "step_counter": 100,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              63,
+              63
+            ]
+          ],
+          "sprite_instances": 10,
+          "step_counter": 127,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              54,
+              54
+            ]
+          ],
+          "sprite_instances": 7,
+          "step_counter": 100,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              54,
+              54
+            ]
+          ],
+          "sprite_instances": 8,
+          "step_counter": 127,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              63,
+              63
+            ]
+          ],
+          "sprite_instances": 10,
+          "step_counter": 100,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              63,
+              63
+            ]
+          ],
+          "sprite_instances": 9,
+          "step_counter": 150,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              63,
+              63
+            ]
+          ],
+          "sprite_instances": 10,
+          "step_counter": 200,
+          "data_keys": [
+            "StepCounter"
+          ]
+        }
+      ]
+    },
+    "lf52": {
+      "game_id": "lf52-271a04aa",
+      "short_id": "lf52",
+      "title": "LF52",
+      "default_fps": 30,
+      "tags": [
+        "click"
+      ],
+      "file": "lf52.py",
+      "path": "environment_files/lf52/271a04aa/lf52.py",
+      "file_lines": 5878,
+      "file_bytes": 216183,
+      "n_level_definitions": 10,
+      "n_baseline_levels": 10,
+      "baseline_actions": [
+        32,
+        81,
+        60,
+        71,
+        205,
+        148,
+        244,
+        109,
+        164,
+        225
+      ],
+      "baseline_total_actions": 1339,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "available_actions_source": "inferred_from_GameAction_usage",
+      "n_available_actions": 7,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "uses_RESET_action": true,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 1,
+      "n_sys_click_sprites": 0,
+      "n_classes": 68,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 4,
+        "complete_action_calls": 6,
+        "has_def_win": true,
+        "has_def_lose": true,
+        "undo_mentions": 15
+      },
+      "grid_sizes": [
+        [
+          8,
+          8
+        ]
+      ],
+      "min_grid_dim": 8,
+      "max_grid_dim": 8,
+      "level_step_counters": [],
+      "level_data_keys": [],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 8,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 9,
+          "grid_size": [
+            [
+              8,
+              8
+            ]
+          ],
+          "sprite_instances": 1,
+          "step_counter": null,
+          "data_keys": []
+        }
+      ]
+    },
+    "lp85": {
+      "game_id": "lp85-305b61c3",
+      "short_id": "lp85",
+      "title": "LP85",
+      "default_fps": 20,
+      "tags": [
+        "click"
+      ],
+      "file": "lp85.py",
+      "path": "environment_files/lp85/305b61c3/lp85.py",
+      "file_lines": 21430,
+      "file_bytes": 456495,
+      "n_level_definitions": 8,
+      "n_baseline_levels": 8,
+      "baseline_actions": [
+        17,
+        38,
+        31,
+        16,
+        41,
+        60,
+        26,
+        159
+      ],
+      "baseline_total_actions": 388,
+      "available_actions": [
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 1,
+      "gameaction_ids_used": [
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "click_only",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": false,
+      "n_sprite_definitions": 89,
+      "n_sys_click_sprites": 82,
+      "n_classes": 4,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 3,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          27,
+          32
+        ],
+        [
+          32,
+          19
+        ],
+        [
+          39,
+          31
+        ],
+        [
+          41,
+          41
+        ],
+        [
+          48,
+          36
+        ],
+        [
+          57,
+          57
+        ],
+        [
+          60,
+          64
+        ],
+        [
+          63,
+          63
+        ]
+      ],
+      "min_grid_dim": 19,
+      "max_grid_dim": 64,
+      "level_step_counters": [
+        13,
+        60,
+        80,
+        150,
+        80,
+        80,
+        80,
+        80
+      ],
+      "level_data_keys": [
+        "StepCounter",
+        "level_name"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              32,
+              19
+            ]
+          ],
+          "sprite_instances": 23,
+          "step_counter": 13,
+          "data_keys": [
+            "StepCounter",
+            "level_name"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              41,
+              41
+            ]
+          ],
+          "sprite_instances": 50,
+          "step_counter": 60,
+          "data_keys": [
+            "StepCounter",
+            "level_name"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              39,
+              31
+            ]
+          ],
+          "sprite_instances": 36,
+          "step_counter": 80,
+          "data_keys": [
+            "StepCounter",
+            "level_name"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              57,
+              57
+            ]
+          ],
+          "sprite_instances": 54,
+          "step_counter": 150,
+          "data_keys": [
+            "StepCounter",
+            "level_name"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              27,
+              32
+            ]
+          ],
+          "sprite_instances": 27,
+          "step_counter": 80,
+          "data_keys": [
+            "StepCounter",
+            "level_name"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              60,
+              64
+            ]
+          ],
+          "sprite_instances": 114,
+          "step_counter": 80,
+          "data_keys": [
+            "StepCounter",
+            "level_name"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              48,
+              36
+            ]
+          ],
+          "sprite_instances": 22,
+          "step_counter": 80,
+          "data_keys": [
+            "StepCounter",
+            "level_name"
+          ]
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              63,
+              63
+            ]
+          ],
+          "sprite_instances": 84,
+          "step_counter": 80,
+          "data_keys": [
+            "StepCounter",
+            "level_name"
+          ]
+        }
+      ]
+    },
+    "ls20": {
+      "game_id": "ls20-9607627b",
+      "short_id": "ls20",
+      "title": "LS20",
+      "default_fps": 30,
+      "tags": [
+        "keyboard"
+      ],
+      "file": "ls20.py",
+      "path": "environment_files/ls20/9607627b/ls20.py",
+      "file_lines": 2043,
+      "file_bytes": 104880,
+      "n_level_definitions": 7,
+      "n_baseline_levels": 7,
+      "baseline_actions": [
+        22,
+        123,
+        73,
+        84,
+        96,
+        192,
+        186
+      ],
+      "baseline_total_actions": 776,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 4,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "keyboard_only",
+      "has_click_ACTION6": false,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 36,
+      "n_sys_click_sprites": 0,
+      "n_classes": 5,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 7,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 21
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42
+      ],
+      "level_data_keys": [
+        "Fog",
+        "GoalColor",
+        "GoalRotation",
+        "StartColor",
+        "StartRotation",
+        "StartShape",
+        "StepCounter",
+        "StepsDecrement",
+        "kvynsvxbpi"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 127,
+          "step_counter": 42,
+          "data_keys": [
+            "Fog",
+            "GoalColor",
+            "GoalRotation",
+            "StartColor",
+            "StartRotation",
+            "StartShape",
+            "StepCounter",
+            "StepsDecrement",
+            "kvynsvxbpi"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 110,
+          "step_counter": 42,
+          "data_keys": [
+            "Fog",
+            "GoalColor",
+            "GoalRotation",
+            "StartColor",
+            "StartRotation",
+            "StartShape",
+            "StepCounter",
+            "kvynsvxbpi"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 96,
+          "step_counter": 42,
+          "data_keys": [
+            "Fog",
+            "GoalColor",
+            "GoalRotation",
+            "StartColor",
+            "StartRotation",
+            "StartShape",
+            "StepCounter",
+            "kvynsvxbpi"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 109,
+          "step_counter": 42,
+          "data_keys": [
+            "Fog",
+            "GoalColor",
+            "GoalRotation",
+            "StartColor",
+            "StartRotation",
+            "StartShape",
+            "StepCounter",
+            "StepsDecrement",
+            "kvynsvxbpi"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 101,
+          "step_counter": 42,
+          "data_keys": [
+            "Fog",
+            "GoalColor",
+            "GoalRotation",
+            "StartColor",
+            "StartRotation",
+            "StartShape",
+            "StepCounter",
+            "kvynsvxbpi"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 102,
+          "step_counter": 42,
+          "data_keys": [
+            "Fog",
+            "GoalColor",
+            "GoalRotation",
+            "StartColor",
+            "StartRotation",
+            "StartShape",
+            "StepCounter",
+            "StepsDecrement",
+            "kvynsvxbpi"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 103,
+          "step_counter": 42,
+          "data_keys": [
+            "Fog",
+            "GoalColor",
+            "GoalRotation",
+            "StartColor",
+            "StartRotation",
+            "StartShape",
+            "StepCounter",
+            "kvynsvxbpi"
+          ]
+        }
+      ]
+    },
+    "m0r0": {
+      "game_id": "m0r0-492f87ba",
+      "short_id": "m0r0",
+      "title": "M0R0",
+      "default_fps": 7,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "m0r0.py",
+      "path": "environment_files/m0r0/492f87ba/m0r0.py",
+      "file_lines": 909,
+      "file_bytes": 39574,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        30,
+        111,
+        203,
+        26,
+        500,
+        237
+      ],
+      "baseline_total_actions": 1107,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 6,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 23,
+      "n_sys_click_sprites": 7,
+      "n_classes": 3,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 6,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          11,
+          11
+        ],
+        [
+          13,
+          13
+        ],
+        [
+          15,
+          15
+        ]
+      ],
+      "min_grid_dim": 11,
+      "max_grid_dim": 15,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "psqw"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              11,
+              11
+            ]
+          ],
+          "sprite_instances": 3,
+          "step_counter": null,
+          "data_keys": [
+            "psqw"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              13,
+              13
+            ]
+          ],
+          "sprite_instances": 29,
+          "step_counter": null,
+          "data_keys": [
+            "psqw"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              13,
+              13
+            ]
+          ],
+          "sprite_instances": 6,
+          "step_counter": null,
+          "data_keys": [
+            "psqw"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              11,
+              11
+            ]
+          ],
+          "sprite_instances": 22,
+          "step_counter": null,
+          "data_keys": [
+            "psqw"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              15,
+              15
+            ]
+          ],
+          "sprite_instances": 11,
+          "step_counter": null,
+          "data_keys": [
+            "psqw"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              13,
+              13
+            ]
+          ],
+          "sprite_instances": 70,
+          "step_counter": null,
+          "data_keys": [
+            "psqw"
+          ]
+        }
+      ]
+    },
+    "r11l": {
+      "game_id": "r11l-495a7899",
+      "short_id": "r11l",
+      "title": "R11L",
+      "default_fps": 30,
+      "tags": [
+        "click"
+      ],
+      "file": "r11l.py",
+      "path": "environment_files/r11l/495a7899/r11l.py",
+      "file_lines": 1838,
+      "file_bytes": 188150,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        22,
+        33,
+        51,
+        26,
+        52,
+        49
+      ],
+      "baseline_total_actions": 233,
+      "available_actions": [
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 1,
+      "gameaction_ids_used": [
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "click_only",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": false,
+      "n_sprite_definitions": 50,
+      "n_sys_click_sprites": 9,
+      "n_classes": 5,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 2,
+        "complete_action_calls": 9,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 5,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 11,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 12,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 24,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 19,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 21,
+          "step_counter": null,
+          "data_keys": []
+        }
+      ]
+    },
+    "re86": {
+      "game_id": "re86-8af5384d",
+      "short_id": "re86",
+      "title": "RE86",
+      "default_fps": 25,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "re86.py",
+      "path": "environment_files/re86/8af5384d/re86.py",
+      "file_lines": 2142,
+      "file_bytes": 239075,
+      "n_level_definitions": 8,
+      "n_baseline_levels": 8,
+      "baseline_actions": [
+        26,
+        42,
+        86,
+        108,
+        189,
+        139,
+        424,
+        241
+      ],
+      "baseline_total_actions": 1255,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 5,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "keyboard_only",
+      "has_click_ACTION6": false,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 55,
+      "n_sys_click_sprites": 0,
+      "n_classes": 3,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 1,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [
+        100,
+        100,
+        200,
+        200,
+        250,
+        200,
+        300,
+        400
+      ],
+      "level_data_keys": [
+        "StepCounter"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 3,
+          "step_counter": 100,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 4,
+          "step_counter": 100,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 4,
+          "step_counter": 200,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 9,
+          "step_counter": 200,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 9,
+          "step_counter": 250,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 4,
+          "step_counter": 200,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 10,
+          "step_counter": 300,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 19,
+          "step_counter": 400,
+          "data_keys": [
+            "StepCounter"
+          ]
+        }
+      ]
+    },
+    "s5i5": {
+      "game_id": "s5i5-18d95033",
+      "short_id": "s5i5",
+      "title": "S5I5",
+      "default_fps": 15,
+      "tags": [
+        "click"
+      ],
+      "file": "s5i5.py",
+      "path": "environment_files/s5i5/18d95033/s5i5.py",
+      "file_lines": 2253,
+      "file_bytes": 168955,
+      "n_level_definitions": 8,
+      "n_baseline_levels": 8,
+      "baseline_actions": [
+        20,
+        89,
+        106,
+        54,
+        162,
+        38,
+        86,
+        83
+      ],
+      "baseline_total_actions": 638,
+      "available_actions": [
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 1,
+      "gameaction_ids_used": [
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "click_only",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": false,
+      "n_sprite_definitions": 92,
+      "n_sys_click_sprites": 0,
+      "n_classes": 3,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 1,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [
+        50,
+        150,
+        200,
+        100,
+        150,
+        150,
+        200,
+        200
+      ],
+      "level_data_keys": [
+        "Children",
+        "StepCounter"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 10,
+          "step_counter": 50,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 12,
+          "step_counter": 150,
+          "data_keys": [
+            "Children",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 20,
+          "step_counter": 200,
+          "data_keys": [
+            "Children",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 17,
+          "step_counter": 100,
+          "data_keys": [
+            "Children",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 18,
+          "step_counter": 150,
+          "data_keys": [
+            "Children",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 12,
+          "step_counter": 150,
+          "data_keys": [
+            "Children",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 20,
+          "step_counter": 200,
+          "data_keys": [
+            "Children",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 24,
+          "step_counter": 200,
+          "data_keys": [
+            "Children",
+            "StepCounter"
+          ]
+        }
+      ]
+    },
+    "sb26": {
+      "game_id": "sb26-7fbdac44",
+      "short_id": "sb26",
+      "title": "SB26",
+      "default_fps": 30,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "sb26.py",
+      "path": "environment_files/sb26/7fbdac44/sb26.py",
+      "file_lines": 1153,
+      "file_bytes": 63992,
+      "n_level_definitions": 8,
+      "n_baseline_levels": 8,
+      "baseline_actions": [
+        18,
+        28,
+        18,
+        19,
+        31,
+        23,
+        58,
+        18
+      ],
+      "baseline_total_actions": 213,
+      "available_actions": [
+        5,
+        6,
+        7
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 3,
+      "gameaction_ids_used": [
+        5,
+        6,
+        7
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 21,
+      "n_sys_click_sprites": 6,
+      "n_classes": 2,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 2,
+        "complete_action_calls": 5,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 18,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 33,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 34,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 32,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 37,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 44,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 35,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 43,
+          "step_counter": null,
+          "data_keys": []
+        }
+      ]
+    },
+    "sc25": {
+      "game_id": "sc25-635fd71a",
+      "short_id": "sc25",
+      "title": "SC25",
+      "default_fps": 20,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "sc25.py",
+      "path": "environment_files/sc25/635fd71a/sc25.py",
+      "file_lines": 2754,
+      "file_bytes": 225958,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        36,
+        6,
+        32,
+        83,
+        143,
+        50
+      ],
+      "baseline_total_actions": 350,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 5,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "uses_RESET_action": true,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 51,
+      "n_sys_click_sprites": 1,
+      "n_classes": 1,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 2,
+        "complete_action_calls": 13,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 1
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "efvw",
+        "rpjr",
+        "slfh"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 26,
+          "step_counter": null,
+          "data_keys": [
+            "efvw",
+            "rpjr",
+            "slfh"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 29,
+          "step_counter": null,
+          "data_keys": [
+            "efvw",
+            "rpjr",
+            "slfh"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 29,
+          "step_counter": null,
+          "data_keys": [
+            "efvw",
+            "rpjr",
+            "slfh"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 31,
+          "step_counter": null,
+          "data_keys": [
+            "efvw",
+            "slfh"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 42,
+          "step_counter": null,
+          "data_keys": [
+            "efvw",
+            "slfh"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 43,
+          "step_counter": null,
+          "data_keys": [
+            "efvw",
+            "slfh"
+          ]
+        }
+      ]
+    },
+    "sk48": {
+      "game_id": "sk48-d8078629",
+      "short_id": "sk48",
+      "title": "SK48",
+      "default_fps": 30,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "sk48.py",
+      "path": "environment_files/sk48/d8078629/sk48.py",
+      "file_lines": 987,
+      "file_bytes": 44635,
+      "n_level_definitions": 8,
+      "n_baseline_levels": 8,
+      "baseline_actions": [
+        61,
+        177,
+        101,
+        103,
+        230,
+        181,
+        125,
+        92
+      ],
+      "baseline_total_actions": 1070,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 6,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 16,
+      "n_sys_click_sprites": 3,
+      "n_classes": 2,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 2,
+        "complete_action_calls": 4,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "grouped_pauses",
+        "lit_extension"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 21,
+          "step_counter": null,
+          "data_keys": [
+            "grouped_pauses",
+            "lit_extension"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 26,
+          "step_counter": null,
+          "data_keys": [
+            "grouped_pauses",
+            "lit_extension"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 32,
+          "step_counter": null,
+          "data_keys": [
+            "grouped_pauses",
+            "lit_extension"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 41,
+          "step_counter": null,
+          "data_keys": [
+            "grouped_pauses",
+            "lit_extension"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 29,
+          "step_counter": null,
+          "data_keys": [
+            "grouped_pauses",
+            "lit_extension"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 44,
+          "step_counter": null,
+          "data_keys": [
+            "grouped_pauses",
+            "lit_extension"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 42,
+          "step_counter": null,
+          "data_keys": [
+            "grouped_pauses",
+            "lit_extension"
+          ]
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 29,
+          "step_counter": null,
+          "data_keys": [
+            "grouped_pauses",
+            "lit_extension"
+          ]
+        }
+      ]
+    },
+    "sp80": {
+      "game_id": "sp80-589a99af",
+      "short_id": "sp80",
+      "title": "SP80",
+      "default_fps": 10,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "sp80.py",
+      "path": "environment_files/sp80/589a99af/sp80.py",
+      "file_lines": 875,
+      "file_bytes": 39981,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        39,
+        58,
+        25,
+        148,
+        96,
+        152
+      ],
+      "baseline_total_actions": 518,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 6,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "uses_RESET_action": true,
+      "has_get_valid_actions_override": true,
+      "input_type": "mixed_click_keyboard",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 18,
+      "n_sys_click_sprites": 9,
+      "n_classes": 3,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 3,
+        "complete_action_calls": 7,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          16,
+          16
+        ],
+        [
+          20,
+          20
+        ]
+      ],
+      "min_grid_dim": 16,
+      "max_grid_dim": 20,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "dojfslwbg",
+        "steps"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              16,
+              16
+            ]
+          ],
+          "sprite_instances": 7,
+          "step_counter": null,
+          "data_keys": [
+            "dojfslwbg",
+            "steps"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              16,
+              16
+            ]
+          ],
+          "sprite_instances": 10,
+          "step_counter": null,
+          "data_keys": [
+            "dojfslwbg",
+            "steps"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              16,
+              16
+            ]
+          ],
+          "sprite_instances": 15,
+          "step_counter": null,
+          "data_keys": [
+            "dojfslwbg",
+            "steps"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": [
+            "dojfslwbg",
+            "steps"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 16,
+          "step_counter": null,
+          "data_keys": [
+            "dojfslwbg",
+            "steps"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              20,
+              20
+            ]
+          ],
+          "sprite_instances": 14,
+          "step_counter": null,
+          "data_keys": [
+            "dojfslwbg",
+            "steps"
+          ]
+        }
+      ]
+    },
+    "su15": {
+      "game_id": "su15-1944f8ab",
+      "short_id": "su15",
+      "title": "SU15",
+      "default_fps": 20,
+      "tags": [
+        "click"
+      ],
+      "file": "su15.py",
+      "path": "environment_files/su15/1944f8ab/su15.py",
+      "file_lines": 2154,
+      "file_bytes": 88005,
+      "n_level_definitions": 9,
+      "n_baseline_levels": 9,
+      "baseline_actions": [
+        22,
+        42,
+        26,
+        115,
+        36,
+        31,
+        8,
+        40,
+        41
+      ],
+      "baseline_total_actions": 361,
+      "available_actions": [
+        6,
+        7
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 2,
+      "gameaction_ids_used": [
+        6,
+        7
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": true,
+      "input_type": "click_only",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": false,
+      "n_sprite_definitions": 42,
+      "n_sys_click_sprites": 0,
+      "n_classes": 2,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 3,
+        "complete_action_calls": 8,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "steps",
+        "xkstxyqbs"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 8,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 16,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 14,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 15,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 8,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 16,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        },
+        {
+          "level_index": 8,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 16,
+          "step_counter": null,
+          "data_keys": [
+            "steps",
+            "xkstxyqbs"
+          ]
+        }
+      ]
+    },
+    "tn36": {
+      "game_id": "tn36-ef4dde99",
+      "short_id": "tn36",
+      "title": "TN36",
+      "default_fps": 3,
+      "tags": [
+        "click"
+      ],
+      "file": "tn36.py",
+      "path": "environment_files/tn36/ef4dde99/tn36.py",
+      "file_lines": 2626,
+      "file_bytes": 165101,
+      "n_level_definitions": 7,
+      "n_baseline_levels": 7,
+      "baseline_actions": [
+        32,
+        72,
+        26,
+        40,
+        30,
+        55,
+        62
+      ],
+      "baseline_total_actions": 317,
+      "available_actions": [
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 1,
+      "gameaction_ids_used": [
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "click_only",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": false,
+      "n_sprite_definitions": 48,
+      "n_sys_click_sprites": 6,
+      "n_classes": 17,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 3,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "Positions",
+        "Programs",
+        "Reset",
+        "Rotations",
+        "scvkkws"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 30,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 76,
+          "step_counter": null,
+          "data_keys": [
+            "Positions",
+            "Programs",
+            "Reset",
+            "Rotations",
+            "scvkkws"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 96,
+          "step_counter": null,
+          "data_keys": [
+            "Positions",
+            "Programs",
+            "Reset",
+            "Rotations",
+            "scvkkws"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 89,
+          "step_counter": null,
+          "data_keys": [
+            "Positions",
+            "Programs",
+            "Reset",
+            "Rotations",
+            "scvkkws"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 91,
+          "step_counter": null,
+          "data_keys": [
+            "Positions",
+            "Programs",
+            "Reset",
+            "Rotations",
+            "scvkkws"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 95,
+          "step_counter": null,
+          "data_keys": [
+            "Positions",
+            "Programs",
+            "Reset",
+            "Rotations",
+            "scvkkws"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 100,
+          "step_counter": null,
+          "data_keys": [
+            "Positions",
+            "Programs",
+            "Reset",
+            "Rotations",
+            "scvkkws"
+          ]
+        }
+      ]
+    },
+    "tr87": {
+      "game_id": "tr87-cd924810",
+      "short_id": "tr87",
+      "title": "TR87",
+      "default_fps": 10,
+      "tags": [
+        "keyboard"
+      ],
+      "file": "tr87.py",
+      "path": "environment_files/tr87/cd924810/tr87.py",
+      "file_lines": 1103,
+      "file_bytes": 48068,
+      "n_level_definitions": 6,
+      "n_baseline_levels": 6,
+      "baseline_actions": [
+        54,
+        58,
+        40,
+        45,
+        71,
+        146
+      ],
+      "baseline_total_actions": 414,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 4,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "keyboard_only",
+      "has_click_ACTION6": false,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 36,
+      "n_sys_click_sprites": 0,
+      "n_classes": 2,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 2,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [],
+      "level_data_keys": [
+        "alter_rules",
+        "double_translation",
+        "tree_translation"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 51,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 65,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 73,
+          "step_counter": null,
+          "data_keys": []
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 69,
+          "step_counter": null,
+          "data_keys": [
+            "double_translation"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 45,
+          "step_counter": null,
+          "data_keys": [
+            "alter_rules"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 55,
+          "step_counter": null,
+          "data_keys": [
+            "alter_rules",
+            "double_translation",
+            "tree_translation"
+          ]
+        }
+      ]
+    },
+    "tu93": {
+      "game_id": "tu93-0768757b",
+      "short_id": "tu93",
+      "title": "TU93",
+      "default_fps": 30,
+      "tags": [
+        "keyboard_click"
+      ],
+      "file": "tu93.py",
+      "path": "environment_files/tu93/0768757b/tu93.py",
+      "file_lines": 1251,
+      "file_bytes": 74044,
+      "n_level_definitions": 9,
+      "n_baseline_levels": 9,
+      "baseline_actions": [
+        19,
+        16,
+        34,
+        42,
+        123,
+        80,
+        14,
+        23,
+        111
+      ],
+      "baseline_total_actions": 462,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 4,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "keyboard_only",
+      "has_click_ACTION6": false,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 43,
+      "n_sys_click_sprites": 0,
+      "n_classes": 3,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 2,
+        "complete_action_calls": 2,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          39,
+          39
+        ],
+        [
+          42,
+          42
+        ],
+        [
+          45,
+          45
+        ],
+        [
+          49,
+          49
+        ],
+        [
+          51,
+          51
+        ]
+      ],
+      "min_grid_dim": 39,
+      "max_grid_dim": 51,
+      "level_step_counters": [
+        50,
+        50,
+        35,
+        20,
+        50,
+        60,
+        30,
+        50,
+        50
+      ],
+      "level_data_keys": [
+        "StepCounter"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              39,
+              39
+            ]
+          ],
+          "sprite_instances": 3,
+          "step_counter": 50,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              45,
+              45
+            ]
+          ],
+          "sprite_instances": 4,
+          "step_counter": 50,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              45,
+              45
+            ]
+          ],
+          "sprite_instances": 6,
+          "step_counter": 35,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              51,
+              51
+            ]
+          ],
+          "sprite_instances": 5,
+          "step_counter": 20,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              49,
+              49
+            ]
+          ],
+          "sprite_instances": 8,
+          "step_counter": 50,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              45,
+              45
+            ]
+          ],
+          "sprite_instances": 11,
+          "step_counter": 60,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              45,
+              45
+            ]
+          ],
+          "sprite_instances": 5,
+          "step_counter": 30,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              42,
+              42
+            ]
+          ],
+          "sprite_instances": 5,
+          "step_counter": 50,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 8,
+          "grid_size": [
+            [
+              51,
+              51
+            ]
+          ],
+          "sprite_instances": 9,
+          "step_counter": 50,
+          "data_keys": [
+            "StepCounter"
+          ]
+        }
+      ]
+    },
+    "vc33": {
+      "game_id": "vc33-5430563c",
+      "short_id": "vc33",
+      "title": "VC33",
+      "default_fps": 20,
+      "tags": [
+        "click"
+      ],
+      "file": "vc33.py",
+      "path": "environment_files/vc33/5430563c/vc33.py",
+      "file_lines": 2108,
+      "file_bytes": 74307,
+      "n_level_definitions": 7,
+      "n_baseline_levels": 7,
+      "baseline_actions": [
+        7,
+        18,
+        44,
+        61,
+        131,
+        34,
+        152
+      ],
+      "baseline_total_actions": 447,
+      "available_actions": [
+        6
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 1,
+      "gameaction_ids_used": [
+        6
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "click_only",
+      "has_click_ACTION6": true,
+      "has_keyboard_ACTION1_5": false,
+      "n_sprite_definitions": 62,
+      "n_sys_click_sprites": 4,
+      "n_classes": 4,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 1,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          32,
+          32
+        ],
+        [
+          48,
+          48
+        ],
+        [
+          52,
+          52
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 32,
+      "max_grid_dim": 64,
+      "level_step_counters": [
+        50,
+        50,
+        75,
+        50,
+        200,
+        50,
+        200
+      ],
+      "level_data_keys": [
+        "Gravity",
+        "StepCounter"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              32,
+              32
+            ]
+          ],
+          "sprite_instances": 7,
+          "step_counter": 50,
+          "data_keys": [
+            "Gravity",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              32,
+              32
+            ]
+          ],
+          "sprite_instances": 11,
+          "step_counter": 50,
+          "data_keys": [
+            "Gravity",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              52,
+              52
+            ]
+          ],
+          "sprite_instances": 23,
+          "step_counter": 75,
+          "data_keys": [
+            "Gravity",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 19,
+          "step_counter": 50,
+          "data_keys": [
+            "Gravity",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 20,
+          "step_counter": 200,
+          "data_keys": [
+            "Gravity",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 13,
+          "step_counter": 50,
+          "data_keys": [
+            "Gravity",
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              48,
+              48
+            ]
+          ],
+          "sprite_instances": 26,
+          "step_counter": 200,
+          "data_keys": [
+            "Gravity",
+            "StepCounter"
+          ]
+        }
+      ]
+    },
+    "wa30": {
+      "game_id": "wa30-ee6fef47",
+      "short_id": "wa30",
+      "title": "WA30",
+      "default_fps": 5,
+      "tags": [
+        "keyboard"
+      ],
+      "file": "wa30.py",
+      "path": "environment_files/wa30/ee6fef47/wa30.py",
+      "file_lines": 1238,
+      "file_bytes": 58285,
+      "n_level_definitions": 9,
+      "n_baseline_levels": 9,
+      "baseline_actions": [
+        71,
+        119,
+        183,
+        98,
+        368,
+        68,
+        79,
+        442,
+        415
+      ],
+      "baseline_total_actions": 1843,
+      "available_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "available_actions_source": "constructor",
+      "n_available_actions": 5,
+      "gameaction_ids_used": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "uses_RESET_action": false,
+      "has_get_valid_actions_override": false,
+      "input_type": "keyboard_only",
+      "has_click_ACTION6": false,
+      "has_keyboard_ACTION1_5": true,
+      "n_sprite_definitions": 20,
+      "n_sys_click_sprites": 0,
+      "n_classes": 3,
+      "counts": {
+        "next_level_calls": 1,
+        "lose_calls": 1,
+        "complete_action_calls": 1,
+        "has_def_win": false,
+        "has_def_lose": false,
+        "undo_mentions": 0
+      },
+      "grid_sizes": [
+        [
+          64,
+          64
+        ]
+      ],
+      "min_grid_dim": 64,
+      "max_grid_dim": 64,
+      "level_step_counters": [
+        200,
+        70,
+        100,
+        100,
+        125,
+        75,
+        125,
+        150,
+        70
+      ],
+      "level_data_keys": [
+        "StepCounter"
+      ],
+      "per_level": [
+        {
+          "level_index": 0,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 5,
+          "step_counter": 200,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 1,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 8,
+          "step_counter": 70,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 2,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 24,
+          "step_counter": 100,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 3,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 51,
+          "step_counter": 100,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 4,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 29,
+          "step_counter": 125,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 5,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 36,
+          "step_counter": 75,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 6,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 40,
+          "step_counter": 125,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 7,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 50,
+          "step_counter": 150,
+          "data_keys": [
+            "StepCounter"
+          ]
+        },
+        {
+          "level_index": 8,
+          "grid_size": [
+            [
+              64,
+              64
+            ]
+          ],
+          "sprite_instances": 73,
+          "step_counter": 70,
+          "data_keys": [
+            "StepCounter"
+          ]
+        }
+      ]
+    }
+  }
+}
