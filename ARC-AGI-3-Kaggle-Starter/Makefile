@@ -20,7 +20,7 @@ COMP_SLUG       := arc-prize-2026-arc-agi-3
 GAME            ?=
 STEPS           ?= 200
 
-.PHONY: help setup play-local pull-sample notebook submit status verify-local clean _check-kaggle
+.PHONY: help setup play-local pull-sample notebook gate gate-quick sync-agent submit status verify-local clean _check-kaggle
 
 _check-kaggle:
 	@if [ ! -s .kaggle/access_token ]; then \
@@ -68,7 +68,18 @@ pull-sample: _check-kaggle ## Download the official Stochastic Goose sample note
 notebook: ## Splice agent/my_agent.py into notebooks/submission.ipynb
 	$(VENV_PY) scripts/build_notebook.py
 
-submit: notebook _check-kaggle ## Build notebook and push to Kaggle (one-line submission)
+GATE_FLAGS      ?=
+
+sync-agent: ## Ensure agent/my_agent.py and canonical explorer.py stay unified
+	$(VENV_PY) scripts/sync_agent.py
+
+gate: ## Run pre-submission readiness gate (autonomy, breadth, time/budget safety)
+	$(VENV_PY) scripts/gate.py $(GATE_FLAGS)
+
+gate-quick: ## Fast pre-submission gate (fast breadth evaluation)
+	$(VENV_PY) scripts/gate.py --quick $(GATE_FLAGS)
+
+submit: $(if $(SKIP_GATE),,gate) notebook _check-kaggle ## Run gate, build notebook and push to Kaggle (one-line submission)
 	@grep -q REPLACE_WITH_YOUR_USERNAME notebooks/kernel-metadata.json && { \
 	    echo "ERROR: edit notebooks/kernel-metadata.json and replace REPLACE_WITH_YOUR_USERNAME"; \
 	    exit 1; } || true

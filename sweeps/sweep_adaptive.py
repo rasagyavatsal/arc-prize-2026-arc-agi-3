@@ -31,19 +31,9 @@ def budget_for(baseline_total: int) -> int:
     return int(min(BUDGET_MAX, max(BUDGET_MIN, round(BUDGET_MULT * baseline_total))))
 
 
-class AdaptiveExplorer(Explorer):
-    """Explorer with a per-game action budget + wall-clock guard."""
-
-    def __init__(self, *args, time_limit_s: float = TIME_LIMIT_S, budget: int | None = None, **kwargs):
-        if budget is not None:
-            self.MAX_ACTIONS = int(budget)  # instance attr shadows class attr before super() reads it
-        super().__init__(*args, **kwargs)
-        self._time_limit_s = time_limit_s
-
-    def is_done(self, frames, latest_frame) -> bool:
-        if self.timer and (time.time() - self.timer) > self._time_limit_s:
-            return True
-        return super().is_done(frames, latest_frame)
+# Unified with canonical Explorer: Explorer now has native budget & wall-clock guards
+AdaptiveExplorer = Explorer
+AUTONOMOUS_MODE = os.environ.get("SWEEP_AUTONOMOUS", "1") == "1"
 
 
 def load_meta(base_gid: str) -> dict:
@@ -56,7 +46,11 @@ def run_game(gid: str) -> dict:
     base = gid.split("-")[0]
     meta = load_meta(base)
     baselines = meta.get("baseline_actions", [])
-    budget = budget_for(sum(baselines))
+    if AUTONOMOUS_MODE:
+        # Evaluates exact autonomous submission behavior without metadata cheating
+        budget = int(os.environ.get("MAX_ACTIONS", str(Explorer.DEFAULT_MAX_ACTIONS)))
+    else:
+        budget = budget_for(sum(baselines)) if baselines else Explorer.DEFAULT_MAX_ACTIONS
     t0 = time.time()
     arc = Arcade()
     card = arc.open_scorecard(tags=["sweep-adaptive"])
@@ -68,9 +62,10 @@ def run_game(gid: str) -> dict:
     }
     try:
         env = arc.make(gid, scorecard_id=card)
-        agent = AdaptiveExplorer(
+        agent = Explorer(
             card_id=card, game_id=gid, agent_name="explorer-adaptive",
             ROOT_URL="", record=True, arc_env=env, budget=budget,
+            time_limit_s=TIME_LIMIT_S,
         )
         agent.main()
         sc = arc.close_scorecard(card)
