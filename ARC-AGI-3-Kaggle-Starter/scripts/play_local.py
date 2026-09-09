@@ -49,7 +49,7 @@ def main() -> None:
                    help="Game id to play. If omitted, plays ALL available games "
                         "(mirrors what Kaggle does in competition rerun). "
                         "Comma-separated list also accepted, e.g. ls20,vc33.")
-    p.add_argument("--max-steps", type=int, default=200,
+    p.add_argument("--max-steps", type=int, default=None,
                    help="Per-game cap on actions (overrides MyAgent.MAX_ACTIONS).")
     p.add_argument("--list", action="store_true",
                    help="List available games and exit.")
@@ -86,8 +86,8 @@ def main() -> None:
               f"(this is what Kaggle does in competition rerun).\n")
 
     MyAgentCls = load_my_agent_class()
-    if hasattr(MyAgentCls, "MAX_ACTIONS"):
-        MyAgentCls.MAX_ACTIONS = min(MyAgentCls.MAX_ACTIONS, args.max_steps)
+    if args.max_steps is not None and hasattr(MyAgentCls, "MAX_ACTIONS"):
+        MyAgentCls.MAX_ACTIONS = args.max_steps
 
     per_game = []
     for i, game_id in enumerate(game_ids, 1):
@@ -97,7 +97,7 @@ def main() -> None:
             print(f"  could not create env for {game_id!r}, skipping")
             continue
 
-        agent = MyAgentCls(
+        agent_kwargs = dict(
             card_id="local-dev",
             game_id=game_id,
             agent_name=f"MyAgent.local.{game_id}",
@@ -106,6 +106,9 @@ def main() -> None:
             arc_env=env,
             tags=["local-dev"],
         )
+        if args.max_steps is not None:
+            agent_kwargs["budget"] = args.max_steps
+        agent = MyAgentCls(**agent_kwargs)
         agent.main()
 
         final = agent.frames[-1]

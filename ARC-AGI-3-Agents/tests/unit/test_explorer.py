@@ -166,3 +166,57 @@ class TestExplorer:
         third = agent.choose_action([], f)
         assert third is GameAction.RESET
         assert agent.level_attempts[0] == 1
+
+    def test_budget_and_time_limit_configuration(self):
+        import os
+        from agents.templates.explorer import Explorer, MyAgent
+        assert MyAgent is Explorer
+
+        # Default budget and time limit
+        agent_default = Explorer(
+            card_id="c", game_id="g", agent_name="a", ROOT_URL="u", record=False, arc_env=None
+        )
+        assert agent_default.MAX_ACTIONS == 1500
+        assert agent_default.TIME_LIMIT_S == 270.0
+
+        # Explicit kwargs override
+        agent_custom = Explorer(
+            card_id="c", game_id="g", agent_name="a", ROOT_URL="u", record=False, arc_env=None,
+            budget=500, time_limit_s=120.0
+        )
+        assert agent_custom.MAX_ACTIONS == 500
+        assert agent_custom.TIME_LIMIT_S == 120.0
+
+        # Env var override
+        os.environ["MAX_ACTIONS"] = "2000"
+        os.environ["TIME_LIMIT_S"] = "250.0"
+        try:
+            agent_env = Explorer(
+                card_id="c", game_id="g", agent_name="a", ROOT_URL="u", record=False, arc_env=None
+            )
+            assert agent_env.MAX_ACTIONS == 2000
+            assert agent_env.TIME_LIMIT_S == 250.0
+        finally:
+            del os.environ["MAX_ACTIONS"]
+            del os.environ["TIME_LIMIT_S"]
+
+    def test_wall_clock_timeout_stops_agent(self):
+        import time
+        agent = make_agent()
+        agent.TIME_LIMIT_S = 0.05
+        f = make_frame([[0]])
+        # Before timer is set, not done
+        assert agent.is_done([], f) is False
+
+        # Set timer in the past
+        agent.timer = time.time() - 0.1
+        assert agent.is_done([], f) is True
+
+    def test_autonomy_without_baseline_actions(self):
+        """Verify agent never accesses baseline_actions or metadata and adapts total_levels from frame."""
+        agent = make_agent()
+        # arc_env is None, no baseline_actions exist
+        f = make_frame([[1]], levels=2)
+        f.win_levels = 10
+        agent.choose_action([], f)
+        assert agent.total_levels == 10

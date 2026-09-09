@@ -122,7 +122,22 @@ twice.
 **"Submit to Competition"** to enter Phase B and get a leaderboard score.
 
 > **You only get 5 official submissions per day**, so it pays to be
-> confident before you submit: get `make play-local` passing, then submit.
+> confident before you submit. `make submit` automatically runs the
+> **Submission Readiness Gate** (`make gate`) before pushing to verify
+> autonomy, budget safety, code unity, and multi-game breadth.
+
+### The Submission Readiness Gate (`make gate`)
+
+Before spending a submission quota slot, the gate executes 4 rigorous checks:
+1. **Code Unity**: Verifies `agent/my_agent.py` and canonical `explorer.py` share a single source of truth (`make sync-agent`).
+2. **Autonomous Check**: Verifies the agent relies ONLY on live observation `FrameData`, with zero `metadata.json` or `baseline_actions` leakage.
+3. **Time & Budget Guard**: Verifies `TIME_LIMIT_S <= 280s` (< 4.9 min/game, ensuring 110 games finish under Kaggle's 9-hour limit) and healthy action budgets.
+4. **Breadth Check**: Verifies that the agent scores > 0 across multiple distinct game categories locally.
+
+```bash
+make gate                # Run readiness gate standalone
+SKIP_GATE=1 make submit  # Emergency bypass if needed
+```
 
 > **Heads up:** Before your first `make submit`, open
 > [`notebooks/kernel-metadata.json`](notebooks/kernel-metadata.json) and

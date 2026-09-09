@@ -36,12 +36,33 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import os
+import time
 from collections import Counter, deque
 from typing import Any, Optional
 
 from arcengine import FrameData, GameAction, GameState
 
-from ..agent import Agent
+try:
+    from agents.agent import Agent
+except ImportError:
+    try:
+        from ..agent import Agent
+    except (ImportError, ValueError):
+        import sys
+        from pathlib import Path
+        cur = Path(__file__).resolve()
+        for parent in cur.parents:
+            if (parent / "agents" / "agent.py").exists():
+                if str(parent) not in sys.path:
+                    sys.path.insert(0, str(parent))
+                break
+            if (parent / "vendor" / "ARC-AGI-3-Agents" / "agents" / "agent.py").exists():
+                vpath = str(parent / "vendor" / "ARC-AGI-3-Agents")
+                if vpath not in sys.path:
+                    sys.path.insert(0, vpath)
+                break
+        from agents.agent import Agent
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +70,10 @@ logger = logging.getLogger(__name__)
 class Explorer(Agent):
     """Persistent-memory frontier explorer (programmatic, CPU-only)."""
 
-    MAX_ACTIONS = 80
+    DEFAULT_MAX_ACTIONS = 1500
+    DEFAULT_TIME_LIMIT_S = 270.0  # < 4.9 min / 294s per game (scalable to 110 games in 9h)
+    MAX_ACTIONS = DEFAULT_MAX_ACTIONS
+    TIME_LIMIT_S = DEFAULT_TIME_LIMIT_S
     RESERVE_ACTIONS = 2  # actions kept for a final known-progress push
     RECENT_WINDOW = 16  # signature history length for cycle detection
     NO_CHANGE_LIMIT = 6  # no-effect actions tolerated before a level RESET
@@ -60,8 +84,35 @@ class Explorer(Agent):
     DEMOTE_AFTER = 3  # consecutive no-ops before an action is probed last
     HUD_BOTTOM_ROWS = 2  # bottom rows ignored (status bars/timers live there)
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        *args: Any,
+        budget: int | None = None,
+        time_limit_s: float | None = None,
+        **kwargs: Any,
+    ) -> None:
         super().__init__(*args, **kwargs)
+        if budget is not None:
+            self.MAX_ACTIONS = int(budget)
+        elif "MAX_ACTIONS" in os.environ:
+            try:
+                self.MAX_ACTIONS = int(os.environ["MAX_ACTIONS"])
+            except ValueError:
+                self.MAX_ACTIONS = self.DEFAULT_MAX_ACTIONS
+        else:
+            self.MAX_ACTIONS = self.DEFAULT_MAX_ACTIONS
+
+        if time_limit_s is not None:
+            self.TIME_LIMIT_S = float(time_limit_s)
+        elif "TIME_LIMIT_S" in os.environ:
+            try:
+                self.TIME_LIMIT_S = float(os.environ["TIME_LIMIT_S"])
+            except ValueError:
+                self.TIME_LIMIT_S = self.DEFAULT_TIME_LIMIT_S
+        else:
+            self.TIME_LIMIT_S = self.DEFAULT_TIME_LIMIT_S
+
+        self.timer: Optional[float] = None
         # signature -> {"avail": [ids], "edges": {key: delta}, "visits": int,
         #               "cands": [(x, y)], "stuck": int}
         self.memory: dict[str, dict[str, Any]] = {}
@@ -81,23 +132,24 @@ class Explorer(Agent):
         self._reset_pending = False  # last issued action was RESET
         self.action_nop_streak: dict[int, int] = {}
         self._give_up = False
-        self.total_levels = self._known_level_count()
+        self.total_levels = 8  # default baseline; updated live from FrameData.win_levels
         logger.info(
             f"{self.game_id}: explorer ready "
-            f"(levels={self.total_levels or '?'}, budget={self.MAX_ACTIONS})"
+            f"(levels={self.total_levels or '?'}, budget={self.MAX_ACTIONS}, time_limit={self.TIME_LIMIT_S}s)"
         )
 
     # ------------------------------------------------------------------ memory
 
-    def _known_level_count(self) -> int:
-        """Number of levels according to the environment metadata, if present."""
-        env = getattr(self, "arc_env", None)
-        info = getattr(env, "environment_info", None)
-        baseline = getattr(info, "baseline_actions", None)
-        try:
-            return len(baseline) if baseline else 0
-        except Exception:  # pragma: no cover - defensive
-            return 0
+    def _update_total_levels(self, frame: FrameData) -> None:
+        """Derive total levels strictly from observation FrameData (win_levels)."""
+        win_levels = getattr(frame, "win_levels", None)
+        if win_levels is not None:
+            try:
+                val = int(win_levels)
+                if val > 0:
+                    self.total_levels = val
+            except (ValueError, TypeError):
+                pass
 
     @staticmethod
     def _grid(frame: FrameData) -> list[list[int]]:
@@ -546,7 +598,14 @@ class Explorer(Agent):
     # -------------------------------------------------------------- agent API
 
     def is_done(self, frames: list[FrameData], latest_frame: FrameData) -> bool:
-        """Done on WIN, on exhausted action budget, or when hopelessly stuck."""
+        """Done on WIN, exhausted action budget, wall-clock timeout, or when wedged."""
+        timer = getattr(self, "timer", None)
+        if timer is not None and timer > 0:
+            if (time.time() - timer) >= getattr(self, "TIME_LIMIT_S", self.DEFAULT_TIME_LIMIT_S):
+                logger.warning(
+                    f"{self.game_id}: reached wall-clock limit of {self.TIME_LIMIT_S}s, stopping."
+                )
+                return True
         return bool(
             latest_frame.state is GameState.WIN
             or self.action_counter >= self.MAX_ACTIONS
@@ -556,6 +615,7 @@ class Explorer(Agent):
     def choose_action(
         self, frames: list[FrameData], latest_frame: FrameData
     ) -> GameAction:
+        self._update_total_levels(latest_frame)
         empty = latest_frame.is_empty()
         sig: Optional[str] = None
         if not empty:
@@ -664,3 +724,9 @@ class Explorer(Agent):
         return self._reset_or_giveup(
             latest_frame, "no frontier reachable", sig=sig
         )
+
+
+# Canonical alias for Kaggle submission pipeline compatibility
+MyAgent = Explorer
+
+__all__ = ["Explorer", "MyAgent"]
