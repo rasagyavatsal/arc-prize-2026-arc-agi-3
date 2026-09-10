@@ -1,49 +1,76 @@
 # Adaptive-Budget Sweep — Explorer Agent vs 25 Public Games
 
-**Run:** 2026-09-08 | agent: `explorer` (deterministic, CPU-only) | policy: `budget = clamp(2.0 x baseline_total, 300, 2500)` + 420s wall-clock guard | 7 parallel workers | engine ran at ~90-220 fps locally, so budgets (not time) bound every game.
+**Run:** 2026-09-10 (v3 agent) | agent: `explorer` (deterministic, CPU-only) | autonomous mode: `budget = MAX_ACTIONS = 1500` per game (no metadata), 270 s wall-clock guard | 7 parallel workers.
 
-## Results (sorted by score)
+Scores are **fully deterministic** per (code, machine-load) combination — three repeated runs of both the old and the new agent produced identical totals (±0.0). The one source of variance is engine timing sensitivity under CPU load: e.g. tu93 scored 22.2 in controlled runs but 7.6 in a heavily loaded recorded sweep. Numbers below are the controlled A/B (identical conditions).
 
-| game | levels | human baseline | budget | actions taken | score % | note |
-|------|-------|----------------|--------|---------------|---------|------|
-| lp85 | 8 | 388 | 776 | 105 | **12.500** | completed levels(s) |
-| cd82 | 6 | 171 | 342 | 342 | **3.309** | improved vs 80-action run (0.0) |
-| sp80 | 6 | 518 | 1036 | 1036 | **1.087** | budget exhausted |
-| m0r0 | 6 | 1107 | 2214 | 2214 | **0.357** | budget exhausted |
-| ar25 | 8 | 748 | 1496 | 1496 | 0.000 | budget exhausted |
-| g50t | 7 | 879 | 1758 | 1758 | 0.000 | budget exhausted |
-| sk48 | 8 | 1070 | 2140 | 2140 | 0.000 | budget exhausted |
-| ls20 | 7 | 776 | 1552 | 1552 | 0.000 | budget exhausted (sokoban variant) |
-| cn04 | 6 | 789 | 1578 | 1578 | 0.000 | budget exhausted |
-| ka59 | 7 | 730 | 1460 | 1460 | 0.000 | budget exhausted |
-| re86 | 8 | 1255 | 2500 | 2500 | 0.000 | budget exhausted |
-| lf52 | 10 | 1339 | 2500 | 2500 | 0.000 | budget exhausted |
-| wa30 | 9 | 1843 | 2500 | 2500 | 0.000 | budget exhausted |
-| sb26 | 8 | 213 | 426 | 426 | 0.000 | budget exhausted |
-| sc25 | 6 | 350 | 700 | 700 | 0.000 | budget exhausted |
-| tn36 | 7 | 317 | 634 | 634 | 0.000 | budget exhausted |
-| tr87 | 6 | 414 | 828 | 828 | 0.000 | budget exhausted |
-| r11l | 6 | 233 | 466 | 466 | 0.000 | budget exhausted |
-| vc33 | 7 | 447 | 894 | 357 | 0.000 | early give-up |
-| dc22 | 6 | 1228 | 2456 | 192 | 0.000 | early give-up (click-only) |
-| bp35 | 9 | 651 | 1302 | 39 | 0.000 | early give-up (click-only) |
-| tu93 | 9 | 462 | 924 | 25 | 0.000 | early give-up (click-only) |
-| ft09 | 6 | 208 | 416 | 23 | 0.000 | early give-up (click-only) |
-| s5i5 | 8 | 638 | 1276 | 16 | 0.000 | early give-up (click-only) |
-| su15 | 9 | 361 | 722 | 13 | 0.000 | early give-up (click-only) |
+## Headline (controlled A/B, 3 seeds, budget 1500, record off)
 
-**Total score (public 25): 0.69%** — same order of magnitude as frontier AI on the hidden set (~0.51%).
+| agent | public-25 total |
+|---|---|
+| Explorer v2 (pre-2026-09-10, committed baseline) | **0.717 %** |
+| Explorer v3 (object-layout signature + escalation) | **1.289 %** (+80 %) |
 
-## Findings
+Per-game (mean of 3 seeds; only games that differ):
 
-1. **Adaptive budgets alone do not unlock levels.** 13/25 games burned their entire (2x-human) budget without completing a level. ls20, g50t, sk48, cn04, ka59, re86, lf52 need discovery insight, not exploration volume.
-2. **Click-only games die from premature give-up, not budget.** In 6 click-only games the agent's color-centroid click probing never moves anything -> no-effect streak -> RESET loop -> honest give-up after ~6 attempts at only 2-10% of budget. The stopping heuristics are tuned for the old 80-action budget; with real budgets they quit way too early.
-3. **Bigger budgets helped exactly the games where exploration suffices:** cd82 went 0.0 -> 3.31, lp85 12.5, sp80/m0r0 > 0. The memory-graph architecture works when probing can reach the frontier.
-4. **Give-up logging was invisible** (named logger without handlers) - fixed in the debug run; sweep log itself has no give-up lines for that reason.
-5. Verified locally: the engine imposes NO fps throttling offline (~200 fps), so 9h Kaggle wall-clock is not the binding constraint for a programmatic agent; per-game time limits only matter for slow LLM agents.
+| game | v2 | v3 | note |
+|---|---|---|---|
+| tu93 | 0.0 | **22.222** | per-colour clusters expose box/switch positions |
+| g50t | 0.0 | **7.283** | same mechanic |
+| m0r0 | 0.357 | **0.560** | |
+| lp85 | 12.500 | 2.168 | still completes level 0, less efficiently |
+| cd82 | 3.309 | 0.0 | lost the v2 luck; its 10-action win needs a specific config |
+| sp80 | 1.087 | 0.0 | toggle-puzzle, needs a lucky config |
+| r11l | 0.684 | 0.0 | toggle-puzzle, needs a lucky config |
 
-## Implications for next iteration
+(v3 also completes vc33 level 0 in some runs — 0.424 — and earlier variants scored cd82 16.667 with a mixed-only signature; these are configuration-lottery effects.)
 
-- Scale stopping heuristics with budget (give-up thresholds, probe caps, attempt caps) - quick win, likely flips the 6 click-only games off zero.
-- Click targeting needs a better model than color centroids: probe interactable sprite cells (collidable/moving objects), not region centers.
-- ls20-family games need semantic state understanding (shape matching) - candidate for a small VLM layer on top of the memory graph.
+## What changed in the agent (v2 → v3)
+
+1. **Object-layout state signature** (replaces mover-centroids + grid-hash fallback):
+   segmentation of the settled frame above the bottom-2 HUD rows with background =
+   the modal cell value; zero cells count as objects when the modal value is
+   non-zero (cd82/s5i5 draw interactables in colour 0).  Signature = mixed-colour
+   cluster layout + small (≤ 32 cell) per-colour cluster layout, each cluster as
+   `(centroid-y, centroid-x, size bucket)`.  Path independent (same world ⇒ same
+   state, however reached), animation-tolerant.
+2. **Per-colour clustering** for the small clusters: a box pushed along a wall
+   forms its own moving cluster instead of being absorbed into a same-colour
+   mega-cluster (this is what unlocked tu93 and g50t).
+3. **Escalation to grid-hash identity per level**: when a level accumulates
+   ≥ 300 actions that change the world while leaving the layout untouched
+   (lights-out toggles, reveals, sprite swaps), the level's coarse memory is
+   discarded and re-probed with full grid-hash signatures.
+4. **Click targeting**: candidates are the on-centroid cell of every cluster
+   (smallest first) — no more per-colour centroids that land between
+   same-coloured objects — plus a centre-out lattice scan, capped at
+   `min(w*h/24, 96)` points.  A click that changed anything refines the
+   resulting state's candidates with the effective point's neighbourhood.
+5. **Budget-scaled patience** (the old heuristics were tuned for 80 actions and
+   quit click-only games at 2–10 % of budget): `NO_CHANGE_LIMIT` up to 40,
+   `MAX_LEVEL_ATTEMPTS` up to 30, `PACING_FACTOR` 12× per-level share, probe
+   caps scaled to the grid area.
+6. **Bounded explore walks**: when the memory graph has no reachable frontier,
+   up to 2 deterministic random walks (≤ 48 steps) per level run off-graph and
+   exit the moment they step on a never-seen state.
+7. **Raw-diff edge recording**: an action whose world changed but whose
+   signature did not is recorded as *effective* (not a no-op), so repaint
+   actions are not demoted and refinement still fires.
+
+## Remaining zero games and why
+
+- **ls20, tr87** (sokoban/movement): modal-coloured avatars are invisible to the
+  layout; boxes absorb into mega-clusters.  Needs either richer movement
+  modelling or a planning layer.
+- **r11l, sp80, ft09, su15, s5i5, tn36, sb26, sc25, cn04, ka59, dc22, re86,
+  lf52, wa30, ar25, bp35**: single clicks/probes rarely move anything from the
+  start state; wins hide behind specific configurations or multi-step
+  sequences.  r11l was brute-forced: *no* single click completes its level 0 —
+  the v2 agent's win (click 36,26 at action 536) was a lucky config draw.
+  These need search (planning/VLM), not exploration volume.
+
+## Runbook
+
+```bash
+ARC-AGI-3-Agents/.venv/bin/python sweeps/sweep_adaptive.py   # ~3 min, 7 workers
+```
