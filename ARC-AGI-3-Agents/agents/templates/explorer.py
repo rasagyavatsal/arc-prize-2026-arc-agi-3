@@ -2,32 +2,50 @@
 
 State identity
 --------------
-Games composite HUD overlays (step-budget bars, lives, tickers) onto the world
-frame, and many levels animate per move, so a raw grid hash makes every revisit
-of the same world cell look like a new state.  Explorer therefore identifies a
-state by the position of the *movers*: the connected clusters of cells that
-changed on the last transition whose new value differs from the frame's
-modal (background) colour.  A movement of the avatar produces one such cluster,
-a pushed box a second one, and blocked moves or HUD ticks produce none (the
-previous mover position is kept).  States without any observed mover fall back
-to a full grid hash.
+Games composite HUD overlays and animate per move, so a raw grid hash makes
+every revisit of the same world cell look like a new state.  Explorer instead
+identifies a state by a two-part *object layout* of the settled frame (rows
+above the bottom HUD band, background = the modal cell value):
+
+* mixed-colour clusters - adjacent sprites merge, keeping navigation memories
+  unified for games whose avatars are multi-colour composites;
+* small (<= 32 cell) per-colour clusters - boxes and sprites must be tracked
+  individually even when they touch a wall of another colour, while
+  wall-scale clusters whose outline shifts would only fragment the graph.
+
+Each cluster contributes ``(centroid-y, centroid-x, size bucket)``.  The
+signature is path independent (reaching the same world by different routes
+yields the same state) and robust to within-shape animation.  A level that
+keeps changing the world without ever changing its layout (lights-out
+toggles, reveals, sprite swaps - counted via the raw grid diff in
+``_record_result``) is escalated to full grid-hash identity, discarding its
+coarse nodes.  Levels with no distinguishable objects always use the grid
+hash.
 
 Memory
 ------
 A persistent dict (kept across levels) maps ``state signature -> {action key:
 observed delta}`` where a delta records the resulting signature, whether the
-state changed, the levels_completed delta and the resulting game state.
+state changed (layout *or* raw diff), the levels_completed delta and the
+resulting game state.
 
 Per step the agent:
 1. RESETs on NOT_PLAYED / GAME_OVER / empty frames (sparing, budgeted).
 2. Takes a known levels-increasing action when one exists.
-3. Probes untried available actions; ACTION6 probes centroids of distinct
-   coloured regions (rare colours first) instead of random coordinates, and
-   ACTION7 (frequently an undo/state-restore) is probed before ACTION6.
+3. Probes untried available actions; ACTION6 probes *interactable objects*
+   (the cell of each distinct cluster closest to its centroid, smallest
+   clusters first - every cell of every object for escalated levels) followed
+   by a deterministic centre-out lattice scan of the playfield, and ACTION7
+   (frequently an undo/state-restore) is probed before ACTION6.  A click
+   that changed something refines the resulting state's candidates with the
+   neighbourhood of the effective point.
 4. Otherwise replays known paths (BFS over the memory graph) to the nearest
    state that still has untried actions.
 5. Avoids no-op loops: cycles fall back to the least-recently-tried action,
-   then a sparing level RESET, then the agent stops honestly.
+   then a bounded deterministic random walk (which exits as soon as it steps
+   on a never-seen state), then a sparing level RESET, then the agent stops
+   honestly.  All patience thresholds scale with the action budget so large
+   budgets are actually spent exploring instead of quitting early.
 
 The agent uses no LLM and no network calls; it runs on CPU.
 """
@@ -37,6 +55,7 @@ from __future__ import annotations
 import hashlib
 import logging
 import os
+import random
 import time
 from collections import Counter, deque
 from typing import Any, Optional
@@ -76,13 +95,18 @@ class Explorer(Agent):
     TIME_LIMIT_S = DEFAULT_TIME_LIMIT_S
     RESERVE_ACTIONS = 2  # actions kept for a final known-progress push
     RECENT_WINDOW = 16  # signature history length for cycle detection
-    NO_CHANGE_LIMIT = 6  # no-effect actions tolerated before a level RESET
-    MAX_LEVEL_ATTEMPTS = 6  # resets/game-overs per level before giving up
-    MAX_STUCK_LRU = 3  # least-recently-tried retries before a level RESET
-    MAX_PROBE_COORDS = 12  # ACTION6 coordinates probed per state signature
-    MOVER_MIN_CELLS = 8  # smallest changed cluster treated as a mover
+    NO_CHANGE_LIMIT = 6  # no-effect actions tolerated before a level RESET (scaled)
+    MAX_LEVEL_ATTEMPTS = 6  # resets/game-overs per level before giving up (scaled)
+    MAX_STUCK_LRU = 3  # least-recently-tried retries before exploring/resetting (scaled)
+    MAX_PROBE_COORDS = 12  # minimum ACTION6 coordinates offered per state
+    MAX_PROBE_CAP = 96  # upper bound on ACTION6 coordinates offered per state
     DEMOTE_AFTER = 3  # consecutive no-ops before an action is probed last
     HUD_BOTTOM_ROWS = 2  # bottom rows ignored (status bars/timers live there)
+    PACING_ATTEMPTS = 2  # failed attempts before budget pacing may give up
+    PACING_FACTOR = 12  # a level may spend up to FACTOR x its budget share
+    EXPLORE_STEPS = 32  # random-walk length when no frontier is reachable (scaled)
+    MAX_EXPLORE_RUNS = 2  # fruitless walks per level before a RESET is preferred
+    ESCALATE_AFTER = 300  # invisible world changes before a level's identity goes fine
 
     def __init__(
         self,
@@ -112,6 +136,19 @@ class Explorer(Agent):
         else:
             self.TIME_LIMIT_S = self.DEFAULT_TIME_LIMIT_S
 
+        # Patience scales with the budget: a 1500-action run must not apply
+        # heuristics tuned for the 80-action sample agent, or it quits while
+        # the playfield still offers unexplored probes.
+        self.NO_CHANGE_LIMIT = max(
+            self.NO_CHANGE_LIMIT, min(40, self.MAX_ACTIONS // 50)
+        )
+        self.MAX_LEVEL_ATTEMPTS = max(
+            self.MAX_LEVEL_ATTEMPTS, min(30, self.MAX_ACTIONS // 80)
+        )
+        self.MAX_STUCK_LRU = max(self.MAX_STUCK_LRU, min(6, self.MAX_ACTIONS // 400))
+        self.EXPLORE_STEPS = max(12, min(48, self.MAX_ACTIONS // 40))
+        self.MAX_EXPLORE_RUNS = 2  # fruitless walks per level before a RESET is preferred
+
         self.timer: Optional[float] = None
         # signature -> {"avail": [ids], "edges": {key: delta}, "visits": int,
         #               "cands": [(x, y)], "stuck": int}
@@ -125,11 +162,14 @@ class Explorer(Agent):
         self.last_levels = -1
         self.last_sig = ""
         self.level_start_action = 0
-        # mover tracking (see module docstring)
         self.last_grid: Optional[list[list[int]]] = None
         self.last_grid_levels = -1
-        self.mover_centroids: tuple[tuple[int, int], ...] = ()
-        self._reset_pending = False  # last issued action was RESET
+        self.last_grid_full_reset = False
+        self.world_changed = False  # raw diff of the latest transition (HUD excluded)
+        self.explore_left = 0  # random-walk steps remaining (0 = structured mode)
+        self.explore_runs = 0  # walks started since the last discovery / level change
+        self.fine_levels: set[int] = set()  # levels switched to grid-hash identity
+        self.invisible_changes: dict[int, int] = {}  # level -> changed self-loop count
         self.action_nop_streak: dict[int, int] = {}
         self._give_up = False
         self.total_levels = 8  # default baseline; updated live from FrameData.win_levels
@@ -156,81 +196,209 @@ class Explorer(Agent):
         """The settled view of the world is the last rendered layer."""
         return frame.frame[-1] if frame.frame else []
 
-    def _observe_transition(self, grid: list[list[int]], levels: int) -> None:
-        """Track mover positions from the last transition.
+    def _segment(
+        self, grid: list[list[int]], exclude_hud: bool
+    ) -> list[list[tuple[int, int]]]:
+        """4-connected per-colour clusters of non-background cells.
 
-        A mover is a connected cluster of >= MOVER_MIN_CELLS changed cells whose
-        new value differs from the frame's modal colour (HUD ticks and floor
-        reveal are modal-coloured and thus ignored).  When no mover moved, the
-        previous mover position is kept, so blocked moves and HUD-only changes
-        preserve state identity.
+        Background = the modal cell value of the playfield (rows above the
+        HUD band), so floor/wall expanses do not show up as one giant object.
+        Clustering is per colour: a box pushed along a wall then forms its own
+        moving cluster instead of being absorbed into a same-colour mega
+        cluster whose centroid never moves.  Zero cells are only background
+        when they are the modal value: games whose avatar or interactables
+        are drawn in colour 0 on a non-zero floor (cd82, s5i5) must still be
+        visible to the signature.  With ``exclude_hud`` the bottom HUD rows
+        are omitted entirely.
         """
-        was_reset = self._reset_pending
-        self._reset_pending = False
-        same_level = (
-            self.last_grid is not None
-            and levels == self.last_grid_levels
-            and len(self.last_grid) == len(grid)
+        cutoff = (
+            max(0, len(grid) - self.HUD_BOTTOM_ROWS) if exclude_hud else len(grid)
         )
-        if not same_level or was_reset:
-            # a RESET (or a level change) restores the world and the HUD bars,
-            # which would otherwise show up as fake movers
-            self.mover_centroids = ()
-        else:
-            # status bars/timers are conventionally drawn along the bottom
-            # edge; changes confined to that band are HUD ticks, not world
-            # changes, and must not make no-ops look effective
-            cutoff = max(0, min(len(self.last_grid), len(grid)) - self.HUD_BOTTOM_ROWS)
-            changed = [
-                (y, x)
-                for y in range(cutoff)
-                for x, (va, vb) in enumerate(zip(self.last_grid[y], grid[y]))
-                if va != vb
-            ]
-            cents: list[tuple[int, int]] = []
-            if changed:
-                modal = Counter(
-                    v for row in grid[:cutoff] for v in row
-                ).most_common(1)[0][0]
-                remaining = set(changed)
-                for start in changed:
-                    if start not in remaining:
-                        continue
-                    # flood fill one changed cluster (4-neighbourhood)
-                    stack = [start]
-                    remaining.discard(start)
-                    cluster: list[tuple[int, int]] = []
-                    while stack:
-                        y, x = stack.pop()
-                        cluster.append((y, x))
-                        for nb in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)):
-                            if nb in remaining:
-                                remaining.discard(nb)
-                                stack.append(nb)
-                    if len(cluster) < self.MOVER_MIN_CELLS:
-                        continue
-                    arrival = [(y, x) for y, x in cluster if grid[y][x] != modal]
-                    pts = arrival or cluster
-                    cy = sum(p[0] for p in pts) // len(pts)
-                    cx = sum(p[1] for p in pts) // len(pts)
-                    cents.append((cy, cx))
-            if cents:
-                self.mover_centroids = tuple(sorted(cents))
-        self.last_grid = [row[:] for row in grid]
-        self.last_grid_levels = levels
+        if cutoff <= 0:
+            return []
+        modal = Counter(v for row in grid[:cutoff] for v in row).most_common(1)[0][0]
+        cells = [
+            (y, x)
+            for y in range(cutoff)
+            for x, v in enumerate(grid[y])
+            if v != modal
+        ]
+        if not cells:
+            return []
+        objs: list[list[tuple[int, int]]] = []
+        remaining = set(cells)
+        for start in cells:
+            if start not in remaining:
+                continue
+            stack = [start]
+            remaining.discard(start)
+            cluster: list[tuple[int, int]] = []
+            colour = grid[start[0]][start[1]]
+            while stack:
+                y, x = stack.pop()
+                cluster.append((y, x))
+                for nb in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)):
+                    if (
+                        nb in remaining
+                        and colour is not None
+                        and grid[nb[0]][nb[1]] == colour
+                    ):
+                        remaining.discard(nb)
+                        stack.append(nb)
+            objs.append(cluster)
+        return objs
+
+    def _segment_mixed(
+        self, grid: list[list[int]], exclude_hud: bool
+    ) -> list[list[tuple[int, int]]]:
+        """Like ``_segment`` but a cluster may contain several colours.
+
+        Coarser than per-colour clustering: adjacent differently-coloured
+        sprites merge, which keeps navigation memories unified in games
+        whose objects are drawn as multi-colour composites.
+        """
+        cutoff = (
+            max(0, len(grid) - self.HUD_BOTTOM_ROWS) if exclude_hud else len(grid)
+        )
+        if cutoff <= 0:
+            return []
+        modal = Counter(v for row in grid[:cutoff] for v in row).most_common(1)[0][0]
+        cells = [
+            (y, x)
+            for y in range(cutoff)
+            for x, v in enumerate(grid[y])
+            if v != modal
+        ]
+        if not cells:
+            return []
+        objs: list[list[tuple[int, int]]] = []
+        remaining = set(cells)
+        for start in cells:
+            if start not in remaining:
+                continue
+            stack = [start]
+            remaining.discard(start)
+            cluster: list[tuple[int, int]] = []
+            while stack:
+                y, x = stack.pop()
+                cluster.append((y, x))
+                for nb in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)):
+                    if nb in remaining:
+                        remaining.discard(nb)
+                        stack.append(nb)
+            objs.append(cluster)
+        return objs
+
+    @staticmethod
+    def _size_bucket(n: int) -> int:
+        """Coarse cluster size, stable under +/-1-cell sprite animation."""
+        for bound in (1, 2, 4, 8, 16, 32, 64):
+            if n <= bound:
+                return bound
+        return 128
+
+    def _objects(self, grid: list[list[int]]) -> list[tuple[int, int, int]]:
+        """Per-colour object layout: (cy, cx, size bucket) per cluster."""
+        return self._layout(self._segment(grid, exclude_hud=True))
+
+    def _objects_mixed(
+        self, grid: list[list[int]]
+    ) -> list[tuple[int, int, int]]:
+        """Mixed-colour object layout: adjacent sprites merge into one object."""
+        return self._layout(self._segment_mixed(grid, exclude_hud=True))
+
+    @staticmethod
+    def _layout(
+        clusters: list[list[tuple[int, int]]]
+    ) -> list[tuple[int, int, int]]:
+        out: list[tuple[int, int, int]] = []
+        for cluster in clusters:
+            cy = sum(p[0] for p in cluster) // len(cluster)
+            cx = sum(p[1] for p in cluster) // len(cluster)
+            out.append((cy, cx, Explorer._size_bucket(len(cluster))))
+        return sorted(out)
+
+    def _escalate_to_fine(self, level: int) -> None:
+        """Re-key a level's memory to grid-hash state identity.
+
+        A stream of actions that change the world while leaving every object
+        layout untouched means the coarse signature cannot see this level's
+        real states (lights-out toggles, reveals, sprite swaps).  From now on
+        the level's signatures are full grid hashes, and the coarse nodes are
+        discarded so the level is re-probed at the granularity that matters.
+        """
+        if level in self.fine_levels:
+            return
+        self.fine_levels.add(level)
+        prefix = f"ob|{level}|"
+        for s in [s for s in self.memory if s.startswith(prefix)]:
+            del self.memory[s]
+        self._seen = {s for s in self._seen if not s.startswith(prefix)}
+        self.plan = []
+        if self.pending is not None and self.pending["sig"].startswith(prefix):
+            self.pending = None
+        logger.info(
+            f"{self.game_id}: level {level} switched to fine-grained state "
+            f"identity after {self.invisible_changes.get(level, 0)} invisible changes"
+        )
 
     def _signature(self, frame: FrameData) -> str:
-        """State signature: mover positions when known, else the grid hash."""
+        """State signature: object layout when known, else the grid hash.
+
+        Deliberately position-coarse: two frames with the same objects at the
+        same places are the same state even if sprites repaint in place, so
+        navigation memories stay unified across cosmetic changes and scrolls.
+        Real effects of repaint-style actions are still recorded per edge via
+        the raw grid diff in ``_record_result``.
+        """
         levels = int(frame.levels_completed)
-        if self.mover_centroids:
-            pos = ";".join(f"{y}.{x}" for y, x in self.mover_centroids)
-            return f"mv|{levels}|{pos}"
         grid = self._grid(frame)
+        objs = self._objects(grid)
         cutoff = max(0, len(grid) - self.HUD_BOTTOM_ROWS)
+        if objs and levels not in self.fine_levels:
+            # per-colour detail only for small clusters: sprites and boxes
+            # must be tracked individually, while wall-scale clusters whose
+            # outline shifts (scrolls, reveals) would fragment the graph
+            detail = [c for c in objs if c[2] <= 32]
+            mixed = self._objects_mixed(grid)
+            layout = ";".join(f"{y}.{x}.{b}" for y, x, b in detail)
+            mlayout = ";".join(f"{y}.{x}.{b}" for y, x, b in mixed)
+            return f"ob|{levels}|{mlayout}|{layout}"
         h = hashlib.sha1()
         for row in grid[:cutoff]:
             h.update((";" + ",".join(str(int(v)) for v in row)).encode())
         return f"gd|{levels}|{h.hexdigest()[:16]}"
+
+    def _observe_transition(
+        self, grid: list[list[int]], levels: int, full_reset: bool
+    ) -> None:
+        """Record whether the latest transition changed the world (raw diff).
+
+        The state signature is deliberately coarse (object positions), so a
+        repaint-in-place or a small object shift can leave it untouched; the
+        raw diff keeps those actions from being miscounted as no-ops.  HUD
+        rows are excluded: status bars tick every move in many games.
+        """
+        same_level = (
+            self.last_grid is not None
+            and levels == self.last_grid_levels
+            and not full_reset
+            and not self.last_grid_full_reset
+            and len(self.last_grid) == len(grid)
+        )
+        if not same_level:
+            self.world_changed = False
+        else:
+            cutoff = max(0, min(len(self.last_grid), len(grid)) - self.HUD_BOTTOM_ROWS)
+            self.world_changed = any(
+                self.last_grid[y][x] != grid[y][x]
+                for y in range(cutoff)
+                for x, (va, vb) in enumerate(zip(self.last_grid[y], grid[y]))
+                if va != vb
+            )
+        self.last_grid = [row[:] for row in grid]
+        self.last_grid_levels = levels
+        self.last_grid_full_reset = full_reset
 
     def _node(self, sig: str, frame: FrameData) -> dict[str, Any]:
         node = self.memory.get(sig)
@@ -251,39 +419,78 @@ class Explorer(Agent):
             )
         return node
 
+    def _probe_cap(self, width: int, height: int) -> int:
+        """Click candidates per state grows with the searchable playfield."""
+        return max(self.MAX_PROBE_COORDS, min(self.MAX_PROBE_CAP, (width * height) // 24))
+
     def _candidates(self, frame: FrameData) -> list[tuple[int, int]]:
-        """ACTION6 probe coordinates: centroids of distinct colours, rare first."""
+        """ACTION6 probe coordinates: interactable objects, then a lattice.
+
+        Every non-background cluster contributes the cell closest to its own
+        centroid (so the click always lands on the object, unlike a colour
+        centroid that can fall between same-coloured objects), smallest
+        clusters first.  A centre-out lattice scan follows, which reaches
+        clickable cells that belong to large background-adjacent structures.
+        """
         grid = self._grid(frame)
         height = len(grid)
         width = len(grid[0]) if grid else 0
         if not width or not height:
             return [(32, 32)]
-        cells: dict[int, list[tuple[int, int]]] = {}
-        for y, row in enumerate(grid):
-            for x, value in enumerate(row):
-                if value:
-                    cells.setdefault(int(value), []).append((x, y))
+        cap = self._probe_cap(width, height)
         cands: list[tuple[int, int]] = []
-        for color in sorted(cells, key=lambda c: (len(cells[c]), c)):
-            pts = cells[color]
-            cx = min(63, max(0, sum(p[0] for p in pts) // len(pts)))
-            cy = min(63, max(0, sum(p[1] for p in pts) // len(pts)))
-            if (cx, cy) not in cands:
-                cands.append((cx, cy))
-            if len(cands) >= self.MAX_PROBE_COORDS:
-                return cands
-        for x, y in (
-            (width // 2, height // 2),
-            (width // 4, height // 4),
-            (3 * width // 4, height // 4),
-            (width // 4, 3 * height // 4),
-            (3 * width // 4, 3 * height // 4),
-        ):
-            if len(cands) >= 4:
+
+        def add(pt: tuple[int, int]) -> bool:
+            x, y = pt
+            if 0 <= x < width and 0 <= y < height and pt not in cands:
+                cands.append(pt)
+                return True
+            return False
+
+        # status bars only exist on larger grids; tiny grids are all playfield
+        clusters = self._segment(grid, exclude_hud=height >= 12)
+        clusters.sort(key=lambda c: (len(c), c[0]))
+
+        if int(frame.levels_completed) in self.fine_levels:
+            # fine (grid-hash) identity: every cell of every object is a
+            # distinct experiment, so enumerate them exhaustively instead of
+            # sampling one point per object
+            for cluster in clusters:
+                for py, px in sorted(cluster):
+                    if len(cands) >= cap:
+                        return cands
+                    add((px, py))
+        else:
+            for cluster in clusters:
+                cy = sum(p[0] for p in cluster) / len(cluster)
+                cx = sum(p[1] for p in cluster) / len(cluster)
+                # cell of the cluster nearest its centroid: guaranteed on-object
+                py, px = min(cluster, key=lambda p: (p[0] - cy) ** 2 + (p[1] - cx) ** 2)
+                add((px, py))
+                if len(cands) >= cap:
+                    return cands
+                if len(cluster) >= 16:
+                    # large structures (walls, boards) get a second, distant cell
+                    ys = [p[0] for p in cluster]
+                    xs = [p[1] for p in cluster]
+                    add((min(xs), min(ys)))
+                    add((max(xs), max(ys)))
+                    if len(cands) >= cap:
+                        return cands
+
+        stride = max(2, min(width, height) // 8)
+        cy0, cx0 = height / 2, width / 2
+        lattice = [
+            (x, y)
+            for y in range(0, height, stride)
+            for x in range(0, width, stride)
+        ]
+        lattice.sort(key=lambda p: (p[0] - cx0) ** 2 + (p[1] - cy0) ** 2)
+        for pt in lattice:
+            if len(cands) >= cap:
                 break
-            if (x, y) not in cands:
-                cands.append((x, y))
-        return cands[: self.MAX_PROBE_COORDS]
+            add(pt)
+        return cands[:cap]
 
     @staticmethod
     def _key(aid: int, x: Optional[int], y: Optional[int]) -> str:
@@ -498,7 +705,7 @@ class Explorer(Agent):
         )
         edge = node["edges"].setdefault(key, {"tries": 0})
         empty = latest.is_empty()
-        changed = sig is not None and sig != frm
+        changed = sig is not None and (sig != frm or self.world_changed)
         edge["tries"] = int(edge.get("tries", 0)) + 1
         edge["dlevel"] = int(latest.levels_completed) - int(pending["levels"])
         edge["state"] = latest.state.name
@@ -519,6 +726,36 @@ class Explorer(Agent):
             aid = self._key_action_id(key)
             if aid is not None:
                 self.action_nop_streak[aid] = 0
+            # The world moved but no object did: this level's coarse identity
+            # is missing real state changes.  Count them and escalate if the
+            # pattern persists.
+            if sig is not None and sig == frm and self.world_changed:
+                lvl = int(pending["levels"])
+                self.invisible_changes[lvl] = self.invisible_changes.get(lvl, 0) + 1
+                if self.invisible_changes[lvl] >= self.ESCALATE_AFTER:
+                    self._escalate_to_fine(lvl)
+            # A click that moved something refines the resulting state: the
+            # interactable lives near the effective point, so probe its
+            # neighbourhood first (buttons/edges often respond per cell).
+            if key.startswith("ACTION6@") and sig is not None:
+                x_s, y_s = key.split("@", 1)[1].split(",", 1)
+                bx, by = int(x_s), int(y_s)
+                nxt = self.memory.setdefault(
+                    sig,
+                    {"avail": [], "edges": {}, "visits": 0, "cands": [], "stuck": 0},
+                )
+                grid = self._grid(latest)
+                height = len(grid)
+                width = len(grid[0]) if grid else 0
+                existing = set(nxt["cands"])
+                fresh = [
+                    (x, y)
+                    for dy in (2, 1, -1, -2)
+                    for dx in (2, 1, -1, -2)
+                    if 0 <= (x := bx + dx) < width and 0 <= (y := by + dy) < height
+                    and (x, y) not in existing
+                ]
+                nxt["cands"] = fresh + list(nxt["cands"])
         else:
             self.no_change_streak += 1
             aid = self._key_action_id(key)
@@ -533,8 +770,10 @@ class Explorer(Agent):
         x: Optional[int],
         y: Optional[int],
         why: str,
+        explore: bool = False,
     ) -> GameAction:
-        self._reset_pending = False
+        if not explore:
+            self.explore_left = 0
         action = GameAction.from_id(int(aid))
         if x is not None:
             action.set_data({"x": int(x), "y": int(y)})
@@ -578,9 +817,10 @@ class Explorer(Agent):
             # grinding, never blocks a reachable level).
             share = max(8, self.MAX_ACTIONS // max(1, self.total_levels))
             spent = self.action_counter - self.level_start_action
-            if attempts >= 2 and spent > 8 * share:
+            if attempts >= self.PACING_ATTEMPTS and spent > self.PACING_FACTOR * share:
                 self._give_up_now(
-                    f"level {levels}: spent {spent} actions (> 5x share {share}) ({why})"
+                    f"level {levels}: spent {spent} actions "
+                    f"(> {self.PACING_FACTOR}x share {share}) ({why})"
                 )
                 return GameAction.RESET
         if count_attempt:
@@ -588,11 +828,50 @@ class Explorer(Agent):
         self.plan = []
         self.no_change_streak = 0
         self.level_start_action = self.action_counter
-        self._reset_pending = True
         logger.info(
             f"{self.game_id}: RESET ({why}); level {levels} attempt "
             f"{self.level_attempts.get(levels, attempts + 1)}"
         )
+        return GameAction.RESET
+
+    def _explore_action(self, sig: str, latest: FrameData) -> GameAction:
+        """One deterministic-random step of the frontier-escape walk.
+
+        Used only when the memory graph offers no reachable untried probe:
+        unseen configurations are exactly what off-graph wandering can find,
+        and the walk exits (via ``_issue``) the moment it steps somewhere new.
+        """
+        rng = random.Random(f"{self.game_id}|{sig}|{self.action_counter}")
+        node = self.memory.get(sig) or {}
+        simple = [
+            aid
+            for aid in sorted(node.get("avail", []))
+            if (act := self._to_action(aid))
+            and act is not GameAction.RESET
+            and not act.is_complex()
+        ]
+        grid = self._grid(latest)
+        height = len(grid)
+        width = len(grid[0]) if grid else 0
+        has_click = bool({6} & set(node.get("avail", [])))
+        if simple and (not has_click or rng.random() < 0.5):
+            return self._issue(
+                sig, latest, rng.choice(simple), None, None,
+                why="explore walk", explore=True,
+            )
+        if has_click and width and height:
+            cutoff = max(1, height - self.HUD_BOTTOM_ROWS)
+            x = y = 0
+            for _ in range(8):
+                x = rng.randrange(width)
+                y = rng.randrange(cutoff)
+                if grid[y][x]:
+                    break  # prefer on-object cells when the guess finds one
+            return self._issue(sig, latest, 6, x, y, why="explore click", explore=True)
+        if simple:
+            return self._issue(
+                sig, latest, simple[0], None, None, why="explore walk", explore=True
+            )
         return GameAction.RESET
 
     # -------------------------------------------------------------- agent API
@@ -620,7 +899,9 @@ class Explorer(Agent):
         sig: Optional[str] = None
         if not empty:
             self._observe_transition(
-                self._grid(latest_frame), int(latest_frame.levels_completed)
+                self._grid(latest_frame),
+                int(latest_frame.levels_completed),
+                bool(latest_frame.full_reset),
             )
             sig = self._signature(latest_frame)
 
@@ -654,8 +935,15 @@ class Explorer(Agent):
                 self.no_change_streak = 0
                 self.level_start_action = self.action_counter
             self.last_levels = levels
+            self.explore_left = 0  # a fresh level is structured-probing territory
+            self.explore_runs = 0
 
         assert sig is not None
+        # A walk that lands on a never-seen state hands control back to the
+        # structured logic, which probes the new state's frontier.
+        if sig not in self._seen and self.explore_left > 0:
+            self.explore_left = 0
+            self.explore_runs = 0
         self._seen.add(sig)
         self.recent.append(sig)
         self.last_sig = sig
@@ -709,8 +997,9 @@ class Explorer(Agent):
             aid, x, y = self._parse_key(step["key"])
             return self._issue(sig, latest_frame, aid, x, y, why="replay to frontier")
 
-        # 6) Stuck / cycling: least-recently-tried action, then a sparing
-        #    level RESET, then stop honestly.
+        # 6) Stuck / cycling: least-recently-tried retries, then a bounded
+        #    random walk off the memory graph (exits on any new state), then a
+        #    sparing level RESET, then stop honestly.
         if list(self.recent).count(sig) >= 3:
             logger.debug(f"{self.game_id}: cycle detected at {sig}")
         wedged = self._is_wedged(sig)
@@ -721,6 +1010,19 @@ class Explorer(Agent):
                 return self._issue(
                     sig, latest_frame, *lru, why="cycle break (least-recently-tried)"
                 )
+        # A wedged state's simple actions are known no-ops: wandering from
+        # there would only repeat them, so it goes straight to a RESET.
+        if not wedged:
+            if self.explore_left > 0:
+                if remaining > self.RESERVE_ACTIONS + 2:
+                    self.explore_left -= 1
+                    return self._explore_action(sig, latest_frame)
+                self.explore_left = 0
+            if self.explore_runs < self.MAX_EXPLORE_RUNS:
+                if remaining > self.RESERVE_ACTIONS + self.EXPLORE_STEPS + 2:
+                    self.explore_runs += 1
+                    self.explore_left = self.EXPLORE_STEPS - 1
+                    return self._explore_action(sig, latest_frame)
         return self._reset_or_giveup(
             latest_frame, "no frontier reachable", sig=sig
         )

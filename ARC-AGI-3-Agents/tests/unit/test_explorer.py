@@ -146,8 +146,12 @@ class TestExplorer:
         assert agent.level_attempts[0] == agent.MAX_LEVEL_ATTEMPTS
         assert agent.is_done([], f) is True
 
-        # A state with at least one known effective action is not wedged:
-        # cycling there breaks out via the least-recently-tried action.
+        # A state with at least one known effective action is not wedged. Once
+        # the LRU retries are exhausted (no frontier reachable anywhere in the
+        # memory graph), the cycle is escaped with a bounded random walk
+        # (explore mode), which falls back to a RESET once its fruitless runs
+        # are used up.  No result frames are fed back here (pending is
+        # cleared), so the hand-built edges stay frozen for the whole loop.
         agent = make_agent()
         f = make_frame([[7]])
         sig = agent._signature(f)
@@ -160,11 +164,23 @@ class TestExplorer:
             }
         first = agent.choose_action([], f)
         assert first is GameAction.ACTION1  # least-recently-tried, ties by id
-        second = agent.choose_action([], f)
-        assert second is GameAction.ACTION2  # ACTION1 was just retried
-        # after MAX_STUCK_LRU retries the cycle is escaped with a sparing RESET
-        third = agent.choose_action([], f)
-        assert third is GameAction.RESET
+        agent.pending = None
+
+        node["stuck"] = agent.MAX_STUCK_LRU  # LRU retries already exhausted
+        saw_explore = 0
+        action = None
+        for _ in range(2 * agent.MAX_EXPLORE_RUNS * agent.EXPLORE_STEPS + 10):
+            action = agent.choose_action([], f)
+            agent.pending = None
+            why = action.reasoning or {}
+            if isinstance(why, str):
+                why = {"why": why}
+            if "explore" in why.get("why", ""):
+                saw_explore += 1
+            if action is GameAction.RESET:
+                break
+        assert saw_explore > 0, "expected explore-walk actions before the RESET"
+        assert action is GameAction.RESET
         assert agent.level_attempts[0] == 1
 
     def test_budget_and_time_limit_configuration(self):

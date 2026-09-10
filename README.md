@@ -9,13 +9,15 @@ with human-competitive action efficiency.
 
 | Milestone | Result |
 |---|---|
-| Baseline `Explorer` agent (deterministic, CPU-only, zero LLM calls) | **0.69%** on the 25 public games |
+| Explorer v3 (object-layout signature, escalation, scaled patience) | **1.29%** on the 25 public games (v2 baseline: 0.72%) |
 | Kaggle submission pipeline | **validated end-to-end** (official starter kit, notebook pushed) |
+| Submission Readiness Gate | 4 checks (code unity, autonomy, budget, breadth) — passing |
 | Game intelligence | all 25 public games statically profiled |
-| Adaptive-budget sweep | done — see `notes/sweep_adaptive.md` |
 
 Scoring (RHAE): per completed level `(human_baseline / agent_actions)^2` capped at 1.15,
-weighted by level index; total = mean over games. Frontier AI ≈ 0.51%.
+weighted by level index; total = mean over games. Frontier AI ≈ 0.51%. Scores are
+deterministic per machine-load; engine timing sensitivity gives ±0.6% run-to-run
+spread on the public set (see `notes/sweep_adaptive.md`).
 
 ## Layout
 

@@ -115,8 +115,41 @@ class TestGateVerification:
             assert "score" in res
             assert "levels" in res
             assert "status" in res
-        # Verify that vc33 has score 0.0 and status ZERO (no scorecard bleed from lp85)
-        vc33_res = next(r for r in results if r["game"] == "vc33")
-        assert vc33_res["score"] == 0.0
-        assert vc33_res["status"] == "ZERO"
+        # Scorecard isolation: an in-battery entry must reflect a standalone
+        # run of that game, not another battery game's scorecard. Re-run the
+        # first battery game alone and compare.
+        import arc_agi
+        from arc_agi import OperationMode
+
+        solo_game = results[0]["game"]
+        breadth_res = next(r for r in results if r["game"] == solo_game)
+        env_dir = None
+        for candidate in (STARTER / "environment_files", WORKSPACE / "environment_files"):
+            if candidate.exists():
+                env_dir = str(candidate)
+                break
+        arc = arc_agi.Arcade(operation_mode=OperationMode.NORMAL, environments_dir=env_dir)
+        card_id = arc.open_scorecard(tags=["gate-isolation-test"])
+        env = arc.make(solo_game, scorecard_id=card_id)
+        agent_cls = load_agent_class()
+        agent = agent_cls(
+            card_id=card_id,
+            game_id=solo_game,
+            agent_name=f"GateIsolation.{solo_game}",
+            ROOT_URL="http://localhost",
+            record=False,
+            arc_env=env,
+            budget=50,
+        )
+        agent.main()
+        sc = arc.close_scorecard(card_id)
+        solo_score = 0.0
+        if sc and sc.environments:
+            for env_s in sc.environments:
+                if solo_game in env_s.id:
+                    solo_score = float(env_s.score)
+        assert breadth_res["score"] == round(solo_score, 3), (
+            f"{solo_game} breadth entry ({breadth_res['score']}) does not match an "
+            f"isolated run ({round(solo_score, 3)}): scorecard bleed detected"
+        )
 

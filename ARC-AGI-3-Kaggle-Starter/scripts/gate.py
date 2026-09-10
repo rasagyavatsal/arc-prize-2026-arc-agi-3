@@ -214,9 +214,9 @@ def check_breadth(game_steps: int = 400, min_nonzero: int = 2) -> tuple[bool, st
     arc = arc_agi.Arcade(operation_mode=OperationMode.NORMAL, environments_dir=env_dir)
     agent_cls = load_agent_class()
 
-    # Representative evaluation battery across categories:
-    # lp85: click/pathfinding, cd82: movement/grid, vc33: puzzle
-    candidate_games = ["lp85", "cd82", "vc33"]
+    # Representative evaluation battery across input categories:
+    # g50t = keyboard, lp85 = click, tu93 = keyboard_click
+    candidate_games = ["g50t", "lp85", "tu93"]
     results = []
     nonzero_count = 0
 
