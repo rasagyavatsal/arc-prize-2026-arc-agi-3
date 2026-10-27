@@ -60,19 +60,32 @@ class TestGateVerification:
         # Mock class with old 80 actions default
         class StubAgent(agent_cls):
             MAX_ACTIONS = 80
-            TIME_LIMIT_S = 270.0
+            TIME_LIMIT_S = 27000.0
 
         monkeypatch.setattr("scripts.gate.load_agent_class", lambda: StubAgent)
         ok, msg = check_time_and_budget()
         assert ok is False
         assert "dangerously small" in msg
 
-    def test_budget_check_fails_on_excessive_timeout(self, monkeypatch):
+    def test_budget_check_fails_on_short_timeout(self, monkeypatch):
         agent_cls = load_agent_class()
-        # Mock class with timeout > 280s (violates 9h / 110 games)
+        # Mock class with the old 270s per-game limit (starves concurrent games)
         class StubAgent(agent_cls):
             MAX_ACTIONS = 1500
-            TIME_LIMIT_S = 350.0
+            TIME_LIMIT_S = 270.0
+
+        monkeypatch.setattr("scripts.gate.load_agent_class", lambda: StubAgent)
+        ok, msg = check_time_and_budget()
+        assert ok is False
+        assert "too short" in msg
+
+    def test_budget_check_fails_on_excessive_run_deadline(self, monkeypatch):
+        agent_cls = load_agent_class()
+        # Mock class with a run deadline > 8h (no margin under the 9h limit)
+        class StubAgent(agent_cls):
+            MAX_ACTIONS = 1500
+            TIME_LIMIT_S = 27000.0
+            RUN_DEADLINE_S = 32400.0
 
         monkeypatch.setattr("scripts.gate.load_agent_class", lambda: StubAgent)
         ok, msg = check_time_and_budget()

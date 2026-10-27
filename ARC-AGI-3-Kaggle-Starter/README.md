@@ -131,7 +131,7 @@ twice.
 Before spending a submission quota slot, the gate executes 4 rigorous checks:
 1. **Code Unity**: Verifies `agent/my_agent.py` and canonical `explorer.py` share a single source of truth (`make sync-agent`).
 2. **Autonomous Check**: Verifies the agent relies ONLY on live observation `FrameData`, with zero `metadata.json` or `baseline_actions` leakage.
-3. **Time & Budget Guard**: Verifies `TIME_LIMIT_S <= 280s` (< 4.9 min/game, ensuring 110 games finish under Kaggle's 9-hour limit) and healthy action budgets.
+3. **Time & Budget Guard**: The framework plays all 110 games concurrently, so it verifies `TIME_LIMIT_S >= 3600s` (a short per-game cap starves every game of CPU) and `RUN_DEADLINE_S <= 8h` (keeps the run under Kaggle's 9-hour limit), plus healthy action budgets.
 4. **Breadth Check**: Verifies that the agent scores > 0 across multiple distinct game categories locally.
 
 ```bash

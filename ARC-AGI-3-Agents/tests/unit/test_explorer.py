@@ -193,7 +193,7 @@ class TestExplorer:
             card_id="c", game_id="g", agent_name="a", ROOT_URL="u", record=False, arc_env=None
         )
         assert agent_default.MAX_ACTIONS == 1500
-        assert agent_default.TIME_LIMIT_S == 270.0
+        assert agent_default.TIME_LIMIT_S == 27000.0
 
         # Explicit kwargs override
         agent_custom = Explorer(
@@ -226,6 +226,15 @@ class TestExplorer:
 
         # Set timer in the past
         agent.timer = time.time() - 0.1
+        assert agent.is_done([], f) is True
+
+    def test_run_deadline_stops_agent(self):
+        agent = make_agent()
+        f = make_frame([[0]])
+        assert agent.is_done([], f) is False
+
+        # The run-wide deadline applies even when the per-game timer is fresh
+        agent.RUN_DEADLINE_S = 0.0
         assert agent.is_done([], f) is True
 
     def test_autonomy_without_baseline_actions(self):

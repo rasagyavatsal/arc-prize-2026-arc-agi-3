@@ -85,12 +85,19 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+# Import time ~ start of the run; anchors the run-wide RUN_DEADLINE_S.
+_RUN_START = time.time()
+
 
 class Explorer(Agent):
     """Persistent-memory frontier explorer (programmatic, CPU-only)."""
 
     DEFAULT_MAX_ACTIONS = 1500
-    DEFAULT_TIME_LIMIT_S = 270.0  # < 4.9 min / 294s per game (scalable to 110 games in 9h)
+    # The Swarm plays every game concurrently (one thread each), so a per-game
+    # limit is a share of the whole run, not 9h / 110: a 270s cap starved all
+    # 110 games of CPU and stopped them early (0.09 on Kaggle vs 0.71 locally).
+    DEFAULT_TIME_LIMIT_S = 27000.0  # 7.5h per game
+    RUN_DEADLINE_S = 27000.0  # 7.5h since import, across all games (< 9h notebook limit)
     MAX_ACTIONS = DEFAULT_MAX_ACTIONS
     TIME_LIMIT_S = DEFAULT_TIME_LIMIT_S
     RESERVE_ACTIONS = 2  # actions kept for a final known-progress push
@@ -878,6 +885,11 @@ class Explorer(Agent):
 
     def is_done(self, frames: list[FrameData], latest_frame: FrameData) -> bool:
         """Done on WIN, exhausted action budget, wall-clock timeout, or when wedged."""
+        if (time.time() - _RUN_START) >= self.RUN_DEADLINE_S:
+            logger.warning(
+                f"{self.game_id}: reached run deadline of {self.RUN_DEADLINE_S}s, stopping."
+            )
+            return True
         timer = getattr(self, "timer", None)
         if timer is not None and timer > 0:
             if (time.time() - timer) >= getattr(self, "TIME_LIMIT_S", self.DEFAULT_TIME_LIMIT_S):

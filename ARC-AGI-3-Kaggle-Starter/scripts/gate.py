@@ -6,8 +6,8 @@ before spending Kaggle's limited daily submission slots (1-5/day):
 1. Code Unity: my_agent.py and explorer.py share a single source of truth.
 2. Autonomy: Agent relies ONLY on live observation FrameData, zero metadata.json
    or baseline_actions cheating.
-3. Time & Budget: Wall-clock guard (<4.9 min/game, scalable to 110 games in 9h)
-   and realistic action budget (>80).
+3. Time & Budget: Wall-clock guards sized for 110 concurrent games (per-game
+   limit >= 1h, run-wide deadline <= 8h) and realistic action budget (>80).
 4. Breadth: Multi-category capability check ensuring >= 2 games achieve score > 0.
 """
 from __future__ import annotations
@@ -165,12 +165,25 @@ def check_time_and_budget() -> tuple[bool, str]:
     if time_limit_s <= 0:
         return False, f"TIME_LIMIT_S = {time_limit_s}s must be strictly positive!"
 
-    # Strict per-game limit: 9 hours / 110 games = 294.5s max
-    if time_limit_s > 280.0:
+    # The Swarm runs all 110 games concurrently, so the per-game limit must
+    # not starve them: 270s stopped every game early (0.09 on Kaggle).
+    if time_limit_s < 3600.0:
         return False, (
-            f"TIME_LIMIT_S = {time_limit_s}s exceeds safe ceiling of 280s! "
-            "110 games * 280s = 8.55h < 9h notebook limit."
+            f"TIME_LIMIT_S = {time_limit_s}s is too short! All 110 games run "
+            "concurrently and share the CPU; set TIME_LIMIT_S >= 3600s."
         )
+
+    # The run-wide deadline keeps the notebook under its 9h limit
+    run_deadline_s = getattr(agent_cls, "RUN_DEADLINE_S", None)
+    if run_deadline_s is None:
+        return False, "RUN_DEADLINE_S not defined on MyAgent"
+    if not 0 < run_deadline_s <= 28800.0:
+        return False, (
+            f"RUN_DEADLINE_S = {run_deadline_s}s exceeds safe ceiling of 28800s "
+            "(8h, leaving 1h of the 9h notebook limit for setup and scoring)."
+        )
+    if time_limit_s > run_deadline_s:
+        return False, f"TIME_LIMIT_S = {time_limit_s}s exceeds RUN_DEADLINE_S = {run_deadline_s}s"
 
     # Active wall-clock timeout test
     test_agent = agent_cls(
@@ -193,10 +206,15 @@ def check_time_and_budget() -> tuple[bool, str]:
     if not test_agent.is_done([], f):
         return False, "is_done() failed to stop agent when wall-clock timer exceeded TIME_LIMIT_S!"
 
-    worst_case_hours = round(110 * time_limit_s / 3600, 2)
+    # Simulate the run past its deadline with a fresh per-game timer
+    test_agent.timer = time.time()
+    test_agent.RUN_DEADLINE_S = 0.0
+    if not test_agent.is_done([], f):
+        return False, "is_done() failed to stop agent when the run exceeded RUN_DEADLINE_S!"
+
     return True, (
-        f"MAX_ACTIONS={max_actions}, TIME_LIMIT_S={time_limit_s}s "
-        f"(110 games worst-case: {worst_case_hours}h < 9.0h)"
+        f"MAX_ACTIONS={max_actions}, TIME_LIMIT_S={time_limit_s}s, "
+        f"RUN_DEADLINE_S={run_deadline_s}s ({round(run_deadline_s / 3600, 2)}h < 9.0h)"
     )
 
 
