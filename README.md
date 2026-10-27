@@ -10,7 +10,8 @@ with human-competitive action efficiency.
 | Milestone | Result |
 |---|---|
 | Explorer v3 (object-layout signature, escalation, scaled patience) | **0.71%** on the 25 public games, all run concurrently (the 1.29% controlled run in `notes/sweep_adaptive.md` does not reproduce) |
-| Leaderboard (2026-09-10 submission) | **0.09** — a 270s per-game cap starved the 110 concurrent games; fixed with a run-wide deadline, not yet resubmitted |
+| Leaderboard | **0.09** (2026-09-10 and 2026-10-27). Removing the 270s per-game cap did not change it: the agent does not generalize to unseen games |
+| Held-out evaluation (`sweeps/heldout_eval.py`) | **0/113** levels solved on 15 held-out games vs 7/70 on the 10 tuned (dev) games |
 | Kaggle submission pipeline | **validated end-to-end** (official starter kit, notebook pushed) |
 | Submission Readiness Gate | 4 checks (code unity, autonomy, budget, breadth) — passing |
 | Game intelligence | all 25 public games statically profiled |
@@ -56,6 +57,23 @@ uv run pytest -q                     # 59 tests
 cd ARC-AGI-3-Kaggle-Starter 2>/dev/null; cd ..   # from repo root
 ARC-AGI-3-Agents/.venv/bin/python sweeps/sweep_adaptive.py   # ~4 min, all 25 games concurrent (like Kaggle)
 ```
+
+## Held-out evaluation
+
+The public-25 score over-predicts the leaderboard because its points come from
+games the agent was tuned on. `sweeps/heldout_eval.py` keeps a fixed split of
+10 dev games (tune on these) and 15 held-out games (measure only; don't pick
+heuristics from their per-level results), and starts the agent at every level
+so each split yields one episode per level.
+
+```bash
+ARC-AGI-3-Agents/.venv/bin/python sweeps/heldout_eval.py --split heldout   # ~2.5 min, 113 levels
+ARC-AGI-3-Agents/.venv/bin/python sweeps/heldout_eval.py --split dev       # ~1.5 min, 70 levels
+```
+
+Baseline (Explorer v3, budget 1500/level, 2026-10-27): held-out **0/113** levels,
+dev **7/70** (results in `notes/heldout_eval_*.json`). The held-out solve count
+is the number to move.
 
 ## Kaggle submission
 
