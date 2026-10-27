@@ -53,7 +53,7 @@ uv run pytest -q                     # 59 tests
 
 ```bash
 cd ARC-AGI-3-Kaggle-Starter 2>/dev/null; cd ..   # from repo root
-ARC-AGI-3-Agents/.venv/bin/python sweeps/sweep_adaptive.py   # ~2 min, 7 workers
+ARC-AGI-3-Agents/.venv/bin/python sweeps/sweep_adaptive.py   # ~4 min, all 25 games concurrent (like Kaggle)
 ```
 
 ## Kaggle submission

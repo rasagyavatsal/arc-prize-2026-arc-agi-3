@@ -5,8 +5,10 @@ Run from anywhere: it chdirs into the repo. Env overrides are set BEFORE arc_agi
 
 Budget policy (no official fixed budget exists - agent-side knob):
   budget(game) = clamp(round(2.0 * sum(baseline_actions)), 300, 2500)
-  + hard wall-clock guard per game (default 420s) so every game always produces
-  its scorecard in time (the Kaggle failure mode).
+  + the agent's own wall-clock guards (override with SWEEP_TIME_LIMIT_S).
+
+All games run concurrently by default (SWEEP_WORKERS=0), like Kaggle's Swarm:
+the scores then include the CPU contention the agent sees on the leaderboard.
 """
 import os, sys, time, json, glob, traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -19,12 +21,14 @@ os.environ["RECORDINGS_DIR"] = RECORDINGS
 os.makedirs(RECORDINGS, exist_ok=True)
 sys.path.insert(0, REPO)
 
-TIME_LIMIT_S = float(os.environ.get("SWEEP_TIME_LIMIT_S", "420"))
+TIME_LIMIT_S = os.environ.get("SWEEP_TIME_LIMIT_S")
 BUDGET_MULT, BUDGET_MIN, BUDGET_MAX = 2.0, 300, 2500
-WORKERS = int(os.environ.get("SWEEP_WORKERS", "7"))
+WORKERS = int(os.environ.get("SWEEP_WORKERS", "0"))  # 0 = all games at once
 
 from arc_agi import Arcade  # noqa: E402
 from agents.templates.explorer import Explorer  # noqa: E402
+
+TIME_LIMIT_S = float(TIME_LIMIT_S) if TIME_LIMIT_S else Explorer.DEFAULT_TIME_LIMIT_S
 
 
 def budget_for(baseline_total: int) -> int:
@@ -96,9 +100,10 @@ def run_game(gid: str) -> dict:
 def main() -> None:
     arc = Arcade()
     gids = sorted(getattr(e, "game_id") for e in arc.available_environments)
-    print(f"sweeping {len(gids)} games | workers={WORKERS} | time_limit={TIME_LIMIT_S}s", flush=True)
+    workers = WORKERS or len(gids)
+    print(f"sweeping {len(gids)} games | workers={workers} | time_limit={TIME_LIMIT_S}s", flush=True)
     results, t0 = [], time.time()
-    with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+    with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = {ex.submit(run_game, g): g for g in gids}
         for f in as_completed(futs):
             results.append(f.result())
@@ -106,7 +111,7 @@ def main() -> None:
     total = sum(r.get("score_capped100") or 0 for r in results) / len(results)
     out = {"generated": time.strftime("%Y-%m-%d %H:%M:%S"), "policy": {
         "budget": f"clamp({BUDGET_MULT}*baseline, {BUDGET_MIN}, {BUDGET_MAX})",
-        "time_limit_s": TIME_LIMIT_S, "workers": WORKERS,
+        "time_limit_s": TIME_LIMIT_S, "workers": workers,
     }, "total_score_public25": round(total, 3), "results": results}
     with open(os.path.join(ROOT, "notes", "sweep_adaptive.json"), "w") as f:
         json.dump(out, f, indent=1, default=str)

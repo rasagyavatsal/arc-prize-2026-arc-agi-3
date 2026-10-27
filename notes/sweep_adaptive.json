@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-10 02:06:49",
+ "generated": "2026-10-27 11:40:01",
  "policy": {
   "budget": "clamp(2.0*baseline, 300, 2500)",
-  "time_limit_s": 420.0,
-  "workers": 7
+  "time_limit_s": 27000.0,
+  "workers": 25
  },
  "total_score_public25": 0.706,
  "results": [
@@ -13,7 +13,7 @@
    "levels_total": 9,
    "baseline_total": 462,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 7.645764576457645,
@@ -23,7 +23,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 42.8
+   "elapsed_s": 207.5
   },
   {
    "game": "g50t",
@@ -31,7 +31,7 @@
    "levels_total": 7,
    "baseline_total": 879,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 7.282913165266106,
@@ -41,7 +41,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 176.1
+   "elapsed_s": 216.6
   },
   {
    "game": "lp85",
@@ -49,7 +49,7 @@
    "levels_total": 8,
    "baseline_total": 388,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 2.1683673469387754,
@@ -59,7 +59,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 28.8
+   "elapsed_s": 109.8
   },
   {
    "game": "m0r0",
@@ -67,7 +67,7 @@
    "levels_total": 6,
    "baseline_total": 1107,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.5599104143337066,
@@ -77,7 +77,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 47.5
+   "elapsed_s": 150.2
   },
   {
    "game": "ar25",
@@ -85,7 +85,7 @@
    "levels_total": 8,
    "baseline_total": 748,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -95,7 +95,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 22.7
+   "elapsed_s": 106.6
   },
   {
    "game": "bp35",
@@ -103,7 +103,7 @@
    "levels_total": 9,
    "baseline_total": 651,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -113,7 +113,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 84.5
+   "elapsed_s": 183.4
   },
   {
    "game": "cd82",
@@ -121,7 +121,7 @@
    "levels_total": 6,
    "baseline_total": 171,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -131,7 +131,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 32.6
+   "elapsed_s": 135.1
   },
   {
    "game": "cn04",
@@ -139,7 +139,7 @@
    "levels_total": 6,
    "baseline_total": 789,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -149,7 +149,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 36.0
+   "elapsed_s": 125.7
   },
   {
    "game": "dc22",
@@ -157,7 +157,7 @@
    "levels_total": 6,
    "baseline_total": 1228,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -167,7 +167,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 41.4
+   "elapsed_s": 138.8
   },
   {
    "game": "ft09",
@@ -175,7 +175,7 @@
    "levels_total": 6,
    "baseline_total": 208,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -185,7 +185,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 20.6
+   "elapsed_s": 80.5
   },
   {
    "game": "ka59",
@@ -193,7 +193,7 @@
    "levels_total": 7,
    "baseline_total": 730,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -203,7 +203,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 49.9
+   "elapsed_s": 148.3
   },
   {
    "game": "lf52",
@@ -211,7 +211,7 @@
    "levels_total": 10,
    "baseline_total": 1339,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -221,7 +221,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 103.6
+   "elapsed_s": 199.0
   },
   {
    "game": "ls20",
@@ -229,7 +229,7 @@
    "levels_total": 7,
    "baseline_total": 776,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -239,7 +239,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 35.5
+   "elapsed_s": 137.3
   },
   {
    "game": "r11l",
@@ -247,7 +247,7 @@
    "levels_total": 6,
    "baseline_total": 233,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -257,7 +257,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 39.0
+   "elapsed_s": 151.1
   },
   {
    "game": "re86",
@@ -265,7 +265,7 @@
    "levels_total": 8,
    "baseline_total": 1255,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -275,7 +275,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 77.1
+   "elapsed_s": 196.3
   },
   {
    "game": "s5i5",
@@ -283,7 +283,7 @@
    "levels_total": 8,
    "baseline_total": 638,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -293,7 +293,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 20.7
+   "elapsed_s": 110.1
   },
   {
    "game": "sb26",
@@ -301,7 +301,7 @@
    "levels_total": 8,
    "baseline_total": 213,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -311,7 +311,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 77.9
+   "elapsed_s": 196.0
   },
   {
    "game": "sc25",
@@ -319,7 +319,7 @@
    "levels_total": 6,
    "baseline_total": 350,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -329,7 +329,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 69.4
+   "elapsed_s": 193.1
   },
   {
    "game": "sk48",
@@ -337,7 +337,7 @@
    "levels_total": 8,
    "baseline_total": 1070,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -347,7 +347,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 38.3
+   "elapsed_s": 160.0
   },
   {
    "game": "sp80",
@@ -355,7 +355,7 @@
    "levels_total": 6,
    "baseline_total": 518,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -365,7 +365,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 23.8
+   "elapsed_s": 126.3
   },
   {
    "game": "su15",
@@ -373,7 +373,7 @@
    "levels_total": 9,
    "baseline_total": 361,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -383,7 +383,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 70.2
+   "elapsed_s": 218.9
   },
   {
    "game": "tn36",
@@ -391,7 +391,7 @@
    "levels_total": 7,
    "baseline_total": 317,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -401,7 +401,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 50.1
+   "elapsed_s": 175.3
   },
   {
    "game": "tr87",
@@ -409,7 +409,7 @@
    "levels_total": 6,
    "baseline_total": 414,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -419,7 +419,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 24.8
+   "elapsed_s": 139.0
   },
   {
    "game": "vc33",
@@ -427,7 +427,7 @@
    "levels_total": 7,
    "baseline_total": 447,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -437,7 +437,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 16.7
+   "elapsed_s": 110.6
   },
   {
    "game": "wa30",
@@ -445,7 +445,7 @@
    "levels_total": 9,
    "baseline_total": 1843,
    "budget": 1500,
-   "time_limit_s": 420.0,
+   "time_limit_s": 27000.0,
    "time_capped": false,
    "error": null,
    "score_raw": 0.0,
@@ -455,7 +455,7 @@
    "resets": null,
    "state": null,
    "level_scores": null,
-   "elapsed_s": 14.2
+   "elapsed_s": 107.9
   }
  ]
 }
