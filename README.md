@@ -14,6 +14,7 @@ with human-competitive action efficiency.
 | Held-out evaluation (`sweeps/heldout_eval.py`) | **4/113** levels solved on 15 held-out games (v3: 0/113), dev **14/70** (v3: 7/70) |
 | Explorer v4 (inferred status-bar mask, per-colour click outcomes) | held-out 0 → 2 levels; dev 7 → 11 |
 | Explorer v4.1 (full probes for click-reached states, inert click targets, RESET-loop fix) | held-out 2 → **4** levels; dev 11 → 14; leaderboard not yet resubmitted |
+| LLM adviser (GPT-OSS-120B via vLLM on the RTX Pro 6000, issue #7) | dev 14 → 16 (within noise; a no-model control gets 15); held-out 4 → **3 and 2**: not submitted, off by default |
 | Kaggle submission pipeline | **validated end-to-end** (official starter kit, notebook pushed) |
 | Submission Readiness Gate | 4 checks (code unity, autonomy, budget, breadth) — passing |
 | Game intelligence | all 25 public games statically profiled |
@@ -130,6 +131,38 @@ The first GPU run (2026-10-29) is recorded in `notes/adviser_dev_gpu.json`:
 - **Loss:** s5i5 L3 is no longer solved.
 - **Unsure answers:** the remaining 26 calls returned valid JSON with every
   list empty. Since this run, such answers no longer count as failures.
+
+**Dev tuning** (one GPU session, `notes/adviser_dev_tuning.json`, solved /
+squared):
+
+| variant | solved | squared |
+|---|---|---|
+| baseline | 14 | 0.909% |
+| no-model control (`sweeps/standin_adviser.py`) | 15 | 1.038% |
+| v1 | 13 | 0.909% |
+| v1 with medium reasoning | 13 | 1.160% |
+| v2 | 15 | 0.797% |
+| v2 with the early call | 15 | 0.803% |
+| v2 with medium reasoning and the early call | 16 | 0.982% |
+
+Model runs vary by about one level from run to run. The last variant
+solved the most levels, so it became the default.
+
+**Held-out** (`notes/adviser_heldout.json`, summary lines only):
+
+| | solved | squared |
+|---|---|---|
+| baseline | 4/113 | 0.011% |
+| control | 4/113 | 0.011% |
+| adviser | 3/113 | 0.013% |
+| adviser, repeated | 2/113 | 0.018% |
+
+**Verdict (2026-10-29): the adviser does not generalize.** It solves fewer
+held-out levels, so it is not submitted and the submission builder keeps
+`ADVISER = False`. Its dev gains were within run-to-run noise. A no-model
+control (preferring the colours of the smallest objects when clicking)
+matched it on dev and scored the same as the baseline on held-out. The code stays in place, opt-in through
+`ADVISER_URL`, for any later attempt.
 
 Kaggle setup needed for vLLM:
 
