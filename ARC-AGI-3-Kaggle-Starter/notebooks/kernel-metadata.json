@@ -14,5 +14,6 @@
   "competition_sources": [
     "arc-prize-2026-arc-agi-3"
   ],
-  "model_sources": []
+  "model_sources": [],
+  "machine_shape": "None"
 }
