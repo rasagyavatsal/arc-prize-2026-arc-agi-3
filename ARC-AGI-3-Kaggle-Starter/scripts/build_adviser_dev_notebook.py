@@ -12,7 +12,7 @@ Held-out games are never played here (tune on dev only).
 
 Usage (from ARC-AGI-3-Kaggle-Starter/):
   python scripts/build_adviser_dev_notebook.py      # writes notebooks/adviser-dev/
-  kaggle kernels push -p notebooks/adviser-dev --accelerator <RTX shape>
+  kaggle kernels push -p notebooks/adviser-dev --accelerator NvidiaRtxPro6000
 """
 from __future__ import annotations
 
@@ -28,6 +28,7 @@ OUT_DIR = ROOT / "notebooks" / "adviser-dev"
 
 KERNEL_ID = "rasagyavatsal/arc-agi-3-adviser-dev"
 MODEL_SOURCE = "danielhanchen/gpt-oss-120b/Transformers/default/1"
+ACCELERATOR = "NvidiaRtxPro6000"  # Kaggle silently falls back to a T4 on an unknown name
 VLLM_DEPS = "philipvonderlind/vllm-deps"  # vLLM wheels + tiktoken files (official template)
 
 
@@ -64,7 +65,8 @@ CONFIG = dedent(
     mem = subprocess.run(["nvidia-smi", "--query-gpu=memory.total", "--format=csv,noheader,nounits"],
                          capture_output=True, text=True).stdout.split()
     if not mem or int(mem[0]) < 80000:
-        raise SystemExit(f"need the ~96 GB RTX Pro 6000, got {mem}: stopping before any work")
+        # RuntimeError, not SystemExit: a notebook run carries on after SystemExit
+        raise RuntimeError(f"need the ~96 GB RTX Pro 6000, got {mem}: stopping before any work")
     print("cpus", os.cpu_count())
     """
 )
@@ -286,6 +288,7 @@ def main() -> None:
         "kernel_sources": [VLLM_DEPS],
         "competition_sources": ["arc-prize-2026-arc-agi-3"],
         "model_sources": [MODEL_SOURCE],
+        "machine_shape": ACCELERATOR,
     }
     (OUT_DIR / "kernel-metadata.json").write_text(json.dumps(meta, indent=2) + "\n")
     print(f"[build_adviser_dev_notebook] wrote {OUT_DIR.relative_to(ROOT)}")
