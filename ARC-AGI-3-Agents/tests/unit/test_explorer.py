@@ -266,6 +266,16 @@ class TestExplorer:
         assert len(set(sigs[-agent.HUD_MIN_OBS:])) == 2
         assert agent.world_changed  # the avatar still moved
 
+    def test_each_reset_attempt_gets_fresh_walks(self):
+        """A RESET must not leave the walk budget spent, or the next stuck
+        start state answers it with another RESET (a reset loop)."""
+        agent = make_agent()
+        f = make_frame([[0]])
+        agent.explore_runs = agent.MAX_EXPLORE_RUNS
+        agent.explore_left = 3
+        assert agent._reset_or_giveup(f, "test", sig=agent._signature(f)) is GameAction.RESET
+        assert agent.explore_runs == 0 and agent.explore_left == 0
+
     def test_playfield_lines_are_never_masked(self):
         agent = make_agent()
         for step in range(2 * agent.HUD_MIN_OBS):

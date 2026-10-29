@@ -945,6 +945,10 @@ class Explorer(Agent):
         self.plan = []
         self.no_change_streak = 0
         self.level_start_action = self.action_counter
+        # each attempt gets fresh walks: a start state whose recorded edges
+        # reach no frontier would otherwise answer every RESET with another
+        self.explore_runs = 0
+        self.explore_left = 0
         logger.info(
             f"{self.game_id}: RESET ({why}); level {levels} attempt "
             f"{self.level_attempts.get(levels, attempts + 1)}"
