@@ -1,14 +1,14 @@
 {
- "generated": "2026-10-29 06:01:44",
+ "generated": "2026-10-29 07:04:18",
  "budget": 1500,
  "summary": {
   "split": "dev",
   "levels": 70,
-  "solved": 11,
-  "level0_solved": 8,
+  "solved": 14,
+  "level0_solved": 9,
   "games": 10,
-  "linear_mean": 1.957,
-  "squared_mean_pct": 0.539,
+  "linear_mean": 2.782,
+  "squared_mean_pct": 0.909,
   "errors": 0
  },
  "results": [
@@ -17,11 +17,11 @@
    "level": 0,
    "baseline": 55,
    "solved": true,
-   "actions": 361,
+   "actions": 234,
    "error": null,
-   "elapsed_s": 1.4,
-   "linear": 15.23545706371191,
-   "squared": 0.023211915194020914
+   "elapsed_s": 1.2,
+   "linear": 23.504273504273502,
+   "squared": 0.055245087296369344
   },
   {
    "game": "cd82",
@@ -30,7 +30,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.2,
+   "elapsed_s": 8.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -41,7 +41,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.0,
+   "elapsed_s": 7.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -52,7 +52,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.8,
+   "elapsed_s": 7.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -63,7 +63,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.1,
+   "elapsed_s": 8.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -74,7 +74,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.1,
+   "elapsed_s": 7.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -85,7 +85,7 @@
    "solved": true,
    "actions": 153,
    "error": null,
-   "elapsed_s": 1.2,
+   "elapsed_s": 1.0,
    "linear": 50.98039215686274,
    "squared": 0.2599000384467512
   },
@@ -96,7 +96,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 13.0,
+   "elapsed_s": 14.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -118,7 +118,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.0,
+   "elapsed_s": 14.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -129,7 +129,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 16.4,
+   "elapsed_s": 19.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -140,7 +140,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 15.7,
+   "elapsed_s": 19.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -151,7 +151,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 17.4,
+   "elapsed_s": 21.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -160,20 +160,20 @@
    "level": 0,
    "baseline": 17,
    "solved": true,
-   "actions": 68,
+   "actions": 33,
    "error": null,
-   "elapsed_s": 0.4,
-   "linear": 25.0,
-   "squared": 0.0625
+   "elapsed_s": 0.2,
+   "linear": 51.515151515151516,
+   "squared": 0.26538108356290174
   },
   {
    "game": "lp85",
    "level": 1,
    "baseline": 38,
    "solved": false,
-   "actions": 672,
+   "actions": 1092,
    "error": null,
-   "elapsed_s": 3.9,
+   "elapsed_s": 8.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -182,9 +182,9 @@
    "level": 2,
    "baseline": 31,
    "solved": false,
-   "actions": 559,
+   "actions": 829,
    "error": null,
-   "elapsed_s": 2.5,
+   "elapsed_s": 5.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -195,7 +195,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.4,
+   "elapsed_s": 9.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -204,9 +204,9 @@
    "level": 4,
    "baseline": 41,
    "solved": false,
-   "actions": 904,
+   "actions": 1326,
    "error": null,
-   "elapsed_s": 4.2,
+   "elapsed_s": 10.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -215,9 +215,9 @@
    "level": 5,
    "baseline": 60,
    "solved": false,
-   "actions": 1500,
+   "actions": 968,
    "error": null,
-   "elapsed_s": 6.4,
+   "elapsed_s": 6.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -226,9 +226,9 @@
    "level": 6,
    "baseline": 26,
    "solved": false,
-   "actions": 593,
+   "actions": 925,
    "error": null,
-   "elapsed_s": 3.1,
+   "elapsed_s": 7.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -237,9 +237,9 @@
    "level": 7,
    "baseline": 159,
    "solved": false,
-   "actions": 720,
+   "actions": 1082,
    "error": null,
-   "elapsed_s": 3.2,
+   "elapsed_s": 5.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -261,7 +261,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.4,
+   "elapsed_s": 10.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -272,7 +272,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.4,
+   "elapsed_s": 9.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -283,7 +283,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.7,
+   "elapsed_s": 17.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -294,7 +294,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.4,
+   "elapsed_s": 14.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -305,7 +305,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.6,
+   "elapsed_s": 21.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -316,7 +316,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.9,
+   "elapsed_s": 10.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -327,7 +327,7 @@
    "solved": true,
    "actions": 893,
    "error": null,
-   "elapsed_s": 7.4,
+   "elapsed_s": 13.2,
    "linear": 3.3594624860022395,
    "squared": 0.001128598819485635
   },
@@ -338,7 +338,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.8,
+   "elapsed_s": 12.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -349,7 +349,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.2,
+   "elapsed_s": 21.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -360,7 +360,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.6,
+   "elapsed_s": 14.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -371,7 +371,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.3,
+   "elapsed_s": 11.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -382,7 +382,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 15.8,
+   "elapsed_s": 19.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -390,12 +390,12 @@
    "game": "r11l",
    "level": 0,
    "baseline": 22,
-   "solved": false,
-   "actions": 1500,
+   "solved": true,
+   "actions": 163,
    "error": null,
-   "elapsed_s": 5.1,
-   "linear": 0.0,
-   "squared": 0.0
+   "elapsed_s": 0.8,
+   "linear": 13.496932515337424,
+   "squared": 0.018216718732357258
   },
   {
    "game": "r11l",
@@ -404,7 +404,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.9,
+   "elapsed_s": 11.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -415,7 +415,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.4,
+   "elapsed_s": 9.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -426,7 +426,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.1,
+   "elapsed_s": 7.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -437,7 +437,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.1,
+   "elapsed_s": 7.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -448,7 +448,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.1,
+   "elapsed_s": 7.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -459,7 +459,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.7,
+   "elapsed_s": 6.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -470,7 +470,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.8,
+   "elapsed_s": 8.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -481,7 +481,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.2,
+   "elapsed_s": 8.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -489,12 +489,12 @@
    "game": "s5i5",
    "level": 3,
    "baseline": 54,
-   "solved": false,
-   "actions": 1500,
+   "solved": true,
+   "actions": 1369,
    "error": null,
-   "elapsed_s": 5.5,
-   "linear": 0.0,
-   "squared": 0.0
+   "elapsed_s": 7.6,
+   "linear": 3.9444850255661064,
+   "squared": 0.0015558962116915247
   },
   {
    "game": "s5i5",
@@ -503,7 +503,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.7,
+   "elapsed_s": 7.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -514,7 +514,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.1,
+   "elapsed_s": 7.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -525,7 +525,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.6,
+   "elapsed_s": 9.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -536,7 +536,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.4,
+   "elapsed_s": 10.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -545,11 +545,11 @@
    "level": 0,
    "baseline": 39,
    "solved": true,
-   "actions": 375,
+   "actions": 346,
    "error": null,
-   "elapsed_s": 1.4,
-   "linear": 10.4,
-   "squared": 0.010816
+   "elapsed_s": 1.7,
+   "linear": 11.271676300578035,
+   "squared": 0.012705068662501253
   },
   {
    "game": "sp80",
@@ -558,7 +558,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.4,
+   "elapsed_s": 8.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -569,7 +569,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.8,
+   "elapsed_s": 8.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -580,7 +580,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.4,
+   "elapsed_s": 9.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -591,7 +591,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.5,
+   "elapsed_s": 10.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -602,7 +602,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.5,
+   "elapsed_s": 11.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -613,7 +613,7 @@
    "solved": true,
    "actions": 340,
    "error": null,
-   "elapsed_s": 1.7,
+   "elapsed_s": 1.8,
    "linear": 5.588235294117648,
    "squared": 0.0031228373702422148
   },
@@ -624,7 +624,7 @@
    "solved": true,
    "actions": 192,
    "error": null,
-   "elapsed_s": 0.8,
+   "elapsed_s": 0.9,
    "linear": 8.333333333333332,
    "squared": 0.006944444444444444
   },
@@ -635,7 +635,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.5,
+   "elapsed_s": 9.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -646,7 +646,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.1,
+   "elapsed_s": 9.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -657,7 +657,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.1,
+   "elapsed_s": 12.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -668,7 +668,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.7,
+   "elapsed_s": 12.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -679,7 +679,7 @@
    "solved": true,
    "actions": 494,
    "error": null,
-   "elapsed_s": 3.2,
+   "elapsed_s": 3.4,
    "linear": 2.834008097165992,
    "squared": 0.0008031601894802407
   },
@@ -690,7 +690,7 @@
    "solved": true,
    "actions": 809,
    "error": null,
-   "elapsed_s": 4.8,
+   "elapsed_s": 5.0,
    "linear": 2.843016069221261,
    "squared": 0.0008082740369850309
   },
@@ -701,7 +701,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.8,
+   "elapsed_s": 12.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -710,31 +710,31 @@
    "level": 0,
    "baseline": 7,
    "solved": true,
-   "actions": 139,
+   "actions": 112,
    "error": null,
-   "elapsed_s": 0.6,
-   "linear": 5.0359712230215825,
-   "squared": 0.0025361006159101496
+   "elapsed_s": 0.8,
+   "linear": 6.25,
+   "squared": 0.00390625
   },
   {
    "game": "vc33",
    "level": 1,
    "baseline": 18,
-   "solved": false,
-   "actions": 887,
+   "solved": true,
+   "actions": 519,
    "error": null,
-   "elapsed_s": 4.4,
-   "linear": 0.0,
-   "squared": 0.0
+   "elapsed_s": 3.9,
+   "linear": 3.4682080924855487,
+   "squared": 0.0012028467372782248
   },
   {
    "game": "vc33",
    "level": 2,
    "baseline": 44,
    "solved": false,
-   "actions": 595,
+   "actions": 1500,
    "error": null,
-   "elapsed_s": 3.0,
+   "elapsed_s": 10.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -745,7 +745,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.4,
+   "elapsed_s": 7.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -756,7 +756,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.6,
+   "elapsed_s": 10.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -765,9 +765,9 @@
    "level": 5,
    "baseline": 34,
    "solved": false,
-   "actions": 810,
+   "actions": 1500,
    "error": null,
-   "elapsed_s": 3.7,
+   "elapsed_s": 9.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -778,7 +778,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.7,
+   "elapsed_s": 12.9,
    "linear": 0.0,
    "squared": 0.0
   }

@@ -298,3 +298,44 @@ class TestExplorer:
         assert (10, 10) in live and (4, 4) not in live
         assert (4, 4) in everything
         assert all(agent.memory[sig]["colours"][p] != 1 for p in live)
+
+    def test_state_reached_by_a_click_gets_its_own_probes(self):
+        agent = make_agent()
+        g0 = [[0] * 16 for _ in range(16)]
+        g0[3][3] = 9
+        first = agent.choose_action([], make_frame(g0, avail=(6,)))
+        assert (first.action_data.x, first.action_data.y) == (3, 3)
+
+        g1 = [[0] * 16 for _ in range(16)]
+        g1[12][12] = 9  # the click moved the object across the board
+        agent.choose_action([], make_frame(g1, avail=(6,)))
+        cands = agent.memory[agent.last_sig]["cands"]
+        assert cands[0] in {(3 + dx, 3 + dy) for dx in (-2, -1, 1, 2) for dy in (-2, -1, 1, 2)}
+        assert (12, 12) in cands  # not only the cells around the click
+
+    def test_inert_click_targets_are_deferred_in_other_states(self):
+        agent = make_agent()
+
+        def board(ox, oy):
+            g = [[0] * 16 for _ in range(16)]
+            for dx, dy in ((0, 0), (1, 0), (0, 1)):  # an L-shaped object
+                g[oy + dy][ox + dx] = 4
+            return g
+
+        f = make_frame(board(2, 2), avail=(6,))
+        action = agent.choose_action([], f)
+        point = (action.action_data.x, action.action_data.y)
+        agent.choose_action([], f)  # same frame back: the click did nothing
+        target = agent._click_targets(board(2, 2), [point])[point]
+        assert target[0] == "obj"  # the first probe lands on the object
+        assert agent.target_stats[target] == [1, 0]
+
+        # the same object somewhere else, clicked on the same cell of its shape
+        moved = board(8, 5)
+        agent.pending = None
+        agent.choose_action([], make_frame(moved, avail=(6,)))
+        sig = agent.last_sig
+        shifted = (point[0] + 6, point[1] + 3)
+        assert agent.memory[sig]["targets"][shifted] == target
+        assert shifted not in {(x, y) for _, x, y in agent._untried_at(sig)}
+        assert shifted in {(x, y) for _, x, y in agent._untried_at(sig, dead_ok=True)}

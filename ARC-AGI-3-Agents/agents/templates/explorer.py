@@ -118,6 +118,7 @@ class Explorer(Agent):
     HUD_MIN_OBS = 12  # same-level transitions observed before status bars are inferred
     HUD_RATE = 0.6  # an edge line changing on this share of transitions is a status bar
     CLICK_DEAD_AFTER = 8  # no-effect clicks on a colour before it is probed last
+    TARGET_INERT_AFTER = 1  # no-effect clicks on one target before it is probed last
 
     def __init__(
         self,
@@ -192,6 +193,9 @@ class Explorer(Agent):
         # colour under the click -> [tries, effective]: what a colour does when
         # clicked is shared across states, so dead colours stop eating probes
         self.click_stats: dict[int, list[int]] = {}
+        # click target (see _click_targets) -> [tries, effective]: a target
+        # that did nothing in one state usually does nothing in the next
+        self.target_stats: dict[tuple, list[int]] = {}
         self._give_up = False
         self.total_levels = 8  # default baseline; updated live from FrameData.win_levels
         logger.info(
@@ -499,20 +503,66 @@ class Explorer(Agent):
                 "visits": 0,
                 "cands": self._candidates(frame),
                 "stuck": 0,
+                "framed": True,
             }
             self.memory[sig] = node
         else:
+            if not node.get("framed"):
+                # a placeholder made by _record_result holds only the cells
+                # around the click that led here; add the state's own probes
+                known = set(node["cands"])
+                node["cands"] += [c for c in self._candidates(frame) if c not in known]
+                node["framed"] = True
             # available_actions can be state dependent; keep the union.
             node["avail"] = sorted(
                 set(node["avail"]) | {a for a in cur_avail if 0 <= a <= 7}
             )
-        # colour under each click candidate, read while standing in the state
+        # colour and target under each click candidate, read while standing
+        # in the state
         colours = node.setdefault("colours", {})
+        targets = node.setdefault("targets", {})
         grid = self._grid(frame)
         for x, y in node["cands"]:
             if (x, y) not in colours and 0 <= y < len(grid) and 0 <= x < len(grid[y]):
                 colours[(x, y)] = int(grid[y][x])
+        missing = [p for p in node["cands"] if p not in targets]
+        if missing:
+            targets.update(self._click_targets(grid, missing))
         return node
+
+    def _click_targets(
+        self, grid: list[list[int]], points: list[tuple[int, int]]
+    ) -> dict[tuple[int, int], tuple]:
+        """What each click point lands on, comparable across states.
+
+        On an object: its colour, its shape and the click's offset within it,
+        so the key follows the object when it moves.  Off objects: the cell
+        position and colour.
+        """
+        height = len(grid)
+        width = len(grid[0]) if grid else 0
+        owner: dict[tuple[int, int], list[tuple[int, int]]] = {}
+        for cluster in self._segment(grid, exclude_hud=height >= 12):
+            for cell in cluster:
+                owner[cell] = cluster
+        out: dict[tuple[int, int], tuple] = {}
+        for x, y in points:
+            if not (0 <= y < height and 0 <= x < width):
+                continue
+            cluster = owner.get((y, x))
+            if cluster is None:
+                out[(x, y)] = ("bg", int(grid[y][x]), x, y)
+                continue
+            oy = min(p[0] for p in cluster)
+            ox = min(p[1] for p in cluster)
+            shape = hash(tuple(sorted((p[0] - oy, p[1] - ox) for p in cluster)))
+            out[(x, y)] = ("obj", int(grid[y][x]), shape, x - ox, y - oy)
+        return out
+
+    def _inert_target(self, target: Optional[tuple]) -> bool:
+        """True once clicks on this target have only ever done nothing."""
+        tries, effective = self.target_stats.get(target, (0, 0)) if target else (0, 0)
+        return tries >= self.TARGET_INERT_AFTER and effective == 0
 
     def _dead_colour(self, colour: Optional[int]) -> bool:
         """True once clicks on this colour have repeatedly done nothing."""
@@ -635,7 +685,8 @@ class Explorer(Agent):
         Simple actions first in id order (ACTION7 before ACTION6, since ACTION7
         is frequently a cheap undo), then ACTION6 probe coordinates.  Clicks
         on colours that have never reacted are left out unless ``dead_ok``:
-        they are only explored once the level offers nothing else.
+        they are only explored once the level offers nothing else, and so
+        are click targets that did nothing whenever they were clicked before.
         """
         node = self.memory.get(sig)
         if not node:
@@ -656,10 +707,14 @@ class Explorer(Agent):
             if act is None or not act.is_complex():
                 continue
             colours = node.get("colours", {})
+            targets = node.get("targets", {})
             for x, y in node["cands"]:
                 if self._key(aid, x, y) in node["edges"]:
                     continue
-                if dead_ok or not self._dead_colour(colours.get((x, y))):
+                if dead_ok or not (
+                    self._dead_colour(colours.get((x, y)))
+                    or self._inert_target(targets.get((x, y)))
+                ):
                     out.append((aid, x, y))
         return out
 
@@ -835,6 +890,11 @@ class Explorer(Agent):
             stats = self.click_stats.setdefault(colour, [0, 0])
             stats[0] += 1
             stats[1] += int(changed or edge["dlevel"] != 0)
+        target = pending.get("target")
+        if target is not None:
+            stats = self.target_stats.setdefault(target, [0, 0])
+            stats[0] += 1
+            stats[1] += int(changed or edge["dlevel"] != 0)
         if changed or edge["dlevel"] != 0:
             self.no_change_streak = 0
             aid = self._key_action_id(key)
@@ -901,6 +961,10 @@ class Explorer(Agent):
         grid = self._grid(latest)
         if x is not None and 0 <= int(y) < len(grid) and 0 <= int(x) < len(grid[int(y)]):
             self.pending["colour"] = int(grid[int(y)][int(x)])
+            target = self.memory.get(sig, {}).get("targets", {}).get((int(x), int(y)))
+            if target is None:
+                target = self._click_targets(grid, [(int(x), int(y))]).get((int(x), int(y)))
+            self.pending["target"] = target
         return action
 
     def _give_up_now(self, why: str) -> None:
@@ -1123,17 +1187,17 @@ class Explorer(Agent):
             aid, x, y = self._parse_key(step["key"])
             return self._issue(sig, latest_frame, aid, x, y, why="replay to frontier")
 
-        # 5b) Nothing else left: clicks on colours that never reacted.
+        # 5b) Nothing else left: clicks on colours or targets that never reacted.
         untried = self._untried_at(sig, dead_ok=True)
         if untried:
             aid, x, y = untried[0]
-            return self._issue(sig, latest_frame, aid, x, y, why="dead-colour probe")
+            return self._issue(sig, latest_frame, aid, x, y, why="inert-click probe")
         plan = self._bfs_plan(sig, remaining, dead_ok=True)
         if plan:
             self.plan = plan
             step = plan.pop(0)
             aid, x, y = self._parse_key(step["key"])
-            return self._issue(sig, latest_frame, aid, x, y, why="replay to dead-colour probe")
+            return self._issue(sig, latest_frame, aid, x, y, why="replay to inert-click probe")
 
         # 6) Stuck / cycling: least-recently-tried retries, then a bounded
         #    random walk off the memory graph (exits on any new state), then a

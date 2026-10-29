@@ -60,7 +60,6 @@ def run(game: str, level: int, budget: int, time_limit_s: float) -> dict:
     env.reset()
     ag = Diag(card_id="taxonomy", game_id=env.environment_info.game_id, agent_name="taxonomy",
               ROOT_URL="", record=False, arc_env=env, budget=budget, time_limit_s=time_limit_s)
-    t0 = time.time()
     ag.main()
     solved = ag.frames[-1].levels_completed >= 1
     n = len(log)
@@ -71,7 +70,9 @@ def run(game: str, level: int, budget: int, time_limit_s: float) -> dict:
             seen.add(e["sig"])
             last_new = i
         growth.append(len(seen))
-    at = lambda f: growth[min(n - 1, int(f * n))] if n else 0
+
+    def at(f: float) -> int:
+        return growth[min(n - 1, int(f * n))] if n else 0
 
     lvl = [s for s in ag.memory if s.split("|")[1:2] == ["0"]]
     acts = Counter(e["act"] for e in log)

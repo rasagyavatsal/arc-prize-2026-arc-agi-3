@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-29 06:43:57",
+ "generated": "2026-10-29 07:07:16",
  "budget": 1500,
  "results": [
   {
@@ -8,26 +8,26 @@
    "solved": true,
    "end": "solved",
    "giveup": null,
-   "actions": 361,
+   "actions": 234,
    "kind": "mixed",
-   "states": 19,
+   "states": 32,
    "growth_q": [
     10,
-    13,
-    18,
-    19
+    12,
+    29,
+    32
    ],
-   "last_new": 0.76,
-   "untried": 1621,
+   "last_new": 0.92,
+   "untried": 3177,
    "fine": false,
-   "noop_frac": 0.79,
-   "game_overs": 2,
-   "resets": 3,
-   "click_frac": 0.72,
+   "noop_frac": 0.61,
+   "game_overs": 1,
+   "resets": 2,
+   "click_frac": 0.42,
    "why": {
-    "frontier probe": 346,
-    "replay to frontier": 12,
-    "reset": 3
+    "frontier probe": 225,
+    "replay to frontier": 7,
+    "reset": 2
    }
   },
   {
@@ -38,25 +38,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 55,
+   "states": 116,
    "growth_q": [
-    36,
-    46,
-    55,
-    55
+    47,
+    116,
+    116,
+    116
    ],
-   "last_new": 0.57,
-   "untried": 4779,
+   "last_new": 0.47,
+   "untried": 12058,
    "fine": false,
-   "noop_frac": 0.71,
+   "noop_frac": 0.46,
    "game_overs": 14,
    "resets": 15,
-   "click_frac": 0.81,
+   "click_frac": 0.6,
    "why": {
-    "frontier probe": 1402,
-    "replay to frontier": 72,
-    "reset": 15,
-    "dead-colour probe": 11
+    "frontier probe": 1057,
+    "replay to frontier": 312,
+    "inert-click probe": 116,
+    "reset": 15
    }
   },
   {
@@ -67,23 +67,23 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 208,
+   "states": 250,
    "growth_q": [
-    85,
-    145,
-    176,
-    208
+    88,
+    148,
+    212,
+    250
    ],
-   "last_new": 0.99,
-   "untried": 17521,
+   "last_new": 1.0,
+   "untried": 25204,
    "fine": false,
-   "noop_frac": 0.58,
+   "noop_frac": 0.41,
    "game_overs": 14,
    "resets": 15,
-   "click_frac": 0.54,
+   "click_frac": 0.43,
    "why": {
-    "frontier probe": 1428,
-    "replay to frontier": 57,
+    "frontier probe": 1429,
+    "replay to frontier": 56,
     "reset": 15
    }
   },
@@ -95,24 +95,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 208,
+   "states": 270,
    "growth_q": [
-    88,
-    149,
-    176,
-    208
+    79,
+    151,
+    216,
+    270
    ],
-   "last_new": 0.98,
-   "untried": 17691,
+   "last_new": 1.0,
+   "untried": 27198,
    "fine": false,
-   "noop_frac": 0.59,
+   "noop_frac": 0.41,
    "game_overs": 14,
    "resets": 15,
-   "click_frac": 0.52,
+   "click_frac": 0.4,
    "why": {
-    "frontier probe": 1436,
-    "replay to frontier": 49,
-    "reset": 15
+    "frontier probe": 1428,
+    "replay to frontier": 55,
+    "reset": 15,
+    "inert-click probe": 2
    }
   },
   {
@@ -123,23 +124,23 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 268,
+   "states": 263,
    "growth_q": [
-    93,
-    146,
-    208,
-    268
+    79,
+    135,
+    198,
+    263
    ],
-   "last_new": 1.0,
-   "untried": 23398,
+   "last_new": 0.99,
+   "untried": 26399,
    "fine": false,
-   "noop_frac": 0.56,
+   "noop_frac": 0.42,
    "game_overs": 14,
    "resets": 15,
-   "click_frac": 0.42,
+   "click_frac": 0.4,
    "why": {
-    "frontier probe": 1437,
-    "replay to frontier": 48,
+    "frontier probe": 1432,
+    "replay to frontier": 53,
     "reset": 15
    }
   },
@@ -151,24 +152,24 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 266,
+   "states": 270,
    "growth_q": [
-    93,
-    148,
-    209,
-    266
+    94,
+    152,
+    216,
+    270
    ],
-   "last_new": 1.0,
-   "untried": 23276,
+   "last_new": 0.98,
+   "untried": 27174,
    "fine": false,
-   "noop_frac": 0.56,
+   "noop_frac": 0.43,
    "game_overs": 14,
-   "resets": 15,
-   "click_frac": 0.43,
+   "resets": 14,
+   "click_frac": 0.4,
    "why": {
-    "frontier probe": 1437,
-    "replay to frontier": 48,
-    "reset": 15
+    "frontier probe": 1426,
+    "replay to frontier": 60,
+    "reset": 14
    }
   },
   {
@@ -381,24 +382,24 @@
    "solved": true,
    "end": "solved",
    "giveup": null,
-   "actions": 68,
+   "actions": 33,
    "kind": "click",
    "states": 5,
    "growth_q": [
     1,
     1,
-    1,
+    3,
     5
    ],
-   "last_new": 0.99,
-   "untried": 93,
+   "last_new": 0.97,
+   "untried": 510,
    "fine": false,
-   "noop_frac": 0.94,
+   "noop_frac": 0.88,
    "game_overs": 0,
    "resets": 0,
    "click_frac": 1.0,
    "why": {
-    "frontier probe": 68
+    "frontier probe": 33
    }
   },
   {
@@ -407,26 +408,26 @@
    "solved": false,
    "end": "gave_up",
    "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
-   "actions": 1144,
+   "actions": 1092,
    "kind": "click",
-   "states": 39,
+   "states": 22,
    "growth_q": [
-    39,
-    39,
-    39,
-    39
+    22,
+    22,
+    22,
+    22
    ],
-   "last_new": 0.14,
+   "last_new": 0.05,
    "untried": 0,
    "fine": false,
-   "noop_frac": 0.84,
-   "game_overs": 2,
+   "noop_frac": 0.88,
+   "game_overs": 1,
    "resets": 19,
    "click_frac": 0.98,
    "why": {
-    "explore click": 546,
-    "frontier probe": 475,
-    "dead-colour probe": 101,
+    "explore click": 595,
+    "frontier probe": 364,
+    "inert-click probe": 111,
     "reset": 19,
     "cycle break (least-recently-tried)": 3
    }
@@ -437,26 +438,26 @@
    "solved": false,
    "end": "gave_up",
    "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
-   "actions": 934,
+   "actions": 829,
    "kind": "click",
-   "states": 39,
+   "states": 26,
    "growth_q": [
-    39,
-    39,
-    39,
-    39
+    26,
+    26,
+    26,
+    26
    ],
-   "last_new": 0.23,
+   "last_new": 0.09,
    "untried": 0,
    "fine": false,
-   "noop_frac": 0.76,
-   "game_overs": 2,
+   "noop_frac": 0.86,
+   "game_overs": 1,
    "resets": 19,
    "click_frac": 0.98,
    "why": {
-    "explore click": 449,
-    "frontier probe": 394,
-    "dead-colour probe": 69,
+    "explore click": 483,
+    "frontier probe": 230,
+    "inert-click probe": 94,
     "reset": 19,
     "cycle break (least-recently-tried)": 3
    }
@@ -469,27 +470,27 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 235,
+   "states": 231,
    "growth_q": [
     38,
-    213,
-    235,
-    235
+    221,
+    231,
+    231
    ],
-   "last_new": 0.52,
-   "untried": 6375,
+   "last_new": 0.51,
+   "untried": 24825,
    "fine": true,
-   "noop_frac": 0.11,
+   "noop_frac": 0.12,
    "game_overs": 8,
    "resets": 11,
    "click_frac": 0.99,
    "why": {
-    "frontier probe": 1400,
-    "dead-colour probe": 78,
+    "frontier probe": 1384,
+    "inert-click probe": 77,
+    "explore click": 18,
     "reset": 11,
     "replay to frontier": 7,
-    "cycle break (least-recently-tried)": 3,
-    "explore click": 1
+    "cycle break (least-recently-tried)": 3
    }
   },
   {
@@ -497,8 +498,8 @@
    "level": 4,
    "solved": false,
    "end": "gave_up",
-   "giveup": "level 0: attempts exhausted, no frontier left (no frontier reachable)",
-   "actions": 1466,
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 1326,
    "kind": "click",
    "states": 38,
    "growth_q": [
@@ -507,17 +508,17 @@
     38,
     38
    ],
-   "last_new": 0.09,
+   "last_new": 0.08,
    "untried": 0,
    "fine": false,
-   "noop_frac": 0.71,
-   "game_overs": 4,
+   "noop_frac": 0.76,
+   "game_overs": 3,
    "resets": 19,
    "click_frac": 0.99,
    "why": {
-    "frontier probe": 736,
-    "explore click": 636,
-    "dead-colour probe": 72,
+    "explore click": 625,
+    "frontier probe": 571,
+    "inert-click probe": 108,
     "reset": 19,
     "cycle break (least-recently-tried)": 3
    }
@@ -526,37 +527,9 @@
    "game": "lp85",
    "level": 5,
    "solved": false,
-   "end": "budget",
-   "giveup": null,
-   "actions": 1500,
-   "kind": "click",
-   "states": 38,
-   "growth_q": [
-    23,
-    38,
-    38,
-    38
-   ],
-   "last_new": 0.37,
-   "untried": 381,
-   "fine": false,
-   "noop_frac": 0.8,
-   "game_overs": 3,
-   "resets": 3,
-   "click_frac": 1.0,
-   "why": {
-    "frontier probe": 1496,
-    "reset": 3,
-    "replay to frontier": 1
-   }
-  },
-  {
-   "game": "lp85",
-   "level": 6,
-   "solved": false,
    "end": "gave_up",
    "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
-   "actions": 996,
+   "actions": 968,
    "kind": "click",
    "states": 39,
    "growth_q": [
@@ -565,17 +538,47 @@
     39,
     39
    ],
-   "last_new": 0.21,
+   "last_new": 0.11,
    "untried": 0,
    "fine": false,
-   "noop_frac": 0.78,
-   "game_overs": 2,
+   "noop_frac": 0.85,
+   "game_overs": 1,
    "resets": 19,
    "click_frac": 0.98,
    "why": {
-    "explore click": 477,
-    "frontier probe": 418,
-    "dead-colour probe": 79,
+    "explore click": 473,
+    "frontier probe": 353,
+    "inert-click probe": 120,
+    "reset": 19,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 6,
+   "solved": false,
+   "end": "gave_up",
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 925,
+   "kind": "click",
+   "states": 29,
+   "growth_q": [
+    29,
+    29,
+    29,
+    29
+   ],
+   "last_new": 0.09,
+   "untried": 0,
+   "fine": false,
+   "noop_frac": 0.87,
+   "game_overs": 1,
+   "resets": 19,
+   "click_frac": 0.98,
+   "why": {
+    "explore click": 535,
+    "frontier probe": 272,
+    "inert-click probe": 96,
     "reset": 19,
     "cycle break (least-recently-tried)": 3
    }
@@ -585,27 +588,27 @@
    "level": 7,
    "solved": false,
    "end": "gave_up",
-   "giveup": "level 0: attempts exhausted, no frontier left (no frontier reachable)",
-   "actions": 1177,
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 1082,
    "kind": "click",
-   "states": 77,
+   "states": 26,
    "growth_q": [
-    77,
-    77,
-    77,
-    77
+    26,
+    26,
+    26,
+    26
    ],
-   "last_new": 0.24,
+   "last_new": 0.06,
    "untried": 0,
    "fine": false,
-   "noop_frac": 0.72,
-   "game_overs": 3,
+   "noop_frac": 0.84,
+   "game_overs": 1,
    "resets": 19,
    "click_frac": 0.98,
    "why": {
-    "frontier probe": 544,
-    "explore click": 492,
-    "dead-colour probe": 119,
+    "explore click": 613,
+    "frontier probe": 313,
+    "inert-click probe": 134,
     "reset": 19,
     "cycle break (least-recently-tried)": 3
    }
@@ -830,7 +833,7 @@
     297
    ],
    "last_new": 1.0,
-   "untried": 24742,
+   "untried": 25017,
    "fine": false,
    "noop_frac": 0.34,
    "game_overs": 5,
@@ -857,7 +860,7 @@
     340
    ],
    "last_new": 1.0,
-   "untried": 1017,
+   "untried": 1113,
    "fine": true,
    "noop_frac": 0.34,
    "game_overs": 9,
@@ -876,20 +879,20 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 795,
+   "states": 798,
    "growth_q": [
     220,
     429,
     618,
-    795
+    798
    ],
    "last_new": 1.0,
-   "untried": 68982,
+   "untried": 69303,
    "fine": false,
-   "noop_frac": 0.2,
+   "noop_frac": 0.21,
    "game_overs": 9,
    "resets": 9,
-   "click_frac": 0.04,
+   "click_frac": 0.03,
    "why": {
     "frontier probe": 1491,
     "reset": 9
@@ -903,23 +906,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 395,
+   "states": 310,
    "growth_q": [
-    173,
-    238,
-    258,
-    395
+    180,
+    268,
+    305,
+    310
    ],
-   "last_new": 1.0,
-   "untried": 13721,
-   "fine": true,
-   "noop_frac": 0.36,
+   "last_new": 0.82,
+   "untried": 31970,
+   "fine": false,
+   "noop_frac": 0.2,
    "game_overs": 9,
    "resets": 9,
-   "click_frac": 0.6,
+   "click_frac": 0.28,
    "why": {
-    "frontier probe": 1491,
-    "reset": 9
+    "frontier probe": 1186,
+    "replay to frontier": 304,
+    "reset": 9,
+    "inert-click probe": 1
    }
   },
   {
@@ -938,7 +943,7 @@
     459
    ],
    "last_new": 0.98,
-   "untried": 46760,
+   "untried": 47434,
    "fine": false,
    "noop_frac": 0.3,
    "game_overs": 9,
@@ -965,7 +970,7 @@
     407
    ],
    "last_new": 1.0,
-   "untried": 8721,
+   "untried": 8817,
    "fine": true,
    "noop_frac": 0.36,
    "game_overs": 9,
@@ -979,32 +984,28 @@
   {
    "game": "r11l",
    "level": 0,
-   "solved": false,
-   "end": "budget",
+   "solved": true,
+   "end": "solved",
    "giveup": null,
-   "actions": 1500,
+   "actions": 163,
    "kind": "click",
-   "states": 84,
+   "states": 24,
    "growth_q": [
-    30,
-    48,
-    67,
-    84
+    12,
+    17,
+    21,
+    24
    ],
-   "last_new": 0.99,
-   "untried": 178,
+   "last_new": 0.85,
+   "untried": 1502,
    "fine": false,
-   "noop_frac": 0.92,
-   "game_overs": 23,
-   "resets": 26,
-   "click_frac": 0.98,
+   "noop_frac": 0.76,
+   "game_overs": 2,
+   "resets": 2,
+   "click_frac": 0.99,
    "why": {
-    "frontier probe": 879,
-    "dead-colour probe": 327,
-    "cycle break (least-recently-tried)": 204,
-    "explore click": 60,
-    "reset": 26,
-    "replay to frontier": 4
+    "frontier probe": 161,
+    "reset": 2
    }
   },
   {
@@ -1015,26 +1016,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 80,
+   "states": 131,
    "growth_q": [
-    24,
-    43,
-    61,
-    80
+    33,
+    63,
+    91,
+    131
    ],
-   "last_new": 0.99,
-   "untried": 246,
+   "last_new": 0.94,
+   "untried": 15140,
    "fine": false,
-   "noop_frac": 0.92,
-   "game_overs": 24,
-   "resets": 25,
-   "click_frac": 0.98,
+   "noop_frac": 0.62,
+   "game_overs": 66,
+   "resets": 66,
+   "click_frac": 0.96,
    "why": {
-    "frontier probe": 934,
-    "dead-colour probe": 276,
-    "cycle break (least-recently-tried)": 185,
-    "explore click": 80,
-    "reset": 25
+    "frontier probe": 1399,
+    "reset": 66,
+    "replay to frontier": 34,
+    "inert-click probe": 1
    }
   },
   {
@@ -1045,25 +1045,22 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 78,
+   "states": 187,
    "growth_q": [
-    25,
-    43,
-    63,
-    78
+    31,
+    83,
+    136,
+    187
    ],
-   "last_new": 0.99,
-   "untried": 254,
-   "fine": false,
-   "noop_frac": 0.92,
-   "game_overs": 27,
+   "last_new": 1.0,
+   "untried": 2340,
+   "fine": true,
+   "noop_frac": 0.61,
+   "game_overs": 29,
    "resets": 29,
    "click_frac": 0.98,
    "why": {
-    "frontier probe": 989,
-    "dead-colour probe": 239,
-    "cycle break (least-recently-tried)": 170,
-    "explore click": 73,
+    "frontier probe": 1471,
     "reset": 29
    }
   },
@@ -1075,27 +1072,24 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 88,
+   "states": 125,
    "growth_q": [
-    29,
-    50,
-    70,
-    88
+    46,
+    86,
+    115,
+    125
    ],
    "last_new": 0.99,
-   "untried": 250,
+   "untried": 11624,
    "fine": false,
-   "noop_frac": 0.92,
-   "game_overs": 24,
+   "noop_frac": 0.54,
+   "game_overs": 25,
    "resets": 25,
    "click_frac": 0.98,
    "why": {
-    "frontier probe": 892,
-    "dead-colour probe": 300,
-    "cycle break (least-recently-tried)": 188,
-    "explore click": 93,
+    "frontier probe": 1467,
     "reset": 25,
-    "replay to frontier": 2
+    "replay to frontier": 8
    }
   },
   {
@@ -1106,27 +1100,23 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 86,
+   "states": 56,
    "growth_q": [
-    30,
-    48,
-    67,
-    86
+    38,
+    46,
+    51,
+    56
    ],
-   "last_new": 0.99,
-   "untried": 221,
+   "last_new": 0.97,
+   "untried": 3726,
    "fine": false,
-   "noop_frac": 0.92,
+   "noop_frac": 0.25,
    "game_overs": 24,
-   "resets": 25,
+   "resets": 24,
    "click_frac": 0.98,
    "why": {
-    "frontier probe": 907,
-    "dead-colour probe": 302,
-    "cycle break (least-recently-tried)": 211,
-    "explore click": 53,
-    "reset": 25,
-    "replay to frontier": 2
+    "frontier probe": 1476,
+    "reset": 24
    }
   },
   {
@@ -1137,27 +1127,23 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 86,
+   "states": 186,
    "growth_q": [
-    28,
-    47,
-    67,
-    86
+    41,
+    73,
+    132,
+    186
    ],
-   "last_new": 0.99,
-   "untried": 238,
+   "last_new": 1.0,
+   "untried": 19338,
    "fine": false,
-   "noop_frac": 0.92,
+   "noop_frac": 0.56,
    "game_overs": 24,
-   "resets": 25,
+   "resets": 24,
    "click_frac": 0.98,
    "why": {
-    "frontier probe": 900,
-    "dead-colour probe": 308,
-    "cycle break (least-recently-tried)": 205,
-    "explore click": 60,
-    "reset": 25,
-    "replay to frontier": 2
+    "frontier probe": 1476,
+    "reset": 24
    }
   },
   {
@@ -1168,27 +1154,24 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 46,
+   "states": 126,
    "growth_q": [
-    44,
-    46,
-    46,
-    46
+    71,
+    96,
+    117,
+    126
    ],
-   "last_new": 0.28,
-   "untried": 2971,
+   "last_new": 0.88,
+   "untried": 21038,
    "fine": false,
-   "noop_frac": 0.38,
-   "game_overs": 26,
-   "resets": 30,
+   "noop_frac": 0.18,
+   "game_overs": 29,
+   "resets": 29,
    "click_frac": 0.98,
    "why": {
-    "frontier probe": 1080,
-    "replay to frontier": 161,
-    "explore click": 129,
-    "dead-colour probe": 82,
-    "reset": 30,
-    "cycle break (least-recently-tried)": 18
+    "frontier probe": 1341,
+    "replay to frontier": 130,
+    "reset": 29
    }
   },
   {
@@ -1199,27 +1182,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 60,
+   "states": 340,
    "growth_q": [
-    60,
-    60,
-    60,
-    60
+    150,
+    222,
+    288,
+    340
    ],
-   "last_new": 0.21,
-   "untried": 3141,
+   "last_new": 0.98,
+   "untried": 41676,
    "fine": false,
-   "noop_frac": 0.51,
-   "game_overs": 4,
-   "resets": 17,
+   "noop_frac": 0.44,
+   "game_overs": 9,
+   "resets": 9,
    "click_frac": 0.99,
    "why": {
-    "frontier probe": 985,
-    "explore click": 244,
-    "dead-colour probe": 141,
-    "replay to frontier": 95,
-    "cycle break (least-recently-tried)": 18,
-    "reset": 17
+    "frontier probe": 1414,
+    "replay to frontier": 75,
+    "reset": 9,
+    "inert-click probe": 2
    }
   },
   {
@@ -1230,58 +1211,53 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 64,
+   "states": 108,
    "growth_q": [
-    36,
-    61,
-    61,
-    64
+    53,
+    83,
+    94,
+    108
    ],
    "last_new": 0.92,
-   "untried": 2706,
+   "untried": 14373,
    "fine": false,
    "noop_frac": 0.48,
    "game_overs": 5,
-   "resets": 11,
-   "click_frac": 0.99,
+   "resets": 7,
+   "click_frac": 1.0,
    "why": {
-    "frontier probe": 1052,
-    "replay to frontier": 135,
-    "explore click": 134,
-    "dead-colour probe": 126,
-    "cycle break (least-recently-tried)": 42,
-    "reset": 11
+    "frontier probe": 1137,
+    "inert-click probe": 237,
+    "replay to frontier": 119,
+    "reset": 7
    }
   },
   {
    "game": "s5i5",
    "level": 3,
-   "solved": false,
-   "end": "budget",
+   "solved": true,
+   "end": "solved",
    "giveup": null,
-   "actions": 1500,
+   "actions": 1369,
    "kind": "click",
-   "states": 79,
+   "states": 456,
    "growth_q": [
-    43,
-    46,
-    47,
-    79
+    129,
+    245,
+    336,
+    456
    ],
-   "last_new": 0.97,
-   "untried": 3382,
+   "last_new": 1.0,
+   "untried": 54222,
    "fine": false,
-   "noop_frac": 0.41,
-   "game_overs": 11,
-   "resets": 19,
+   "noop_frac": 0.37,
+   "game_overs": 13,
+   "resets": 13,
    "click_frac": 0.99,
    "why": {
-    "frontier probe": 1106,
-    "dead-colour probe": 137,
-    "explore click": 118,
-    "replay to frontier": 87,
-    "cycle break (least-recently-tried)": 33,
-    "reset": 19
+    "frontier probe": 1342,
+    "replay to frontier": 14,
+    "reset": 13
    }
   },
   {
@@ -1292,27 +1268,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 72,
+   "states": 427,
    "growth_q": [
-    46,
-    57,
-    59,
-    72
+    131,
+    249,
+    360,
+    427
    ],
-   "last_new": 0.95,
-   "untried": 3546,
+   "last_new": 0.98,
+   "untried": 53522,
    "fine": false,
-   "noop_frac": 0.37,
-   "game_overs": 6,
-   "resets": 13,
+   "noop_frac": 0.25,
+   "game_overs": 9,
+   "resets": 10,
    "click_frac": 0.99,
    "why": {
-    "frontier probe": 1156,
-    "explore click": 135,
-    "dead-colour probe": 114,
-    "replay to frontier": 55,
-    "cycle break (least-recently-tried)": 27,
-    "reset": 13
+    "frontier probe": 1485,
+    "reset": 10,
+    "replay to frontier": 4,
+    "inert-click probe": 1
    }
   },
   {
@@ -1323,28 +1297,23 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 33,
+   "states": 51,
    "growth_q": [
     8,
-    29,
-    31,
-    33
+    22,
+    48,
+    51
    ],
-   "last_new": 0.97,
-   "untried": 1715,
+   "last_new": 0.89,
+   "untried": 7610,
    "fine": false,
-   "noop_frac": 0.37,
-   "game_overs": 5,
-   "resets": 18,
+   "noop_frac": 0.07,
+   "game_overs": 9,
+   "resets": 9,
    "click_frac": 0.99,
    "why": {
-    "frontier probe": 1043,
-    "dead-colour probe": 303,
-    "explore click": 78,
-    "replay to frontier": 32,
-    "cycle break (least-recently-tried)": 21,
-    "reset": 18,
-    "replay to dead-colour probe": 5
+    "frontier probe": 1491,
+    "reset": 9
    }
   },
   {
@@ -1355,27 +1324,23 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 67,
+   "states": 143,
    "growth_q": [
-    26,
-    43,
-    46,
-    67
+    29,
+    78,
+    114,
+    143
    ],
-   "last_new": 0.95,
-   "untried": 2061,
+   "last_new": 0.99,
+   "untried": 16679,
    "fine": false,
-   "noop_frac": 0.5,
-   "game_overs": 3,
-   "resets": 12,
-   "click_frac": 0.99,
+   "noop_frac": 0.45,
+   "game_overs": 7,
+   "resets": 7,
+   "click_frac": 1.0,
    "why": {
-    "frontier probe": 993,
-    "dead-colour probe": 180,
-    "explore click": 178,
-    "replay to frontier": 86,
-    "cycle break (least-recently-tried)": 51,
-    "reset": 12
+    "frontier probe": 1493,
+    "reset": 7
    }
   },
   {
@@ -1386,28 +1351,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 55,
+   "states": 166,
    "growth_q": [
-    23,
-    31,
-    41,
-    55
+    56,
+    108,
+    142,
+    166
    ],
-   "last_new": 0.98,
-   "untried": 2756,
+   "last_new": 0.99,
+   "untried": 23054,
    "fine": false,
-   "noop_frac": 0.6,
-   "game_overs": 3,
-   "resets": 16,
-   "click_frac": 0.99,
+   "noop_frac": 0.43,
+   "game_overs": 6,
+   "resets": 7,
+   "click_frac": 1.0,
    "why": {
-    "frontier probe": 980,
-    "explore click": 218,
-    "dead-colour probe": 217,
-    "cycle break (least-recently-tried)": 57,
-    "reset": 16,
-    "replay to frontier": 11,
-    "replay to dead-colour probe": 1
+    "frontier probe": 1373,
+    "replay to frontier": 118,
+    "reset": 7,
+    "inert-click probe": 2
    }
   },
   {
@@ -1416,26 +1378,26 @@
    "solved": true,
    "end": "solved",
    "giveup": null,
-   "actions": 375,
+   "actions": 346,
    "kind": "mixed",
-   "states": 68,
+   "states": 70,
    "growth_q": [
     27,
-    40,
-    55,
-    68
+    41,
+    58,
+    70
    ],
    "last_new": 0.99,
-   "untried": 4452,
+   "untried": 4648,
    "fine": false,
-   "noop_frac": 0.31,
-   "game_overs": 13,
-   "resets": 13,
-   "click_frac": 0.18,
+   "noop_frac": 0.25,
+   "game_overs": 12,
+   "resets": 12,
+   "click_frac": 0.11,
    "why": {
-    "frontier probe": 307,
-    "replay to frontier": 55,
-    "reset": 13
+    "frontier probe": 281,
+    "replay to frontier": 53,
+    "reset": 12
    }
   },
   {
@@ -1446,24 +1408,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 364,
+   "states": 397,
    "growth_q": [
-    109,
-    198,
-    276,
-    364
+    119,
+    225,
+    319,
+    397
    ],
-   "last_new": 1.0,
-   "untried": 33790,
+   "last_new": 0.99,
+   "untried": 37652,
    "fine": false,
-   "noop_frac": 0.27,
+   "noop_frac": 0.16,
    "game_overs": 32,
    "resets": 32,
-   "click_frac": 0.25,
+   "click_frac": 0.17,
    "why": {
-    "frontier probe": 1279,
-    "replay to frontier": 189,
-    "reset": 32
+    "frontier probe": 1227,
+    "replay to frontier": 238,
+    "reset": 32,
+    "inert-click probe": 3
    }
   },
   {
@@ -1474,23 +1437,23 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 414,
+   "states": 471,
    "growth_q": [
-    123,
-    219,
-    304,
-    414
+    139,
+    259,
+    362,
+    471
    ],
    "last_new": 1.0,
-   "untried": 41888,
+   "untried": 47863,
    "fine": false,
-   "noop_frac": 0.27,
+   "noop_frac": 0.17,
    "game_overs": 14,
    "resets": 14,
-   "click_frac": 0.3,
+   "click_frac": 0.2,
    "why": {
-    "frontier probe": 1418,
-    "replay to frontier": 68,
+    "frontier probe": 1410,
+    "replay to frontier": 76,
     "reset": 14
    }
   },
@@ -1502,20 +1465,20 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 640,
+   "states": 644,
    "growth_q": [
     194,
-    331,
-    498,
-    640
+    327,
+    512,
+    644
    ],
    "last_new": 1.0,
-   "untried": 64676,
+   "untried": 65075,
    "fine": false,
-   "noop_frac": 0.17,
+   "noop_frac": 0.16,
    "game_overs": 13,
    "resets": 13,
-   "click_frac": 0.15,
+   "click_frac": 0.12,
    "why": {
     "frontier probe": 1487,
     "reset": 13
@@ -1529,23 +1492,23 @@
    "giveup": null,
    "actions": 1500,
    "kind": "mixed",
-   "states": 511,
+   "states": 557,
    "growth_q": [
-    131,
-    262,
-    392,
-    511
+    138,
+    283,
+    414,
+    557
    ],
    "last_new": 1.0,
-   "untried": 50290,
+   "untried": 54928,
    "fine": false,
-   "noop_frac": 0.19,
+   "noop_frac": 0.11,
    "game_overs": 14,
    "resets": 14,
-   "click_frac": 0.18,
+   "click_frac": 0.09,
    "why": {
-    "frontier probe": 1414,
-    "replay to frontier": 72,
+    "frontier probe": 1409,
+    "replay to frontier": 77,
     "reset": 14
    }
   },
@@ -1565,7 +1528,7 @@
     694
    ],
    "last_new": 1.0,
-   "untried": 69447,
+   "untried": 69818,
    "fine": false,
    "noop_frac": 0.21,
    "game_overs": 18,
@@ -1843,7 +1806,7 @@
    "solved": true,
    "end": "solved",
    "giveup": null,
-   "actions": 139,
+   "actions": 112,
    "kind": "click",
    "states": 17,
    "growth_q": [
@@ -1852,82 +1815,72 @@
     15,
     17
    ],
-   "last_new": 0.98,
-   "untried": 138,
+   "last_new": 0.96,
+   "untried": 514,
    "fine": false,
-   "noop_frac": 0.67,
+   "noop_frac": 0.77,
    "game_overs": 2,
    "resets": 2,
-   "click_frac": 0.99,
+   "click_frac": 0.98,
    "why": {
-    "frontier probe": 123,
-    "replay to frontier": 9,
-    "cycle break (least-recently-tried)": 3,
-    "explore click": 2,
+    "frontier probe": 110,
     "reset": 2
    }
   },
   {
    "game": "vc33",
    "level": 1,
-   "solved": false,
-   "end": "budget",
+   "solved": true,
+   "end": "solved",
    "giveup": null,
-   "actions": 1500,
+   "actions": 519,
    "kind": "click",
-   "states": 27,
+   "states": 78,
    "growth_q": [
-    27,
-    27,
-    27,
-    27
+    23,
+    39,
+    61,
+    78
    ],
-   "last_new": 0.23,
-   "untried": 224,
+   "last_new": 0.97,
+   "untried": 8754,
    "fine": false,
-   "noop_frac": 0.78,
-   "game_overs": 9,
-   "resets": 36,
+   "noop_frac": 0.4,
+   "game_overs": 10,
+   "resets": 10,
    "click_frac": 0.98,
    "why": {
-    "explore click": 718,
-    "frontier probe": 561,
-    "dead-colour probe": 116,
-    "replay to frontier": 54,
-    "reset": 36,
-    "cycle break (least-recently-tried)": 15
+    "frontier probe": 442,
+    "replay to frontier": 67,
+    "reset": 10
    }
   },
   {
    "game": "vc33",
    "level": 2,
    "solved": false,
-   "end": "gave_up",
-   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
-   "actions": 811,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
    "kind": "click",
-   "states": 18,
+   "states": 250,
    "growth_q": [
-    10,
-    18,
-    18,
-    18
+    38,
+    112,
+    181,
+    250
    ],
-   "last_new": 0.29,
-   "untried": 0,
+   "last_new": 1.0,
+   "untried": 31606,
    "fine": false,
-   "noop_frac": 0.91,
-   "game_overs": 2,
+   "noop_frac": 0.52,
+   "game_overs": 18,
    "resets": 19,
-   "click_frac": 0.98,
+   "click_frac": 0.99,
    "why": {
-    "frontier probe": 356,
-    "explore click": 238,
-    "dead-colour probe": 140,
-    "cycle break (least-recently-tried)": 36,
-    "reset": 19,
-    "replay to frontier": 16,
-    "replay to dead-colour probe": 6
+    "frontier probe": 1442,
+    "replay to frontier": 39,
+    "reset": 19
    }
   },
   {
@@ -1938,26 +1891,24 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 38,
+   "states": 232,
    "growth_q": [
-    30,
-    30,
-    35,
-    38
+    85,
+    163,
+    194,
+    232
    ],
-   "last_new": 0.86,
-   "untried": 154,
+   "last_new": 0.98,
+   "untried": 25698,
    "fine": false,
-   "noop_frac": 0.87,
-   "game_overs": 6,
-   "resets": 37,
+   "noop_frac": 0.51,
+   "game_overs": 28,
+   "resets": 29,
    "click_frac": 0.98,
    "why": {
-    "explore click": 782,
-    "frontier probe": 598,
-    "replay to frontier": 50,
-    "reset": 37,
-    "cycle break (least-recently-tried)": 33
+    "frontier probe": 1418,
+    "replay to frontier": 53,
+    "reset": 29
    }
   },
   {
@@ -1976,7 +1927,7 @@
     39
    ],
    "last_new": 0.13,
-   "untried": 2788,
+   "untried": 8171,
    "fine": false,
    "noop_frac": 0.68,
    "game_overs": 7,
@@ -1995,27 +1946,25 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 46,
+   "states": 120,
    "growth_q": [
-    27,
-    33,
-    46,
-    46
+    64,
+    95,
+    120,
+    120
    ],
-   "last_new": 0.75,
-   "untried": 581,
+   "last_new": 0.65,
+   "untried": 9906,
    "fine": false,
-   "noop_frac": 0.82,
-   "game_overs": 10,
-   "resets": 38,
-   "click_frac": 0.97,
+   "noop_frac": 0.31,
+   "game_overs": 29,
+   "resets": 29,
+   "click_frac": 0.98,
    "why": {
-    "explore click": 671,
-    "frontier probe": 518,
-    "dead-colour probe": 185,
-    "replay to frontier": 58,
-    "reset": 38,
-    "cycle break (least-recently-tried)": 30
+    "frontier probe": 1267,
+    "replay to frontier": 192,
+    "reset": 29,
+    "inert-click probe": 12
    }
   },
   {
@@ -2026,15 +1975,15 @@
    "giveup": null,
    "actions": 1500,
    "kind": "click",
-   "states": 131,
+   "states": 96,
    "growth_q": [
     62,
-    68,
-    104,
-    131
+    96,
+    96,
+    96
    ],
-   "last_new": 0.94,
-   "untried": 3773,
+   "last_new": 0.4,
+   "untried": 14025,
    "fine": false,
    "noop_frac": 0.67,
    "game_overs": 7,
