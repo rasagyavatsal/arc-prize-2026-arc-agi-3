@@ -11,11 +11,13 @@ throughput at several concurrency levels on real object-list prompts.
 Held-out games are never played here (tune on dev only).
 
 Usage (from ARC-AGI-3-Kaggle-Starter/):
-  python scripts/build_adviser_dev_notebook.py      # writes notebooks/adviser-dev/
+  python scripts/build_adviser_dev_notebook.py [--split dev|heldout] [--no-baseline]
+      [--no-bench] [--variant name:KEY=V,...]...    # writes notebooks/adviser-dev/
   kaggle kernels push -p notebooks/adviser-dev --accelerator NvidiaRtxPro6000
 """
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 from textwrap import dedent
@@ -24,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
 EXPLORER = WORKSPACE / "ARC-AGI-3-Agents" / "agents" / "templates" / "explorer.py"
 HELDOUT_EVAL = WORKSPACE / "sweeps" / "heldout_eval.py"
+STANDIN = WORKSPACE / "sweeps" / "standin_adviser.py"
 OUT_DIR = ROOT / "notebooks" / "adviser-dev"
 
 KERNEL_ID = "rasagyavatsal/arc-agi-3-adviser-dev"
@@ -57,6 +60,10 @@ CONFIG = dedent(
     BENCH_CONCURRENCY = [1, 8, 32, 64]
     ADVISER_TIMEOUT_S = 30     # Explorer defaults; raise to see what slower calls buy
     ADVISER_BUDGET_S = 240
+    SPLIT = __SPLIT__
+    RUN_BASELINE = __RUN_BASELINE__
+    RUN_BENCH = __RUN_BENCH__
+    VARIANTS = __VARIANTS__    # name -> extra env for the advised run
 
     import os, subprocess, sys, time, json
     from pathlib import Path
@@ -114,6 +121,8 @@ WORKSPACE_SETUP = dedent(
     shutil.copytree(COMP / "ARC-AGI-3-Agents", W / "ARC-AGI-3-Agents")
     shutil.copy("/tmp/explorer.py", W / "ARC-AGI-3-Agents/agents/templates/explorer.py")
     shutil.copy("/tmp/heldout_eval.py", W / "sweeps/heldout_eval.py")
+    # the control adviser (variant url=http://127.0.0.1:8100/v1)
+    standin = subprocess.Popen([sys.executable, "/tmp/standin_adviser.py", "8100"])
     (W / "environment_files").symlink_to(COMP / "environment_files")
     # slim registry: upstream __init__ imports templates whose deps are not installed
     (W / "ARC-AGI-3-Agents/agents/__init__.py").write_text(textwrap.dedent('''\\
@@ -153,12 +162,20 @@ START_VLLM = dedent(
 
 BASELINE = dedent(
     """\
-    # Plain Explorer on dev while the model loads (CPU only)
-    run_env = {k: v for k, v in os.environ.items() if not k.startswith("ADVISER_")}
-    r = subprocess.run([sys.executable, "sweeps/heldout_eval.py", "--split", "dev",
-                        "--out", "/kaggle/working/dev_without_adviser.json"],
-                       cwd=W, env=run_env, capture_output=True, text=True)
-    print(r.stdout[-3000:], r.stderr[-3000:])
+    def play(name, extra_env):
+        # one split run; held-out prints only its summary line (measure, don't read)
+        run_env = {k: v for k, v in os.environ.items() if not k.startswith("ADVISER_")}
+        run_env.update(extra_env)
+        out = f"/kaggle/working/{SPLIT}_{name}.json"
+        r = subprocess.run([sys.executable, "sweeps/heldout_eval.py", "--split", SPLIT, "--out", out],
+                           cwd=W, env=run_env, capture_output=True, text=True)
+        lines = r.stdout.strip().splitlines()
+        print(name, "|", "\\n".join(lines[-1:] if SPLIT == "heldout" else lines[-14:]), r.stderr[-2000:])
+        return out
+
+    # plain Explorer while the model loads (CPU only)
+    if RUN_BASELINE:
+        play("baseline", {})
     """
 )
 
@@ -215,7 +232,7 @@ BENCH = dedent(
 
     call(prompts[0])  # warm-up
     BENCH = {"startup_s": STARTUP_S}
-    for n in BENCH_CONCURRENCY:
+    for n in BENCH_CONCURRENCY if RUN_BENCH else []:
         batch = [prompts[i % len(prompts)] for i in range(n)]
         t = time.time()
         with ThreadPoolExecutor(n) as pool:
@@ -227,7 +244,7 @@ BENCH = dedent(
                     "completion_tokens_mean": round(statistics.mean(r.get("completion_tokens") or 0 for r in res)),
                     "prompt_tokens_mean": round(statistics.mean(r.get("prompt_tokens") or 0 for r in res))}
         print(n, BENCH[n])
-    for r in res[:3]:
+    for r in res[:3] if RUN_BENCH else []:
         print(repr(r.get("text") or r.get("error"))[:600])
     json.dump(BENCH, open("/kaggle/working/bench.json", "w"), indent=1)
     """
@@ -235,20 +252,18 @@ BENCH = dedent(
 
 ADVISED = dedent(
     """\
-    run_env = dict(os.environ, ADVISER_URL=f"http://127.0.0.1:{PORT}/v1", ADVISER_MODEL=SERVED_NAME,
+    for name, extra in VARIANTS.items():
+        env = dict(ADVISER_URL=f"http://127.0.0.1:{PORT}/v1", ADVISER_MODEL=SERVED_NAME,
                    ADVISER_TIMEOUT_S=str(ADVISER_TIMEOUT_S), ADVISER_BUDGET_S=str(ADVISER_BUDGET_S))
-    r = subprocess.run([sys.executable, "sweeps/heldout_eval.py", "--split", "dev",
-                        "--out", "/kaggle/working/dev_with_adviser.json"],
-                       cwd=W, env=run_env, capture_output=True, text=True)
-    print(r.stdout[-3000:], r.stderr[-3000:])
+        play(name, {**env, **extra})
     """
 )
 
 SUMMARY = dedent(
     """\
-    out = {"bench": BENCH}
-    for name in ("without", "with"):
-        path = Path(f"/kaggle/working/dev_{name}_adviser.json")
+    out = {"split": SPLIT, "bench": BENCH, "variants": VARIANTS}
+    for name in ["baseline", *VARIANTS]:
+        path = Path(f"/kaggle/working/{SPLIT}_{name}.json")
         out[name] = json.load(open(path))["summary"] if path.exists() else None
     out["total_s"] = round(time.time() - T0)
     json.dump(out, open("/kaggle/working/summary.json", "w"), indent=1)
@@ -257,8 +272,18 @@ SUMMARY = dedent(
     """
 )
 
-
-def build() -> dict:
+def build(
+    split: str = "dev",
+    run_baseline: bool = True,
+    run_bench: bool = True,
+    variants: dict[str, dict[str, str]] | None = None,
+) -> dict:
+    config = (
+        CONFIG.replace("__SPLIT__", repr(split))
+        .replace("__RUN_BASELINE__", repr(run_baseline))
+        .replace("__RUN_BENCH__", repr(run_bench))
+        .replace("__VARIANTS__", repr(variants if variants is not None else {"adviser": {}}))
+    )
     return {
         "metadata": {
             "kernelspec": {"language": "python", "display_name": "Python 3", "name": "python3"},
@@ -274,9 +299,10 @@ def build() -> dict:
                 "the dev split. Built by `scripts/build_adviser_dev_notebook.py`; edit that, not "
                 "the cells."
             ),
-            code_cell(CONFIG),
+            code_cell(config),
             code_cell("%%writefile /tmp/explorer.py\n" + EXPLORER.read_text()),
             code_cell("%%writefile /tmp/heldout_eval.py\n" + HELDOUT_EVAL.read_text()),
+            code_cell("%%writefile /tmp/standin_adviser.py\n" + STANDIN.read_text()),
             code_cell(INSTALL),
             code_cell(WORKSPACE_SETUP),
             code_cell(START_VLLM),
@@ -289,9 +315,30 @@ def build() -> dict:
     }
 
 
+def parse_variant(text: str) -> tuple[str, dict[str, str]]:
+    """``name:KEY=V,KEY=V`` -> (name, env); keys get the ADVISER_ prefix."""
+    name, _, spec = text.partition(":")
+    env = {}
+    for item in filter(None, spec.split(",")):
+        key, _, value = item.partition("=")
+        env["ADVISER_" + key.upper().removeprefix("ADVISER_")] = value
+    return name, env
+
+
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--split", choices=["dev", "heldout"], default="dev",
+                    help="heldout prints only summary lines: measure, don't tune")
+    ap.add_argument("--no-baseline", action="store_true", help="skip the plain-Explorer run")
+    ap.add_argument("--no-bench", action="store_true", help="skip the latency/throughput bench")
+    ap.add_argument("--variant", action="append", default=[],
+                    help="advised run as name:KEY=V,... e.g. v2:prompt=2,early=1 or "
+                         "control:url=http://127.0.0.1:8100/v1 (the stand-in; repeatable)")
+    args = ap.parse_args()
+    variants = dict(parse_variant(v) for v in args.variant) or {"adviser": {}}
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUT_DIR / "adviser-dev.ipynb").write_text(json.dumps(build(), indent=1))
+    nb = build(args.split, not args.no_baseline, not args.no_bench, variants)
+    (OUT_DIR / "adviser-dev.ipynb").write_text(json.dumps(nb, indent=1))
     meta = {
         "id": KERNEL_ID,
         "title": "ARC-AGI-3 Adviser Dev",

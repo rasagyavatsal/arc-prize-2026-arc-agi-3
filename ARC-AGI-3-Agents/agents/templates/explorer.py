@@ -120,6 +120,27 @@ ADVISER_SYSTEM = (
     "Use empty lists when unsure."
 )
 
+# v2: common game patterns, coordinates explained, short rankings only
+ADVISER_SYSTEM_V2 = (
+    "You advise an agent playing an unknown turn-based grid puzzle game. "
+    "Nothing is explained: the agent must discover what it controls and what "
+    "completes a level. Common patterns: a small player sprite moved by "
+    "ACTION1-ACTION4 (up, down, left, right) to an exit or goal, or pushing "
+    "boxes onto targets; click puzzles (ACTION6) where clicking buttons, "
+    "tiles or switches toggles, rotates or moves things until a pattern "
+    "matches a reference shown elsewhere on screen; ACTION5 often interacts "
+    "or rotates; ACTION7 is often undo. Colours are integers 0-15. Objects "
+    "have an id, a colour, a size in cells and a box [x0, y0, x1, y1] (x "
+    "right, y down). moves_seen says which colours changed when each action "
+    "was tried: a colour that changes on every move is usually the player. "
+    "clicks_by_colour says which clicked colours did anything. Reply with "
+    'one JSON object and nothing else: {"player": [colours], "goals": '
+    '[object ids], "click_first": [object ids, best first, at most 6], '
+    '"move_first": [action numbers, best first, at most 2]}. Rank only what '
+    "you have a reason for and leave the rest out; empty lists are fine."
+)
+ADVISER_PROMPTS = {"1": ADVISER_SYSTEM, "2": ADVISER_SYSTEM_V2}
+
 
 def parse_advice(text: Optional[str]) -> Optional[dict[str, Any]]:
     """The first JSON object in a model reply, or None."""
@@ -169,6 +190,7 @@ class HttpAdviser(Adviser):
         model: str = "gpt-oss-120b",
         max_tokens: int = 1024,
         reasoning_effort: str = "low",
+        system: str = ADVISER_SYSTEM,
     ) -> None:
         self.url = url.rstrip("/") + "/chat/completions"
         # vLLM serves /health next to /v1
@@ -176,6 +198,7 @@ class HttpAdviser(Adviser):
         self.model = model
         self.max_tokens = max_tokens
         self.reasoning_effort = reasoning_effort
+        self.system = system
 
     def ready(self) -> bool:
         cls = HttpAdviser
@@ -201,7 +224,7 @@ class HttpAdviser(Adviser):
         body = {
             "model": self.model,
             "messages": [
-                {"role": "system", "content": ADVISER_SYSTEM},
+                {"role": "system", "content": self.system},
                 {"role": "user", "content": json.dumps(prompt, separators=(",", ":"))},
             ],
             "max_tokens": self.max_tokens,
@@ -227,7 +250,12 @@ def adviser_from_env() -> Optional[Adviser]:
     url = os.environ.get("ADVISER_URL")
     if not url:
         return None
-    return HttpAdviser(url, os.environ.get("ADVISER_MODEL", "gpt-oss-120b"))
+    return HttpAdviser(
+        url,
+        os.environ.get("ADVISER_MODEL", "gpt-oss-120b"),
+        reasoning_effort=os.environ.get("ADVISER_REASONING", "low"),
+        system=ADVISER_PROMPTS.get(os.environ.get("ADVISER_PROMPT", "1"), ADVISER_SYSTEM),
+    )
 
 
 class Explorer(Agent):
@@ -264,6 +292,7 @@ class Explorer(Agent):
     ADVISER_BUDGET_S = 240.0  # adviser wall time per game, timeouts included
     ADVISER_MARGIN_S = 1800.0  # no adviser calls this close to RUN_DEADLINE_S
     ADVISER_MAX_CALLS = 3  # per level: its start, then plateaus
+    ADVISER_EARLY = False  # also ask once every move has been tried at the level
     ADVISER_MAX_FAILS = 3  # consecutive failed calls (no reply, bad output) before it is dropped
     ADVISER_PLATEAU = 40  # actions without a new state before asking again (scaled)
     ADVISER_MAX_OBJECTS = 48  # objects listed in a prompt, smallest first
@@ -312,15 +341,23 @@ class Explorer(Agent):
         self.ADVISER_PLATEAU = max(self.ADVISER_PLATEAU, self.MAX_ACTIONS // 30)
 
         self.adviser = adviser if adviser is not None else adviser_from_env()
-        for name in ("ADVISER_TIMEOUT_S", "ADVISER_BUDGET_S"):
+        for name, kind in (
+            ("ADVISER_TIMEOUT_S", float),
+            ("ADVISER_BUDGET_S", float),
+            ("ADVISER_PLATEAU", int),
+            ("ADVISER_MAX_CALLS", int),
+        ):
             if name in os.environ:
                 try:
-                    setattr(self, name, float(os.environ[name]))
+                    setattr(self, name, kind(os.environ[name]))
                 except ValueError:
                     pass
+        if "ADVISER_EARLY" in os.environ:
+            self.ADVISER_EARLY = os.environ["ADVISER_EARLY"] == "1"
         self.adviser_spent = 0.0  # seconds spent waiting on the adviser
         self.adviser_fails = 0  # consecutive failed calls
         self.adviser_answers = 0  # calls whose answer set priorities
+        self.adviser_log: list[dict[str, Any]] = []  # per call: level, action, answer
         self.adviser_calls: dict[int, int] = {}  # level -> calls made
         self.adviser_last_call = -1  # action_counter at the last call
         # the current level's answer: {"level", "actions", "colours", "points"}
@@ -974,11 +1011,28 @@ class Explorer(Agent):
             return False
         # the start of the level, or a plateau: no new state for a while
         # and play since the last answer
-        due = calls == 0 or (
-            self.action_counter - self.last_new_state >= self.ADVISER_PLATEAU
-            and self.action_counter - self.adviser_last_call >= self.ADVISER_PLATEAU
+        due = (
+            calls == 0
+            or (calls == 1 and self.ADVISER_EARLY and self._moves_tried(levels))
+            or (
+                self.action_counter - self.last_new_state >= self.ADVISER_PLATEAU
+                and self.action_counter - self.adviser_last_call >= self.ADVISER_PLATEAU
+            )
         )
         return due and self.adviser.ready()
+
+    def _moves_tried(self, levels: int) -> bool:
+        """True once every simple action at the level has an observed effect.
+
+        Only the second call uses this, so it fires once per level: the
+        model then sees which colours each move changes.
+        """
+        node = self.memory.get(self.last_sig) or {}
+        simple = [
+            a for a in node.get("avail", [])
+            if (act := self._to_action(a)) and not act.is_complex() and act is not GameAction.RESET
+        ]
+        return bool(simple) and all((levels, a) in self.action_effects for a in simple)
 
     def _maybe_advise(self, sig: str, frame: FrameData) -> None:
         """Ask the adviser when due; any failure leaves the order as it was."""
@@ -1011,6 +1065,9 @@ class Explorer(Agent):
         worker.join(max(0.0, timeout))
         self.adviser_spent += time.time() - started
         answer = None if worker.is_alive() else result[0]
+        self.adviser_log.append(
+            {"level": levels, "action": self.action_counter, "answer": answer}
+        )
         # an answer in the expected shape with nothing usable is the model
         # being unsure, not a failure: the adviser stays on for later levels
         answered = answer is not None and any(
@@ -1649,4 +1706,11 @@ class Explorer(Agent):
 # Canonical alias for Kaggle submission pipeline compatibility
 MyAgent = Explorer
 
-__all__ = ["Adviser", "Explorer", "HttpAdviser", "MyAgent", "parse_advice"]
+__all__ = [
+    "ADVISER_PROMPTS",
+    "Adviser",
+    "Explorer",
+    "HttpAdviser",
+    "MyAgent",
+    "parse_advice",
+]

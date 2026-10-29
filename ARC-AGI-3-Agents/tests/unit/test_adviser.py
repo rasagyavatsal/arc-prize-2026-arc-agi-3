@@ -15,7 +15,7 @@ from arcengine import FrameData, GameAction, GameState
 
 from agents import Explorer
 from agents.templates import explorer as explorer_mod
-from agents.templates.explorer import Adviser, HttpAdviser, parse_advice
+from agents.templates.explorer import ADVISER_PROMPTS, Adviser, HttpAdviser, parse_advice
 
 
 def make_frame(grid, levels=0, avail=(1, 2, 3, 4)):
@@ -259,6 +259,34 @@ class TestAdviserCallPoints:
         assert first_probe(agent, make_frame(moved)) == (4, None, None)
         assert len(adviser.prompts) == 1
 
+    def test_early_call_once_every_move_was_tried(self):
+        adviser = ScriptedAdviser(*[{"move_first": [1]}] * 3)
+        agent = make_agent(adviser)
+        agent.ADVISER_EARLY = True
+        g = board()
+        calls = []
+        for step in range(8):
+            g = [row[:] for row in g]
+            g[7][step] = 9  # a new state every action: never a plateau
+            agent.choose_action([], make_frame(g))
+            calls.append(len(adviser.prompts))
+            agent.action_counter += 1
+        # level start, then once ACTION1-4 have all been tried, then no more
+        assert calls == [1, 1, 1, 1, 2, 2, 2, 2]
+        assert set(adviser.prompts[1]["moves_seen"]) == {"ACTION1", "ACTION2", "ACTION3", "ACTION4"}
+
+    def test_calls_are_logged(self):
+        agent = make_agent(ScriptedAdviser({"move_first": [4]}))
+        agent.choose_action([], make_frame(board()))
+        assert agent.adviser_log == [{"level": 0, "action": 0, "answer": {"move_first": [4]}}]
+
+    def test_env_knobs(self, monkeypatch):
+        monkeypatch.setenv("ADVISER_PLATEAU", "7")
+        monkeypatch.setenv("ADVISER_MAX_CALLS", "5")
+        monkeypatch.setenv("ADVISER_EARLY", "1")
+        agent = make_agent()
+        assert (agent.ADVISER_PLATEAU, agent.ADVISER_MAX_CALLS, agent.ADVISER_EARLY) == (7, 5, True)
+
     def test_no_plateau_call_while_new_states_appear(self):
         adviser = ScriptedAdviser({"move_first": [1]})
         agent = make_agent(adviser)
@@ -386,6 +414,17 @@ class TestHttpAdviser:
         assert adviser.ready() is True
         handler.health = 503
         assert adviser.ready() is True  # once up, stays up
+
+    def test_env_picks_prompt_and_reasoning(self, monkeypatch, stub_server):
+        handler, url = stub_server
+        handler.reply = {"choices": [{"message": {"content": "{}"}}]}
+        monkeypatch.setenv("ADVISER_URL", url)
+        monkeypatch.setenv("ADVISER_PROMPT", "2")
+        monkeypatch.setenv("ADVISER_REASONING", "medium")
+        make_agent().adviser.advise({}, timeout_s=5)
+        _, body = handler.bodies[0]
+        assert body["reasoning_effort"] == "medium"
+        assert body["messages"][0]["content"] == ADVISER_PROMPTS["2"]
 
     def test_env_enables_the_http_adviser(self, monkeypatch, stub_server):
         handler, url = stub_server

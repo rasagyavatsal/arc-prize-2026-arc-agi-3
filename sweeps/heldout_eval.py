@@ -78,7 +78,8 @@ def play_level(game: str, level: int, budget: int, time_limit_s: float) -> dict:
         if agent.adviser is not None:
             rec["adviser"] = {"calls": sum(agent.adviser_calls.values()),
                               "answers": agent.adviser_answers,
-                              "seconds": round(agent.adviser_spent, 1)}
+                              "seconds": round(agent.adviser_spent, 1),
+                              "log": agent.adviser_log}
     except Exception as e:
         rec["error"] = f"{type(e).__name__}: {e}"
     rec["elapsed_s"] = round(time.time() - t0, 1)
