@@ -30,6 +30,9 @@ KERNEL_ID = "rasagyavatsal/arc-agi-3-adviser-dev"
 MODEL_SOURCE = "danielhanchen/gpt-oss-120b/Transformers/default/1"
 ACCELERATOR = "NvidiaRtxPro6000"  # Kaggle silently falls back to a T4 on an unknown name
 VLLM_DEPS = "philipvonderlind/vllm-deps"  # vLLM wheels + tiktoken files (official template)
+# the vllm-deps wheels are cp312: pin the official template's Python 3.12 image
+# (the current default image is 3.13, where the vLLM install fails)
+DOCKER_IMAGE = "gcr.io/kaggle-images/python@sha256:e5452ce6268c2e8345cfe5141f31ca7ff47032aca46a7ea532bbb87481281d0c"
 
 
 def code_cell(source: str) -> dict:
@@ -67,7 +70,7 @@ CONFIG = dedent(
     if not mem or int(mem[0]) < 80000:
         # RuntimeError, not SystemExit: a notebook run carries on after SystemExit
         raise RuntimeError(f"need the ~96 GB RTX Pro 6000, got {mem}: stopping before any work")
-    print("cpus", os.cpu_count())
+    print("cpus", os.cpu_count(), "| python", sys.version.split()[0])
     """
 )
 
@@ -289,6 +292,7 @@ def main() -> None:
         "competition_sources": ["arc-prize-2026-arc-agi-3"],
         "model_sources": [MODEL_SOURCE],
         "machine_shape": ACCELERATOR,
+        "docker_image": DOCKER_IMAGE,
     }
     (OUT_DIR / "kernel-metadata.json").write_text(json.dumps(meta, indent=2) + "\n")
     print(f"[build_adviser_dev_notebook] wrote {OUT_DIR.relative_to(ROOT)}")

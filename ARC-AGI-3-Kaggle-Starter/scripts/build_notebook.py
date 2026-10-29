@@ -37,6 +37,8 @@ ACCELERATOR = "cpu"   # Explorer is deterministic CPU-only; flip to t4/rtx6000 f
 ADVISER = False
 ADVISER_MODEL_SOURCE = "danielhanchen/gpt-oss-120b/Transformers/default/1"
 ADVISER_KERNEL_SOURCE = "philipvonderlind/vllm-deps"  # vLLM wheels + tiktoken files
+# those wheels are cp312: the official template's Python 3.12 image
+ADVISER_DOCKER_IMAGE = "gcr.io/kaggle-images/python@sha256:e5452ce6268c2e8345cfe5141f31ca7ff47032aca46a7ea532bbb87481281d0c"
 
 # Internal mapping; don't edit unless Kaggle adds new options.
 _ACCELERATORS = {
@@ -262,6 +264,8 @@ def main() -> None:
             "kernel_sources": [ADVISER_KERNEL_SOURCE] if ADVISER else [],
             "model_sources": [ADVISER_MODEL_SOURCE] if ADVISER else [],
         }
+        if ADVISER:
+            wanted["docker_image"] = ADVISER_DOCKER_IMAGE
         changed = {k: v for k, v in wanted.items() if meta.get(k) != v}
         if changed:
             meta.update(changed)
