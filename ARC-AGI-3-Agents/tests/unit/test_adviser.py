@@ -290,6 +290,7 @@ class TestAdviserCallPoints:
     def test_no_plateau_call_while_new_states_appear(self):
         adviser = ScriptedAdviser({"move_first": [1]})
         agent = make_agent(adviser)
+        agent.ADVISER_EARLY = False  # plateaus only
         for step in range(agent.ADVISER_PLATEAU + 5):
             g = [[0] * 8 for _ in range(8)]
             g[step // 8 % 8][step % 8] = 3
@@ -375,7 +376,8 @@ class TestHttpAdviser:
         assert answer == {"move_first": [2]}
         path, body = handler.bodies[0]
         assert path == "/v1/chat/completions"
-        assert body["model"] == "m" and body["reasoning_effort"] == "low"
+        assert body["model"] == "m" and body["reasoning_effort"] == "medium"
+        assert body["messages"][0]["content"] == ADVISER_PROMPTS["2"]
         assert json.loads(body["messages"][1]["content"]) == {"objects": []}
 
     def test_server_error_is_none(self, stub_server):

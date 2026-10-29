@@ -189,8 +189,8 @@ class HttpAdviser(Adviser):
         url: str,
         model: str = "gpt-oss-120b",
         max_tokens: int = 1024,
-        reasoning_effort: str = "low",
-        system: str = ADVISER_SYSTEM,
+        reasoning_effort: str = "medium",
+        system: str = ADVISER_SYSTEM_V2,
     ) -> None:
         self.url = url.rstrip("/") + "/chat/completions"
         # vLLM serves /health next to /v1
@@ -253,8 +253,8 @@ def adviser_from_env() -> Optional[Adviser]:
     return HttpAdviser(
         url,
         os.environ.get("ADVISER_MODEL", "gpt-oss-120b"),
-        reasoning_effort=os.environ.get("ADVISER_REASONING", "low"),
-        system=ADVISER_PROMPTS.get(os.environ.get("ADVISER_PROMPT", "1"), ADVISER_SYSTEM),
+        reasoning_effort=os.environ.get("ADVISER_REASONING", "medium"),
+        system=ADVISER_PROMPTS.get(os.environ.get("ADVISER_PROMPT", "2"), ADVISER_SYSTEM_V2),
     )
 
 
@@ -292,7 +292,9 @@ class Explorer(Agent):
     ADVISER_BUDGET_S = 240.0  # adviser wall time per game, timeouts included
     ADVISER_MARGIN_S = 1800.0  # no adviser calls this close to RUN_DEADLINE_S
     ADVISER_MAX_CALLS = 3  # per level: its start, then plateaus
-    ADVISER_EARLY = False  # also ask once every move has been tried at the level
+    # also ask once every move has been tried at the level (with prompt v2 and
+    # medium reasoning: dev 16/70 vs 14 without the adviser, 2026-10-29)
+    ADVISER_EARLY = True
     ADVISER_MAX_FAILS = 3  # consecutive failed calls (no reply, bad output) before it is dropped
     ADVISER_PLATEAU = 40  # actions without a new state before asking again (scaled)
     ADVISER_MAX_OBJECTS = 48  # objects listed in a prompt, smallest first
