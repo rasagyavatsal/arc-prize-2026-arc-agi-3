@@ -273,3 +273,18 @@ class TestExplorer:
             g[16][step % 32] = 3  # mid-field object changes every step
             agent.choose_action([], make_frame(g))
         assert agent.hud_rows == set() and agent.hud_cols == set()
+
+    def test_clicks_on_dead_colours_are_probed_last(self):
+        agent = make_agent()
+        g = [[0] * 16 for _ in range(16)]
+        g[4][4] = 1  # colour 1: clicks have never reacted
+        g[10][10] = 2  # colour 2: unknown
+        agent.click_stats[1] = [agent.CLICK_DEAD_AFTER, 0]
+        agent.choose_action([], make_frame(g, avail=(6,)))
+        sig = agent.last_sig
+
+        live = {(x, y) for _, x, y in agent._untried_at(sig)}
+        everything = {(x, y) for _, x, y in agent._untried_at(sig, dead_ok=True)}
+        assert (10, 10) in live and (4, 4) not in live
+        assert (4, 4) in everything
+        assert all(agent.memory[sig]["colours"][p] != 1 for p in live)

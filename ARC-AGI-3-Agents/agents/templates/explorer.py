@@ -117,6 +117,7 @@ class Explorer(Agent):
     HUD_BAND = 4  # outer rows/columns of the frame searched for status bars
     HUD_MIN_OBS = 12  # same-level transitions observed before status bars are inferred
     HUD_RATE = 0.6  # an edge line changing on this share of transitions is a status bar
+    CLICK_DEAD_AFTER = 8  # no-effect clicks on a colour before it is probed last
 
     def __init__(
         self,
@@ -188,6 +189,9 @@ class Explorer(Agent):
         self.hud_cols: set[int] = set()
         self.line_changes: Counter[tuple[str, int]] = Counter()
         self.line_obs = 0
+        # colour under the click -> [tries, effective]: what a colour does when
+        # clicked is shared across states, so dead colours stop eating probes
+        self.click_stats: dict[int, list[int]] = {}
         self._give_up = False
         self.total_levels = 8  # default baseline; updated live from FrameData.win_levels
         logger.info(
@@ -502,7 +506,18 @@ class Explorer(Agent):
             node["avail"] = sorted(
                 set(node["avail"]) | {a for a in cur_avail if 0 <= a <= 7}
             )
+        # colour under each click candidate, read while standing in the state
+        colours = node.setdefault("colours", {})
+        grid = self._grid(frame)
+        for x, y in node["cands"]:
+            if (x, y) not in colours and 0 <= y < len(grid) and 0 <= x < len(grid[y]):
+                colours[(x, y)] = int(grid[y][x])
         return node
+
+    def _dead_colour(self, colour: Optional[int]) -> bool:
+        """True once clicks on this colour have repeatedly done nothing."""
+        tries, effective = self.click_stats.get(colour, (0, 0)) if colour is not None else (0, 0)
+        return tries >= self.CLICK_DEAD_AFTER and effective == 0
 
     def _probe_cap(self, width: int, height: int) -> int:
         """Click candidates per state grows with the searchable playfield."""
@@ -612,11 +627,15 @@ class Explorer(Agent):
 
     # ------------------------------------------------------------- memory query
 
-    def _untried_at(self, sig: str) -> list[tuple[int, Optional[int], Optional[int]]]:
+    def _untried_at(
+        self, sig: str, dead_ok: bool = False
+    ) -> list[tuple[int, Optional[int], Optional[int]]]:
         """Untried (action, x, y) probes at a state, best first.
 
         Simple actions first in id order (ACTION7 before ACTION6, since ACTION7
-        is frequently a cheap undo), then ACTION6 probe coordinates.
+        is frequently a cheap undo), then ACTION6 probe coordinates.  Clicks
+        on colours that have never reacted are left out unless ``dead_ok``:
+        they are only explored once the level offers nothing else.
         """
         node = self.memory.get(sig)
         if not node:
@@ -636,13 +655,16 @@ class Explorer(Agent):
             act = self._to_action(aid)
             if act is None or not act.is_complex():
                 continue
+            colours = node.get("colours", {})
             for x, y in node["cands"]:
-                if self._key(aid, x, y) not in node["edges"]:
+                if self._key(aid, x, y) in node["edges"]:
+                    continue
+                if dead_ok or not self._dead_colour(colours.get((x, y))):
                     out.append((aid, x, y))
         return out
 
-    def _has_untried(self, sig: str) -> bool:
-        return bool(self._untried_at(sig))
+    def _has_untried(self, sig: str, dead_ok: bool = False) -> bool:
+        return bool(self._untried_at(sig, dead_ok))
 
     def _progress_action(
         self, sig: str
@@ -690,17 +712,17 @@ class Explorer(Agent):
         """True when the level's memory graph still offers something untried."""
         if sig is None:
             return False
-        if self._untried_at(sig) or self._has_reachable_frontier(sig):
+        if self._untried_at(sig, True) or self._has_reachable_frontier(sig, True):
             return True
         # the reset lands on the level's start state; a frontier known from any
         # previously seen state of this level counts as remaining work
         levels = int(latest.levels_completed)
         for other in self._seen:
-            if f"|{levels}|" in other and self._has_untried(other):
+            if f"|{levels}|" in other and self._has_untried(other, True):
                 return True
         return False
 
-    def _has_reachable_frontier(self, sig: str) -> bool:
+    def _has_reachable_frontier(self, sig: str, dead_ok: bool = False) -> bool:
         node = self.memory.get(sig)
         if not node:
             return False
@@ -709,7 +731,7 @@ class Explorer(Agent):
         queue: deque[str] = deque([sig])
         while queue:
             cur = queue.popleft()
-            if self._has_untried(cur):
+            if self._has_untried(cur, dead_ok):
                 return True
             for key, edge in self.memory.get(cur, {}).get("edges", {}).items():
                 nxt = edge.get("result")
@@ -742,7 +764,9 @@ class Explorer(Agent):
             not edge.get("changed") and edge.get("dlevel", 0) == 0 for edge in simple
         )
 
-    def _bfs_plan(self, sig: str, remaining: int) -> Optional[list[dict[str, Any]]]:
+    def _bfs_plan(
+        self, sig: str, remaining: int, dead_ok: bool = False
+    ) -> Optional[list[dict[str, Any]]]:
         """Shortest known path (as action steps) to a state with untried actions."""
         if remaining <= self.RESERVE_ACTIONS + 1:
             return None
@@ -751,7 +775,7 @@ class Explorer(Agent):
         queue: deque[str] = deque([sig])
         while queue:
             cur = queue.popleft()
-            if cur != sig and self._has_untried(cur):
+            if cur != sig and self._has_untried(cur, dead_ok):
                 steps: list[dict[str, Any]] = []
                 c = cur
                 while c != sig:
@@ -806,6 +830,11 @@ class Explorer(Agent):
             edge["undo"] = True  # ACTION7 restored a previously seen state
         if empty:
             return
+        colour = pending.get("colour")
+        if colour is not None:
+            stats = self.click_stats.setdefault(colour, [0, 0])
+            stats[0] += 1
+            stats[1] += int(changed or edge["dlevel"] != 0)
         if changed or edge["dlevel"] != 0:
             self.no_change_streak = 0
             aid = self._key_action_id(key)
@@ -869,6 +898,9 @@ class Explorer(Agent):
             "levels": int(latest.levels_completed),
             "seen": set(self._seen),
         }
+        grid = self._grid(latest)
+        if x is not None and 0 <= int(y) < len(grid) and 0 <= int(x) < len(grid[int(y)]):
+            self.pending["colour"] = int(grid[int(y)][int(x)])
         return action
 
     def _give_up_now(self, why: str) -> None:
@@ -1086,6 +1118,18 @@ class Explorer(Agent):
             step = plan.pop(0)
             aid, x, y = self._parse_key(step["key"])
             return self._issue(sig, latest_frame, aid, x, y, why="replay to frontier")
+
+        # 5b) Nothing else left: clicks on colours that never reacted.
+        untried = self._untried_at(sig, dead_ok=True)
+        if untried:
+            aid, x, y = untried[0]
+            return self._issue(sig, latest_frame, aid, x, y, why="dead-colour probe")
+        plan = self._bfs_plan(sig, remaining, dead_ok=True)
+        if plan:
+            self.plan = plan
+            step = plan.pop(0)
+            aid, x, y = self._parse_key(step["key"])
+            return self._issue(sig, latest_frame, aid, x, y, why="replay to dead-colour probe")
 
         # 6) Stuck / cycling: least-recently-tried retries, then a bounded
         #    random walk off the memory graph (exits on any new state), then a
