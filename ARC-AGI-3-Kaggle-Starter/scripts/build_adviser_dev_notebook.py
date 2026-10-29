@@ -63,13 +63,23 @@ CONFIG = dedent(
     T0 = time.time()
     W = Path("/kaggle/working/w")
     COMP = Path("/kaggle/input/competitions/arc-prize-2026-arc-agi-3")
-    print(subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv"],
-                         capture_output=True, text=True).stdout)
-    mem = subprocess.run(["nvidia-smi", "--query-gpu=memory.total", "--format=csv,noheader,nounits"],
-                         capture_output=True, text=True).stdout.split()
-    if not mem or int(mem[0]) < 80000:
+    # The pinned (older) image may not have the host driver's NVML on its
+    # library path; nvidia-smi and vLLM both need it.
+    nvml = sorted({str(p.parent) for root in ("/usr/local/nvidia", "/usr/lib", "/usr/lib64",
+                                                "/usr/local/cuda", "/opt", "/usr/local/lib")
+                   if Path(root).exists() for p in Path(root).rglob("libnvidia-ml.so*")})
+    print("libnvidia-ml dirs:", nvml)
+    if nvml:
+        os.environ["LD_LIBRARY_PATH"] = ":".join(nvml + [os.environ.get("LD_LIBRARY_PATH", "")]).rstrip(":")
+    smi = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader,nounits"],
+                         capture_output=True, text=True)
+    print(smi.stdout, smi.stderr[-500:])
+    import torch
+    gpu_mb = torch.cuda.get_device_properties(0).total_memory // 2**20 if torch.cuda.is_available() else 0
+    print("torch", torch.__version__, "cuda", torch.version.cuda, "gpu MiB", gpu_mb)
+    if gpu_mb < 80000:
         # RuntimeError, not SystemExit: a notebook run carries on after SystemExit
-        raise RuntimeError(f"need the ~96 GB RTX Pro 6000, got {mem}: stopping before any work")
+        raise RuntimeError(f"need the ~96 GB RTX Pro 6000, torch sees {gpu_mb} MiB: stopping")
     print("cpus", os.cpu_count(), "| python", sys.version.split()[0])
     """
 )
