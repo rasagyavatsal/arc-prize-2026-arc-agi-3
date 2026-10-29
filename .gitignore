@@ -32,3 +32,4 @@ logs.log
 
 # ---- keep the public games (small, needed to run sweeps) ----
 !environment_files/
+ARC-AGI-3-Kaggle-Starter/notebooks/adviser-dev/

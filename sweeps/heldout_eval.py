@@ -75,6 +75,10 @@ def play_level(game: str, level: int, budget: int, time_limit_s: float) -> dict:
         agent.main()
         rec["actions"] = agent.action_counter
         rec["solved"] = agent.frames[-1].levels_completed >= 1
+        if agent.adviser is not None:
+            rec["adviser"] = {"calls": sum(agent.adviser_calls.values()),
+                              "answers": agent.adviser_answers,
+                              "seconds": round(agent.adviser_spent, 1)}
     except Exception as e:
         rec["error"] = f"{type(e).__name__}: {e}"
     rec["elapsed_s"] = round(time.time() - t0, 1)
@@ -97,7 +101,19 @@ def summarize(name: str, recs: list[dict]) -> dict:
         "linear_mean": round(sum(r["linear"] for r in recs) / max(1, n), 3),
         "squared_mean_pct": round(100 * sum(r["squared"] for r in recs) / max(1, n), 3),
         "errors": sum(r["error"] is not None for r in recs),
+        **adviser_summary(recs),
     }
+
+
+def adviser_summary(recs: list[dict]) -> dict:
+    """Adviser calls, usable answers and mean seconds per call (if one ran)."""
+    advised = [r["adviser"] for r in recs if r.get("adviser")]
+    if not advised:
+        return {}
+    calls = sum(a["calls"] for a in advised)
+    return {"adviser_calls": calls,
+            "adviser_answers": sum(a["answers"] for a in advised),
+            "adviser_s_per_call": round(sum(a["seconds"] for a in advised) / max(1, calls), 2)}
 
 
 def main() -> None:
@@ -141,7 +157,10 @@ def main() -> None:
     print(f"\n{summary['split']}: solved {summary['solved']}/{summary['levels']} levels "
           f"| level-0 {summary['level0_solved']}/{summary['games']} games "
           f"| linear {summary['linear_mean']} | squared {summary['squared_mean_pct']}% "
-          f"| errors {summary['errors']} | {round((time.time() - t0) / 60, 1)} min", flush=True)
+          f"| errors {summary['errors']} | {round((time.time() - t0) / 60, 1)} min"
+          + (f" | adviser {summary['adviser_answers']}/{summary['adviser_calls']} answers, "
+             f"{summary['adviser_s_per_call']}s/call" if "adviser_calls" in summary else ""),
+          flush=True)
 
     out = args.out or os.path.join(ROOT, "notes", f"heldout_eval_{args.split}.json")
     with open(out, "w") as f:

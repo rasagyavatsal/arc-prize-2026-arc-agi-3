@@ -83,6 +83,36 @@ unchanged but ends the ls20 L1/L2 plateaus (`notes/dev_taxonomy.json`)
 (results in `notes/heldout_eval_*.json`). The held-out solve count is the
 number to move.
 
+## LLM adviser (issue #7)
+
+A local open-weight model (GPT-OSS-120B behind vLLM; no internet on Kaggle)
+can reorder the Explorer's frontier. It never chooses actions itself. Set
+`ADVISER_URL` (an OpenAI-compatible `/v1` endpoint) to enable it; leave it
+unset for plain Explorer behaviour.
+
+- **When:** at the start of each level, and again after `ADVISER_PLATEAU`
+  actions with no new state. At most 3 calls per level.
+- **Prompt:** an object list (colour, size, box), the status-bar mask, what
+  each move changed, and click outcomes per colour. The raw grid is not sent.
+- **Answer:** the likely player colours, goal objects, objects to click first
+  and moves to try first. These only reorder untried probes; replay, memory
+  and give-up logic are unchanged.
+- **Fallback:** a timeout (`ADVISER_TIMEOUT_S`, default 30s), an unusable
+  answer, a spent per-game budget (`ADVISER_BUDGET_S`, default 240s), the
+  last 30 min before the run deadline, or a server still loading all mean
+  plain Explorer order. The adviser is dropped after 3 failures in a row.
+- **Tests:** `tests/unit/test_adviser.py` covers this with a scripted
+  stand-in model and a stub HTTP server, so no GPU is needed.
+
+Without `ADVISER_URL`, dev is unchanged at 14/70 (squared 0.909%). Wired to
+a local stand-in server that answers "smallest objects first", dev ran 168
+calls (~2.8k chars per prompt) with no errors.
+
+GPU dev run: `python scripts/build_adviser_dev_notebook.py` (from
+`ARC-AGI-3-Kaggle-Starter/`) writes a private RTX Pro 6000 notebook. It runs
+dev without the adviser, starts vLLM, benchmarks latency and throughput,
+then runs dev with the adviser.
+
 ## Kaggle submission
 
 Uses the [official starter kit](https://github.com/arcprize/ARC-AGI-3-Kaggle-Starter)
