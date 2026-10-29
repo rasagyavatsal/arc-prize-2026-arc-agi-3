@@ -339,3 +339,28 @@ class TestExplorer:
         assert agent.memory[sig]["targets"][shifted] == target
         assert shifted not in {(x, y) for _, x, y in agent._untried_at(sig)}
         assert shifted in {(x, y) for _, x, y in agent._untried_at(sig, dead_ok=True)}
+
+    def test_life_lost_back_at_the_start_keeps_the_real_edge(self):
+        """A step counter that runs out sends the player back to the start;
+        that must not overwrite where the move really goes."""
+        agent = make_agent()
+
+        def board(x):
+            g = [[0] * 8 for _ in range(8)]
+            g[2][x] = 3
+            return g
+
+        agent.choose_action([], make_frame(board(1)))  # start; probes ACTION1
+        start = agent.last_sig
+        agent.choose_action([], make_frame(board(2)))  # moved; probes ACTION1
+        mid = agent.last_sig
+        agent.choose_action([], make_frame(board(3)))
+        far = agent.last_sig
+        assert agent.memory[mid]["edges"]["ACTION1"]["result"] == far
+
+        # the same move again, but the life ran out on it
+        agent.pending = {"sig": mid, "key": "ACTION1", "levels": 0, "seen": set()}
+        agent.choose_action([], make_frame(board(1)))
+        edge = agent.memory[mid]["edges"]["ACTION1"]
+        assert agent.last_sig == start
+        assert edge["result"] == far and edge["lost"] == 1 and edge["tries"] == 2

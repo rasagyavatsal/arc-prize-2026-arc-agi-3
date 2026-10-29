@@ -77,7 +77,9 @@ ARC-AGI-3-Agents/.venv/bin/python sweeps/dev_taxonomy.py                   # why
 Baseline (Explorer v3, budget 1500/level, 2026-10-27): held-out **0/113** levels,
 dev **7/70**. Explorer v4 (2026-10-29): held-out **2/113**, dev **11/70**.
 Explorer v4.1 (2026-10-29): held-out **4/113** (level-0 2/15, squared 0.011%),
-dev **14/70** (squared 0.909%)
+dev **14/70** (squared 0.909%). Keeping a move's real result when a lost life
+sends the player back to the start (2026-10-29) leaves both solve counts
+unchanged but ends the ls20 L1/L2 plateaus (`notes/dev_taxonomy.json`)
 (results in `notes/heldout_eval_*.json`). The held-out solve count is the
 number to move.
 

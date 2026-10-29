@@ -27,7 +27,9 @@ Memory
 A persistent dict (kept across levels) maps ``state signature -> {action key:
 observed delta}`` where a delta records the resulting signature, whether the
 state changed (layout *or* raw diff), the levels_completed delta and the
-resulting game state.
+resulting game state.  A move that lands back on a level's start state from
+mid-level (a step counter ran out and a life was lost) is counted on the edge
+instead of overwriting where the move really goes.
 
 Per step the agent:
 1. RESETs on NOT_PLAYED / GAME_OVER / empty frames (sparing, budgeted).
@@ -196,6 +198,10 @@ class Explorer(Agent):
         # click target (see _click_targets) -> [tries, effective]: a target
         # that did nothing in one state usually does nothing in the next
         self.target_stats: dict[tuple, list[int]] = {}
+        # states a level (re)starts in: a move that lands there from elsewhere
+        # usually lost a life (a step counter ran out), not a real edge
+        self.start_sigs: set[str] = set()
+        self.at_start = True
         self._give_up = False
         self.total_levels = 8  # default baseline; updated live from FrameData.win_levels
         logger.info(
@@ -871,6 +877,21 @@ class Explorer(Agent):
         empty = latest.is_empty()
         changed = sig is not None and (sig != frm or self.world_changed)
         edge["tries"] = int(edge.get("tries", 0)) + 1
+        prev = edge.get("result")
+        if (
+            sig in self.start_sigs
+            and sig != frm
+            and prev
+            and prev != sig
+            and prev not in self.start_sigs
+            and edge.get("state") == GameState.NOT_FINISHED.name
+            and int(latest.levels_completed) == int(pending["levels"])
+        ):
+            # back at the start from mid-level: a life was lost.  Keep the
+            # edge's real result, or the overwrite cuts the level's graph.
+            edge["lost"] = int(edge.get("lost", 0)) + 1
+            self.no_change_streak = 0
+            return
         edge["dlevel"] = int(latest.levels_completed) - int(pending["levels"])
         edge["state"] = latest.state.name
         edge["full_reset"] = bool(latest.full_reset)
@@ -1006,6 +1027,7 @@ class Explorer(Agent):
                 return GameAction.RESET
         if count_attempt:
             self.level_attempts[levels] = attempts + 1
+        self.at_start = True
         self.plan = []
         self.no_change_streak = 0
         self.level_start_action = self.action_counter
@@ -1125,10 +1147,14 @@ class Explorer(Agent):
                 self.no_change_streak = 0
                 self.level_start_action = self.action_counter
             self.last_levels = levels
+            self.at_start = True
             self.explore_left = 0  # a fresh level is structured-probing territory
             self.explore_runs = 0
 
         assert sig is not None
+        if self.at_start:
+            self.start_sigs.add(sig)
+            self.at_start = False
         # A walk that lands on a never-seen state hands control back to the
         # structured logic, which probes the new state's frontier.
         if sig not in self._seen and self.explore_left > 0:
