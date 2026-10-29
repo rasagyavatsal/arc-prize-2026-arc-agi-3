@@ -94,6 +94,16 @@ through a `gateway:8001` sidecar; the gateway computes the score file.
 ## Rules notes
 
 - Evaluation offline → no API models; bundled open weights only (RTX 6000 pool available).
-- Prize eligibility requires open-sourcing (CC-BY-4.0/OSI) — this repo is part of that.
+- Prize eligibility requires open-sourcing before private scores are released:
+  own code under a permissive public-domain licence (CC0 or MIT-0), third-party
+  code under at least a shareable open-source licence — this repo is part of that.
 - 1 submission/day, ≤ 9h notebook runtime, 2 milestones (Jun 30 / Sep 30, 2026),
   submissions close Nov 2, 2026.
+
+## License
+
+Our code is released under [MIT-0](LICENSE). Third-party parts keep their own
+terms: the `ARC-AGI-3-Agents/` framework is MIT (ARC Prize, see its `LICENSE`;
+our additions in it, such as `agents/templates/explorer.py`, are MIT-0), the
+`ARC-AGI-3-Kaggle-Starter/` kit is ARC Prize's, and `environment_files/` are the
+competition's game environments.
