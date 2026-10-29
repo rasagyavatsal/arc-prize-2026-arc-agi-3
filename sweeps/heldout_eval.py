@@ -31,7 +31,7 @@ Usage (from the repo root):
 import argparse, glob, json, logging, os, sys, time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-ROOT = "/Users/rasagyavatsal/arc-prize-2026-arc-agi-3"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.join(ROOT, "ARC-AGI-3-Agents")
 os.environ["OPERATION_MODE"] = "offline"
 os.environ["ENVIRONMENTS_DIR"] = os.path.join(ROOT, "environment_files")
