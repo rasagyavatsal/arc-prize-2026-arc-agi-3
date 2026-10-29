@@ -74,12 +74,13 @@ CONFIG = dedent(
     smi = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader,nounits"],
                          capture_output=True, text=True)
     print(smi.stdout, smi.stderr[-500:])
-    import torch
-    gpu_mb = torch.cuda.get_device_properties(0).total_memory // 2**20 if torch.cuda.is_available() else 0
-    print("torch", torch.__version__, "cuda", torch.version.cuda, "gpu MiB", gpu_mb)
+    # this image's own torch is CPU-only (vLLM installs its CUDA build), so
+    # the GPU check reads nvidia-smi
+    gpu_mb = max([int(f) for line in smi.stdout.splitlines()
+                  for f in line.split(",")[-1:] if f.strip().isdigit()] or [0])
     if gpu_mb < 80000:
         # RuntimeError, not SystemExit: a notebook run carries on after SystemExit
-        raise RuntimeError(f"need the ~96 GB RTX Pro 6000, torch sees {gpu_mb} MiB: stopping")
+        raise RuntimeError(f"need the ~96 GB RTX Pro 6000, nvidia-smi shows {gpu_mb} MiB: stopping")
     print("cpus", os.cpu_count(), "| python", sys.version.split()[0])
     """
 )
