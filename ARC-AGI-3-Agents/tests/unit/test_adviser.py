@@ -159,6 +159,15 @@ class TestAdviserFallbacks:
         assert agent.advice is None
         assert agent.adviser_fails == 1
 
+    def test_unsure_answer_is_plain_order_but_not_a_failure(self):
+        adviser = ScriptedAdviser(*[{"player": [], "goals": [], "click_first": [], "move_first": []}] * 5)
+        agent = make_agent(adviser)
+        for level in range(agent.ADVISER_MAX_FAILS + 2):
+            assert first_probe(agent, make_frame(board(), levels=level)) == (1, None, None)
+        assert agent.adviser_fails == 0
+        assert len(adviser.prompts) == agent.ADVISER_MAX_FAILS + 2
+        assert agent.advice is None
+
     def test_raising_adviser_is_plain_order(self):
         agent = make_agent(ScriptedAdviser(error=RuntimeError("boom")))
         assert first_probe(agent, make_frame(board())) == (1, None, None)

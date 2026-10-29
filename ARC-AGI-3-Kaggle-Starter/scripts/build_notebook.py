@@ -168,8 +168,11 @@ def build() -> dict:
                                     'torch==2.10.0+cu128', 'torchvision==0.25.0+cu128',
                                     'torchaudio==2.10.0+cu128', 'vllm==0.19.1',
                                     'openai==2.24.0', 'openai-harmony==0.0.8'])
+                    # the pinned image lacks the host driver's NVML on its path
+                    nvml = '/usr/local/nvidia/lib64'
                     env = dict(os.environ, TIKTOKEN_ENCODINGS_BASE=str(tiktoken[0]),
-                               VLLM_WORKER_MULTIPROC_METHOD='spawn')
+                               VLLM_WORKER_MULTIPROC_METHOD='spawn',
+                               LD_LIBRARY_PATH=nvml + ':' + os.environ.get('LD_LIBRARY_PATH', ''))
                     subprocess.Popen(
                         ['vllm', 'serve',
                          '/kaggle/input/models/danielhanchen/gpt-oss-120b/transformers/default/1',

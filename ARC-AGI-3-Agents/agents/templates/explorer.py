@@ -264,7 +264,7 @@ class Explorer(Agent):
     ADVISER_BUDGET_S = 240.0  # adviser wall time per game, timeouts included
     ADVISER_MARGIN_S = 1800.0  # no adviser calls this close to RUN_DEADLINE_S
     ADVISER_MAX_CALLS = 3  # per level: its start, then plateaus
-    ADVISER_MAX_FAILS = 3  # consecutive failed calls before the adviser is dropped
+    ADVISER_MAX_FAILS = 3  # consecutive failed calls (no reply, bad output) before it is dropped
     ADVISER_PLATEAU = 40  # actions without a new state before asking again (scaled)
     ADVISER_MAX_OBJECTS = 48  # objects listed in a prompt, smallest first
 
@@ -1011,18 +1011,25 @@ class Explorer(Agent):
         worker.join(max(0.0, timeout))
         self.adviser_spent += time.time() - started
         answer = None if worker.is_alive() else result[0]
-        if answer is not None and self._apply_advice(answer, sig, frame, objects):
+        # an answer in the expected shape with nothing usable is the model
+        # being unsure, not a failure: the adviser stays on for later levels
+        answered = answer is not None and any(
+            k in answer for k in ("player", "goals", "click_first", "move_first")
+        )
+        if answered:
             self.adviser_fails = 0
+        if answered and self._apply_advice(answer, sig, frame, objects):
             self.adviser_answers += 1
             logger.info(
                 f"{self.game_id}: level {levels} advice {self.advice} "
                 f"({time.time() - started:.1f}s)"
             )
         else:
-            self.adviser_fails += 1
+            if not answered:
+                self.adviser_fails += 1
             logger.info(
                 f"{self.game_id}: level {levels} no advice "
-                f"({'timeout' if worker.is_alive() else 'no usable answer'})"
+                f"({'timeout' if worker.is_alive() else 'unsure' if answered else 'no usable answer'})"
             )
 
     def _advised_order(

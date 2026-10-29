@@ -1,0 +1,1469 @@
+{
+ "generated": "2026-10-29 09:42 UTC",
+ "kernel": "rasagyavatsal/arc-agi-3-adviser-dev v6",
+ "setup": "RTX Pro 6000 (97.9 GB), 48 CPUs; vLLM 0.19.1, gpt-oss-120b, fp8 KV, max-num-seqs 64, max-model-len 8192, enforce-eager; reasoning_effort low, max_tokens 1024; ADVISER_TIMEOUT_S 30, ADVISER_BUDGET_S 240",
+ "bench": {
+  "startup_s": 251,
+  "1": {
+   "calls_per_min": 37.9,
+   "p50_s": 1.6,
+   "max_s": 1.6,
+   "parsed": 1,
+   "completion_tokens_mean": 108,
+   "prompt_tokens_mean": 596
+  },
+  "8": {
+   "calls_per_min": 152.8,
+   "p50_s": 2.8,
+   "max_s": 3.1,
+   "parsed": 8,
+   "completion_tokens_mean": 104,
+   "prompt_tokens_mean": 745
+  },
+  "32": {
+   "calls_per_min": 506.8,
+   "p50_s": 3.0,
+   "max_s": 3.8,
+   "parsed": 32,
+   "completion_tokens_mean": 107,
+   "prompt_tokens_mean": 777
+  },
+  "64": {
+   "calls_per_min": 993.1,
+   "p50_s": 2.6,
+   "max_s": 3.9,
+   "parsed": 64,
+   "completion_tokens_mean": 112,
+   "prompt_tokens_mean": 789
+  }
+ },
+ "without": {
+  "split": "dev",
+  "levels": 70,
+  "solved": 14,
+  "level0_solved": 9,
+  "games": 10,
+  "linear_mean": 2.782,
+  "squared_mean_pct": 0.909,
+  "errors": 0
+ },
+ "with": {
+  "split": "dev",
+  "levels": 70,
+  "solved": 14,
+  "level0_solved": 10,
+  "games": 10,
+  "linear_mean": 3.075,
+  "squared_mean_pct": 0.998,
+  "errors": 0,
+  "adviser_calls": 169,
+  "adviser_answers": 143,
+  "adviser_s_per_call": 4.06
+ },
+ "per_level": {
+  "without": [
+   {
+    "game": "cd82",
+    "level": 0,
+    "solved": true,
+    "actions": 234,
+    "baseline": 55,
+    "adviser": null
+   },
+   {
+    "game": "cd82",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 8,
+    "adviser": null
+   },
+   {
+    "game": "cd82",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 41,
+    "adviser": null
+   },
+   {
+    "game": "cd82",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 21,
+    "adviser": null
+   },
+   {
+    "game": "cd82",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 23,
+    "adviser": null
+   },
+   {
+    "game": "cd82",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 23,
+    "adviser": null
+   },
+   {
+    "game": "g50t",
+    "level": 0,
+    "solved": true,
+    "actions": 153,
+    "baseline": 78,
+    "adviser": null
+   },
+   {
+    "game": "g50t",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 175,
+    "adviser": null
+   },
+   {
+    "game": "g50t",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 179,
+    "adviser": null
+   },
+   {
+    "game": "g50t",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 230,
+    "adviser": null
+   },
+   {
+    "game": "g50t",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 96,
+    "adviser": null
+   },
+   {
+    "game": "g50t",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 54,
+    "adviser": null
+   },
+   {
+    "game": "g50t",
+    "level": 6,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 67,
+    "adviser": null
+   },
+   {
+    "game": "lp85",
+    "level": 0,
+    "solved": true,
+    "actions": 33,
+    "baseline": 17,
+    "adviser": null
+   },
+   {
+    "game": "lp85",
+    "level": 1,
+    "solved": false,
+    "actions": 1092,
+    "baseline": 38,
+    "adviser": null
+   },
+   {
+    "game": "lp85",
+    "level": 2,
+    "solved": false,
+    "actions": 829,
+    "baseline": 31,
+    "adviser": null
+   },
+   {
+    "game": "lp85",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 16,
+    "adviser": null
+   },
+   {
+    "game": "lp85",
+    "level": 4,
+    "solved": false,
+    "actions": 1326,
+    "baseline": 41,
+    "adviser": null
+   },
+   {
+    "game": "lp85",
+    "level": 5,
+    "solved": false,
+    "actions": 968,
+    "baseline": 60,
+    "adviser": null
+   },
+   {
+    "game": "lp85",
+    "level": 6,
+    "solved": false,
+    "actions": 925,
+    "baseline": 26,
+    "adviser": null
+   },
+   {
+    "game": "lp85",
+    "level": 7,
+    "solved": false,
+    "actions": 1082,
+    "baseline": 159,
+    "adviser": null
+   },
+   {
+    "game": "ls20",
+    "level": 0,
+    "solved": true,
+    "actions": 299,
+    "baseline": 22,
+    "adviser": null
+   },
+   {
+    "game": "ls20",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 123,
+    "adviser": null
+   },
+   {
+    "game": "ls20",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 73,
+    "adviser": null
+   },
+   {
+    "game": "ls20",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 84,
+    "adviser": null
+   },
+   {
+    "game": "ls20",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 96,
+    "adviser": null
+   },
+   {
+    "game": "ls20",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 192,
+    "adviser": null
+   },
+   {
+    "game": "ls20",
+    "level": 6,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 186,
+    "adviser": null
+   },
+   {
+    "game": "m0r0",
+    "level": 0,
+    "solved": true,
+    "actions": 893,
+    "baseline": 30,
+    "adviser": null
+   },
+   {
+    "game": "m0r0",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 111,
+    "adviser": null
+   },
+   {
+    "game": "m0r0",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 203,
+    "adviser": null
+   },
+   {
+    "game": "m0r0",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 26,
+    "adviser": null
+   },
+   {
+    "game": "m0r0",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 500,
+    "adviser": null
+   },
+   {
+    "game": "m0r0",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 237,
+    "adviser": null
+   },
+   {
+    "game": "r11l",
+    "level": 0,
+    "solved": true,
+    "actions": 163,
+    "baseline": 22,
+    "adviser": null
+   },
+   {
+    "game": "r11l",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 33,
+    "adviser": null
+   },
+   {
+    "game": "r11l",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 51,
+    "adviser": null
+   },
+   {
+    "game": "r11l",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 26,
+    "adviser": null
+   },
+   {
+    "game": "r11l",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 52,
+    "adviser": null
+   },
+   {
+    "game": "r11l",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 49,
+    "adviser": null
+   },
+   {
+    "game": "s5i5",
+    "level": 0,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 20,
+    "adviser": null
+   },
+   {
+    "game": "s5i5",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 89,
+    "adviser": null
+   },
+   {
+    "game": "s5i5",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 106,
+    "adviser": null
+   },
+   {
+    "game": "s5i5",
+    "level": 3,
+    "solved": true,
+    "actions": 1369,
+    "baseline": 54,
+    "adviser": null
+   },
+   {
+    "game": "s5i5",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 162,
+    "adviser": null
+   },
+   {
+    "game": "s5i5",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 38,
+    "adviser": null
+   },
+   {
+    "game": "s5i5",
+    "level": 6,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 86,
+    "adviser": null
+   },
+   {
+    "game": "s5i5",
+    "level": 7,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 83,
+    "adviser": null
+   },
+   {
+    "game": "sp80",
+    "level": 0,
+    "solved": true,
+    "actions": 346,
+    "baseline": 39,
+    "adviser": null
+   },
+   {
+    "game": "sp80",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 58,
+    "adviser": null
+   },
+   {
+    "game": "sp80",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 25,
+    "adviser": null
+   },
+   {
+    "game": "sp80",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 148,
+    "adviser": null
+   },
+   {
+    "game": "sp80",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 96,
+    "adviser": null
+   },
+   {
+    "game": "sp80",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 152,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 0,
+    "solved": true,
+    "actions": 340,
+    "baseline": 19,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 1,
+    "solved": true,
+    "actions": 192,
+    "baseline": 16,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 34,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 42,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 123,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 80,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 6,
+    "solved": true,
+    "actions": 494,
+    "baseline": 14,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 7,
+    "solved": true,
+    "actions": 809,
+    "baseline": 23,
+    "adviser": null
+   },
+   {
+    "game": "tu93",
+    "level": 8,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 111,
+    "adviser": null
+   },
+   {
+    "game": "vc33",
+    "level": 0,
+    "solved": true,
+    "actions": 112,
+    "baseline": 7,
+    "adviser": null
+   },
+   {
+    "game": "vc33",
+    "level": 1,
+    "solved": true,
+    "actions": 519,
+    "baseline": 18,
+    "adviser": null
+   },
+   {
+    "game": "vc33",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 44,
+    "adviser": null
+   },
+   {
+    "game": "vc33",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 61,
+    "adviser": null
+   },
+   {
+    "game": "vc33",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 131,
+    "adviser": null
+   },
+   {
+    "game": "vc33",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 34,
+    "adviser": null
+   },
+   {
+    "game": "vc33",
+    "level": 6,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 152,
+    "adviser": null
+   }
+  ],
+  "with": [
+   {
+    "game": "cd82",
+    "level": 0,
+    "solved": true,
+    "actions": 231,
+    "baseline": 55,
+    "adviser": {
+     "calls": 2,
+     "answers": 2,
+     "seconds": 8.9
+    }
+   },
+   {
+    "game": "cd82",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 8,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 15.3
+    }
+   },
+   {
+    "game": "cd82",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 41,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 14.1
+    }
+   },
+   {
+    "game": "cd82",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 21,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 16.4
+    }
+   },
+   {
+    "game": "cd82",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 23,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 15.8
+    }
+   },
+   {
+    "game": "cd82",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 23,
+    "adviser": {
+     "calls": 2,
+     "answers": 2,
+     "seconds": 9.2
+    }
+   },
+   {
+    "game": "g50t",
+    "level": 0,
+    "solved": true,
+    "actions": 153,
+    "baseline": 78,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 4.9
+    }
+   },
+   {
+    "game": "g50t",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 175,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 12.9
+    }
+   },
+   {
+    "game": "g50t",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 179,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 12.2
+    }
+   },
+   {
+    "game": "g50t",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 230,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 11.3
+    }
+   },
+   {
+    "game": "g50t",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 96,
+    "adviser": {
+     "calls": 2,
+     "answers": 2,
+     "seconds": 9.5
+    }
+   },
+   {
+    "game": "g50t",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 54,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 12.4
+    }
+   },
+   {
+    "game": "g50t",
+    "level": 6,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 67,
+    "adviser": {
+     "calls": 2,
+     "answers": 2,
+     "seconds": 8.4
+    }
+   },
+   {
+    "game": "lp85",
+    "level": 0,
+    "solved": true,
+    "actions": 33,
+    "baseline": 17,
+    "adviser": {
+     "calls": 1,
+     "answers": 0,
+     "seconds": 2.9
+    }
+   },
+   {
+    "game": "lp85",
+    "level": 1,
+    "solved": false,
+    "actions": 1092,
+    "baseline": 38,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 15.6
+    }
+   },
+   {
+    "game": "lp85",
+    "level": 2,
+    "solved": false,
+    "actions": 829,
+    "baseline": 31,
+    "adviser": {
+     "calls": 3,
+     "answers": 1,
+     "seconds": 14.4
+    }
+   },
+   {
+    "game": "lp85",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 16,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 12.3
+    }
+   },
+   {
+    "game": "lp85",
+    "level": 4,
+    "solved": false,
+    "actions": 1326,
+    "baseline": 41,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 12.9
+    }
+   },
+   {
+    "game": "lp85",
+    "level": 5,
+    "solved": false,
+    "actions": 937,
+    "baseline": 60,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 14.2
+    }
+   },
+   {
+    "game": "lp85",
+    "level": 6,
+    "solved": false,
+    "actions": 894,
+    "baseline": 26,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 14.1
+    }
+   },
+   {
+    "game": "lp85",
+    "level": 7,
+    "solved": false,
+    "actions": 973,
+    "baseline": 159,
+    "adviser": {
+     "calls": 3,
+     "answers": 2,
+     "seconds": 13.0
+    }
+   },
+   {
+    "game": "ls20",
+    "level": 0,
+    "solved": true,
+    "actions": 299,
+    "baseline": 22,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 4.8
+    }
+   },
+   {
+    "game": "ls20",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 123,
+    "adviser": {
+     "calls": 3,
+     "answers": 2,
+     "seconds": 13.3
+    }
+   },
+   {
+    "game": "ls20",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 73,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 14.1
+    }
+   },
+   {
+    "game": "ls20",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 84,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 14.9
+    }
+   },
+   {
+    "game": "ls20",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 96,
+    "adviser": {
+     "calls": 3,
+     "answers": 1,
+     "seconds": 11.1
+    }
+   },
+   {
+    "game": "ls20",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 192,
+    "adviser": {
+     "calls": 2,
+     "answers": 2,
+     "seconds": 7.1
+    }
+   },
+   {
+    "game": "ls20",
+    "level": 6,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 186,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 10.5
+    }
+   },
+   {
+    "game": "m0r0",
+    "level": 0,
+    "solved": true,
+    "actions": 893,
+    "baseline": 30,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 10.8
+    }
+   },
+   {
+    "game": "m0r0",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 111,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 15.2
+    }
+   },
+   {
+    "game": "m0r0",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 203,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 3.4
+    }
+   },
+   {
+    "game": "m0r0",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 26,
+    "adviser": {
+     "calls": 3,
+     "answers": 1,
+     "seconds": 11.6
+    }
+   },
+   {
+    "game": "m0r0",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 500,
+    "adviser": {
+     "calls": 3,
+     "answers": 1,
+     "seconds": 14.1
+    }
+   },
+   {
+    "game": "m0r0",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 237,
+    "adviser": {
+     "calls": 3,
+     "answers": 2,
+     "seconds": 13.8
+    }
+   },
+   {
+    "game": "r11l",
+    "level": 0,
+    "solved": true,
+    "actions": 87,
+    "baseline": 22,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 5.4
+    }
+   },
+   {
+    "game": "r11l",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 33,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 6.1
+    }
+   },
+   {
+    "game": "r11l",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 51,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 3.3
+    }
+   },
+   {
+    "game": "r11l",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 26,
+    "adviser": {
+     "calls": 3,
+     "answers": 1,
+     "seconds": 15.3
+    }
+   },
+   {
+    "game": "r11l",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 52,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 14.4
+    }
+   },
+   {
+    "game": "r11l",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 49,
+    "adviser": {
+     "calls": 1,
+     "answers": 0,
+     "seconds": 3.7
+    }
+   },
+   {
+    "game": "s5i5",
+    "level": 0,
+    "solved": true,
+    "actions": 762,
+    "baseline": 20,
+    "adviser": {
+     "calls": 3,
+     "answers": 2,
+     "seconds": 11.2
+    }
+   },
+   {
+    "game": "s5i5",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 89,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 10.6
+    }
+   },
+   {
+    "game": "s5i5",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 106,
+    "adviser": {
+     "calls": 3,
+     "answers": 2,
+     "seconds": 13.4
+    }
+   },
+   {
+    "game": "s5i5",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 54,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 5.8
+    }
+   },
+   {
+    "game": "s5i5",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 162,
+    "adviser": {
+     "calls": 2,
+     "answers": 2,
+     "seconds": 7.9
+    }
+   },
+   {
+    "game": "s5i5",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 38,
+    "adviser": {
+     "calls": 3,
+     "answers": 2,
+     "seconds": 14.4
+    }
+   },
+   {
+    "game": "s5i5",
+    "level": 6,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 86,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 12.7
+    }
+   },
+   {
+    "game": "s5i5",
+    "level": 7,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 83,
+    "adviser": {
+     "calls": 3,
+     "answers": 2,
+     "seconds": 18.6
+    }
+   },
+   {
+    "game": "sp80",
+    "level": 0,
+    "solved": true,
+    "actions": 346,
+    "baseline": 39,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 3.4
+    }
+   },
+   {
+    "game": "sp80",
+    "level": 1,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 58,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 4.1
+    }
+   },
+   {
+    "game": "sp80",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 25,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 13.3
+    }
+   },
+   {
+    "game": "sp80",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 148,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 10.0
+    }
+   },
+   {
+    "game": "sp80",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 96,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 3.3
+    }
+   },
+   {
+    "game": "sp80",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 152,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 3.9
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 0,
+    "solved": true,
+    "actions": 340,
+    "baseline": 19,
+    "adviser": {
+     "calls": 1,
+     "answers": 0,
+     "seconds": 4.0
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 1,
+    "solved": true,
+    "actions": 192,
+    "baseline": 16,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 3.1
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 34,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 9.0
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 42,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 10.8
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 123,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 8.0
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 80,
+    "adviser": {
+     "calls": 1,
+     "answers": 1,
+     "seconds": 4.1
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 6,
+    "solved": true,
+    "actions": 494,
+    "baseline": 14,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 9.1
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 7,
+    "solved": true,
+    "actions": 817,
+    "baseline": 23,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 7.6
+    }
+   },
+   {
+    "game": "tu93",
+    "level": 8,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 111,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 9.4
+    }
+   },
+   {
+    "game": "vc33",
+    "level": 0,
+    "solved": true,
+    "actions": 110,
+    "baseline": 7,
+    "adviser": {
+     "calls": 2,
+     "answers": 1,
+     "seconds": 8.2
+    }
+   },
+   {
+    "game": "vc33",
+    "level": 1,
+    "solved": true,
+    "actions": 137,
+    "baseline": 18,
+    "adviser": {
+     "calls": 2,
+     "answers": 1,
+     "seconds": 5.2
+    }
+   },
+   {
+    "game": "vc33",
+    "level": 2,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 44,
+    "adviser": {
+     "calls": 2,
+     "answers": 1,
+     "seconds": 4.8
+    }
+   },
+   {
+    "game": "vc33",
+    "level": 3,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 61,
+    "adviser": {
+     "calls": 3,
+     "answers": 2,
+     "seconds": 6.3
+    }
+   },
+   {
+    "game": "vc33",
+    "level": 4,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 131,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 7.8
+    }
+   },
+   {
+    "game": "vc33",
+    "level": 5,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 34,
+    "adviser": {
+     "calls": 3,
+     "answers": 3,
+     "seconds": 6.2
+    }
+   },
+   {
+    "game": "vc33",
+    "level": 6,
+    "solved": false,
+    "actions": 1500,
+    "baseline": 152,
+    "adviser": {
+     "calls": 3,
+     "answers": 1,
+     "seconds": 6.4
+    }
+   }
+  ]
+ }
+}

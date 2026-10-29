@@ -111,7 +111,34 @@ calls (~2.8k chars per prompt) with no errors.
 GPU dev run: `python scripts/build_adviser_dev_notebook.py` (from
 `ARC-AGI-3-Kaggle-Starter/`) writes a private RTX Pro 6000 notebook. It runs
 dev without the adviser, starts vLLM, benchmarks latency and throughput,
-then runs dev with the adviser.
+then runs dev with the adviser. It takes about 8 minutes in total.
+
+The first GPU run (2026-10-29) is recorded in `notes/adviser_dev_gpu.json`:
+
+| | dev solved | level-0 | squared |
+|---|---|---|---|
+| without adviser | 14/70 | 9/10 | 0.909% |
+| with GPT-OSS-120B | 14/70 | 10/10 | **0.998%** |
+
+- **Server:** vLLM was healthy 251s after start. Throughput was 38 calls/min
+  at 1 concurrent call and 993 calls/min at 64, with p50 latency of
+  1.6–3.0s.
+- **Prompt size:** about 600–790 prompt tokens and 110 completion tokens.
+- **Adviser on dev:** 169 calls, 143 usable answers, 4.1s per call.
+- **Gains:** s5i5 L0 is newly solved, r11l L0 went from 163 to 87 actions,
+  and vc33 L1 from 519 to 137.
+- **Loss:** s5i5 L3 is no longer solved.
+- **Unsure answers:** the remaining 26 calls returned valid JSON with every
+  list empty. Since this run, such answers no longer count as failures.
+
+Kaggle setup needed for vLLM:
+
+- **Accelerator:** `NvidiaRtxPro6000`. Any other name silently runs on a T4.
+- **Image:** the official template's Python 3.12 image, because the
+  vllm-deps wheels are built for cp312.
+- **Driver path:** `/usr/local/nvidia/lib64` added to `LD_LIBRARY_PATH`.
+- **Torch:** `torch==2.10.0+cu128` named explicitly. Otherwise the image's
+  `+cpu` build satisfies vLLM's requirement and stays installed.
 
 ## Kaggle submission
 
