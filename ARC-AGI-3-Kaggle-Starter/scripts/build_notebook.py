@@ -162,8 +162,12 @@ def build() -> dict:
                             and (d / 'o200k_base.tiktoken').exists()]
                 if wheels and tiktoken:
                     subprocess.run(['pip', 'install', '-q', '--no-index', '--find-links',
-                                    str(wheels[0].parent), 'vllm==0.19.1', 'openai==2.24.0',
-                                    'openai-harmony==0.0.8'])
+                                    str(wheels[0].parent),
+                                    # name the CUDA torch: the image's +cpu build
+                                    # satisfies vllm's pin otherwise
+                                    'torch==2.10.0+cu128', 'torchvision==0.25.0+cu128',
+                                    'torchaudio==2.10.0+cu128', 'vllm==0.19.1',
+                                    'openai==2.24.0', 'openai-harmony==0.0.8'])
                     env = dict(os.environ, TIKTOKEN_ENCODINGS_BASE=str(tiktoken[0]),
                                VLLM_WORKER_MULTIPROC_METHOD='spawn')
                     subprocess.Popen(

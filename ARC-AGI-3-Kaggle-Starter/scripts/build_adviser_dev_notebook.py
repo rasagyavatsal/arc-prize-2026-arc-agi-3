@@ -92,6 +92,10 @@ INSTALL = dedent(
         raise FileNotFoundError("no vllm wheel under /kaggle/input (attach the vllm-deps notebook)")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "--no-index",
                            "--find-links", str(wheels[0].parent),
+                           # the image's torch 2.10.0+cpu satisfies vllm's torch pin, so
+                           # the CUDA builds must be named or pip keeps the CPU one
+                           "torch==2.10.0+cu128", "torchvision==0.25.0+cu128",
+                           "torchaudio==2.10.0+cu128",
                            "vllm==0.19.1", "openai==2.24.0", "openai-harmony==0.0.8"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "--no-index",
                            "--find-links", str(COMP / "arc_agi_3_wheels"), "arc-agi", "python-dotenv"])
