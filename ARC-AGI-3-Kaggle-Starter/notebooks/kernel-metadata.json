@@ -15,5 +15,5 @@
     "arc-prize-2026-arc-agi-3"
   ],
   "model_sources": [],
-  "machine_shape": "None"
+  "docker_image": "gcr.io/kaggle-images/python@sha256:dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9"
 }

@@ -35,6 +35,9 @@ ACCELERATOR = "cpu"   # Explorer is deterministic CPU-only; flip to t4/rtx6000 f
 # loads in the background during the rerun; games play plain Explorer until
 # it is healthy, so the first-action deadline is never at risk.
 ADVISER = False
+# The competition's arc_agi_3_wheels are cp312, and Kaggle's default image is
+# now Python 3.13: pin the image of the last scored submission (2026-10-27).
+DOCKER_IMAGE = "gcr.io/kaggle-images/python@sha256:dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9"
 ADVISER_MODEL_SOURCE = "danielhanchen/gpt-oss-120b/Transformers/default/1"
 ADVISER_KERNEL_SOURCE = "philipvonderlind/vllm-deps"  # vLLM wheels + tiktoken files
 # those wheels are cp312: the official template's Python 3.12 image
@@ -49,7 +52,7 @@ _ACCELERATORS = {
 }
 # machine_shape names for kernel-metadata.json; Kaggle silently runs a T4 on
 # an unknown name
-_SHAPES = {"cpu": "None", "t4": "NvidiaTeslaT4", "p100": "NvidiaTeslaP100",
+_SHAPES = {"t4": "NvidiaTeslaT4", "p100": "NvidiaTeslaP100",
            "rtx6000": "NvidiaRtxPro6000"}
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -267,15 +270,19 @@ def main() -> None:
         meta = json.loads(METADATA_PATH.read_text())
         wanted = {
             "enable_gpu": _ACCELERATORS[ACCELERATOR]["gpu"],
-            "machine_shape": _SHAPES[ACCELERATOR],
             "kernel_sources": [ADVISER_KERNEL_SOURCE] if ADVISER else [],
             "model_sources": [ADVISER_MODEL_SOURCE] if ADVISER else [],
         }
-        if ADVISER:
-            wanted["docker_image"] = ADVISER_DOCKER_IMAGE
+        wanted["docker_image"] = ADVISER_DOCKER_IMAGE if ADVISER else DOCKER_IMAGE
+        if ACCELERATOR in _SHAPES:
+            wanted["machine_shape"] = _SHAPES[ACCELERATOR]
         changed = {k: v for k, v in wanted.items() if meta.get(k) != v}
+        if ACCELERATOR not in _SHAPES and "machine_shape" in meta:
+            changed["machine_shape"] = None  # CPU: no shape, as Kaggle's own pushes
         if changed:
-            meta.update(changed)
+            meta.update({k: v for k, v in changed.items() if v is not None})
+            for k in [k for k, v in changed.items() if v is None]:
+                meta.pop(k)
             METADATA_PATH.write_text(json.dumps(meta, indent=2) + "\n")
             print(f"[build_notebook] Synced {changed} in "
                   f"{METADATA_PATH.relative_to(ROOT)}")
