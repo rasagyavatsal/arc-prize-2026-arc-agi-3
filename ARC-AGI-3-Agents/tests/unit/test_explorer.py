@@ -245,3 +245,31 @@ class TestExplorer:
         f.win_levels = 10
         agent.choose_action([], f)
         assert agent.total_levels == 10
+
+    def test_status_bar_is_masked_out_of_state_identity(self):
+        """A top-row step counter must not make every revisit a new state."""
+        agent = make_agent()
+
+        def grid(step, avatar_x):
+            g = [[0] * 32 for _ in range(32)]
+            g[0][step % 32] = 5  # counter ticks on every action
+            g[16][avatar_x] = 3
+            return g
+
+        sigs = []
+        for step in range(2 * agent.HUD_MIN_OBS):
+            agent.choose_action([], make_frame(grid(step, 8 + step % 2)))
+            sigs.append(agent.last_sig)
+
+        assert agent.hud_rows == {0}
+        # once masked, the avatar's two positions are the only two states
+        assert len(set(sigs[-agent.HUD_MIN_OBS:])) == 2
+        assert agent.world_changed  # the avatar still moved
+
+    def test_playfield_lines_are_never_masked(self):
+        agent = make_agent()
+        for step in range(2 * agent.HUD_MIN_OBS):
+            g = [[0] * 32 for _ in range(32)]
+            g[16][step % 32] = 3  # mid-field object changes every step
+            agent.choose_action([], make_frame(g))
+        assert agent.hud_rows == set() and agent.hud_cols == set()

@@ -114,6 +114,9 @@ class Explorer(Agent):
     EXPLORE_STEPS = 32  # random-walk length when no frontier is reachable (scaled)
     MAX_EXPLORE_RUNS = 2  # fruitless walks per level before a RESET is preferred
     ESCALATE_AFTER = 300  # invisible world changes before a level's identity goes fine
+    HUD_BAND = 4  # outer rows/columns of the frame searched for status bars
+    HUD_MIN_OBS = 12  # same-level transitions observed before status bars are inferred
+    HUD_RATE = 0.6  # an edge line changing on this share of transitions is a status bar
 
     def __init__(
         self,
@@ -178,6 +181,13 @@ class Explorer(Agent):
         self.fine_levels: set[int] = set()  # levels switched to grid-hash identity
         self.invisible_changes: dict[int, int] = {}  # level -> changed self-loop count
         self.action_nop_streak: dict[int, int] = {}
+        # Status bars (step counters, energy meters) inferred from play: edge
+        # rows/columns that change on most transitions, whatever the action.
+        self.hud_shape: Optional[tuple[int, int]] = None
+        self.hud_rows: set[int] = set()
+        self.hud_cols: set[int] = set()
+        self.line_changes: Counter[tuple[str, int]] = Counter()
+        self.line_obs = 0
         self._give_up = False
         self.total_levels = 8  # default baseline; updated live from FrameData.win_levels
         logger.info(
@@ -203,6 +213,39 @@ class Explorer(Agent):
         """The settled view of the world is the last rendered layer."""
         return frame.frame[-1] if frame.frame else []
 
+    def _hud_mask(self, grid: list[list[int]]) -> tuple[set[int], set[int]]:
+        """Inferred status-bar rows and columns, if they apply to this grid."""
+        width = len(grid[0]) if grid else 0
+        if self.hud_shape != (len(grid), width):
+            return set(), set()
+        return self.hud_rows, self.hud_cols
+
+    def _foreground(
+        self, grid: list[list[int]], exclude_hud: bool
+    ) -> list[tuple[int, int]]:
+        """Non-background playfield cells, status bars excluded.
+
+        Background = the modal cell value of the playfield (rows above the
+        HUD band, minus inferred status-bar lines).
+        """
+        cutoff = (
+            max(0, len(grid) - self.HUD_BOTTOM_ROWS) if exclude_hud else len(grid)
+        )
+        if cutoff <= 0:
+            return []
+        rows, cols = self._hud_mask(grid)
+        field = [
+            (y, x, v)
+            for y in range(cutoff)
+            if y not in rows
+            for x, v in enumerate(grid[y])
+            if x not in cols
+        ]
+        if not field:
+            return []
+        modal = Counter(v for _, _, v in field).most_common(1)[0][0]
+        return [(y, x) for y, x, v in field if v != modal]
+
     def _segment(
         self, grid: list[list[int]], exclude_hud: bool
     ) -> list[list[tuple[int, int]]]:
@@ -218,18 +261,7 @@ class Explorer(Agent):
         visible to the signature.  With ``exclude_hud`` the bottom HUD rows
         are omitted entirely.
         """
-        cutoff = (
-            max(0, len(grid) - self.HUD_BOTTOM_ROWS) if exclude_hud else len(grid)
-        )
-        if cutoff <= 0:
-            return []
-        modal = Counter(v for row in grid[:cutoff] for v in row).most_common(1)[0][0]
-        cells = [
-            (y, x)
-            for y in range(cutoff)
-            for x, v in enumerate(grid[y])
-            if v != modal
-        ]
+        cells = self._foreground(grid, exclude_hud)
         if not cells:
             return []
         objs: list[list[tuple[int, int]]] = []
@@ -264,18 +296,7 @@ class Explorer(Agent):
         sprites merge, which keeps navigation memories unified in games
         whose objects are drawn as multi-colour composites.
         """
-        cutoff = (
-            max(0, len(grid) - self.HUD_BOTTOM_ROWS) if exclude_hud else len(grid)
-        )
-        if cutoff <= 0:
-            return []
-        modal = Counter(v for row in grid[:cutoff] for v in row).most_common(1)[0][0]
-        cells = [
-            (y, x)
-            for y in range(cutoff)
-            for x, v in enumerate(grid[y])
-            if v != modal
-        ]
+        cells = self._foreground(grid, exclude_hud)
         if not cells:
             return []
         objs: list[list[tuple[int, int]]] = []
@@ -337,16 +358,62 @@ class Explorer(Agent):
         if level in self.fine_levels:
             return
         self.fine_levels.add(level)
-        prefix = f"ob|{level}|"
-        for s in [s for s in self.memory if s.startswith(prefix)]:
-            del self.memory[s]
-        self._seen = {s for s in self._seen if not s.startswith(prefix)}
-        self.plan = []
-        if self.pending is not None and self.pending["sig"].startswith(prefix):
-            self.pending = None
+        self._forget_level(level, ("ob",))
         logger.info(
             f"{self.game_id}: level {level} switched to fine-grained state "
             f"identity after {self.invisible_changes.get(level, 0)} invisible changes"
+        )
+
+    def _forget_level(self, level: int, kinds: tuple[str, ...] = ("ob", "gd")) -> None:
+        """Drop a level's memory nodes whose signatures no longer apply."""
+        prefixes = tuple(f"{k}|{level}|" for k in kinds)
+        for s in [s for s in self.memory if s.startswith(prefixes)]:
+            del self.memory[s]
+        self._seen = {s for s in self._seen if not s.startswith(prefixes)}
+        self.plan = []
+        if self.pending is not None and self.pending["sig"].startswith(prefixes):
+            self.pending = None
+
+    def _update_hud(self, changed: list[tuple[int, int]], height: int, width: int, level: int) -> None:
+        """Mask edge lines that change on most transitions (status bars).
+
+        Step counters and energy meters change on almost every action, so
+        without a mask every move looks like a world change: no action is
+        ever a no-op and every revisit is a new state.  Only lines within
+        ``HUD_BAND`` of the frame edge qualify, so an avatar's corridor in
+        the playfield is never masked.  A mask that grows invalidates the
+        level's signatures, which are rebuilt from the next frame on.
+        """
+        if self.hud_shape != (height, width):
+            self.hud_shape = (height, width)
+            self.hud_rows, self.hud_cols = set(), set()
+            self.line_changes.clear()
+            self.line_obs = 0
+        if height < 4 * self.HUD_BAND or width < 4 * self.HUD_BAND:
+            return  # small grids are all playfield
+        cutoff = height - self.HUD_BOTTOM_ROWS  # rows below are always ignored
+        band_rows = {
+            y for y, _ in changed
+            if y < self.HUD_BAND or height - self.HUD_BAND <= y < cutoff
+        }
+        band_cols = {x for _, x in changed if x < self.HUD_BAND or x >= width - self.HUD_BAND}
+        self.line_changes.update(("r", y) for y in band_rows)
+        self.line_changes.update(("c", x) for x in band_cols)
+        self.line_obs += 1
+        if self.line_obs < self.HUD_MIN_OBS:
+            return
+        need = self.HUD_RATE * self.line_obs
+        rows = {i for (k, i), n in self.line_changes.items() if k == "r" and n >= need}
+        cols = {i for (k, i), n in self.line_changes.items() if k == "c" and n >= need}
+        if rows <= self.hud_rows and cols <= self.hud_cols:
+            return
+        self.hud_rows |= rows
+        self.hud_cols |= cols
+        self._forget_level(level)
+        self.invisible_changes.pop(level, None)  # counted against the unmasked bar
+        logger.info(
+            f"{self.game_id}: status bar rows {sorted(self.hud_rows)} "
+            f"cols {sorted(self.hud_cols)} masked after {self.line_obs} transitions"
         )
 
     def _signature(self, frame: FrameData) -> str:
@@ -371,9 +438,14 @@ class Explorer(Agent):
             layout = ";".join(f"{y}.{x}.{b}" for y, x, b in detail)
             mlayout = ";".join(f"{y}.{x}.{b}" for y, x, b in mixed)
             return f"ob|{levels}|{mlayout}|{layout}"
+        rows, cols = self._hud_mask(grid)
         h = hashlib.sha1()
-        for row in grid[:cutoff]:
-            h.update((";" + ",".join(str(int(v)) for v in row)).encode())
+        for y, row in enumerate(grid[:cutoff]):
+            if y in rows:
+                continue
+            h.update(
+                (";" + ",".join(str(int(v)) for x, v in enumerate(row) if x not in cols)).encode()
+            )
         return f"gd|{levels}|{h.hexdigest()[:16]}"
 
     def _observe_transition(
@@ -396,12 +468,18 @@ class Explorer(Agent):
         if not same_level:
             self.world_changed = False
         else:
-            cutoff = max(0, min(len(self.last_grid), len(grid)) - self.HUD_BOTTOM_ROWS)
-            self.world_changed = any(
-                self.last_grid[y][x] != grid[y][x]
-                for y in range(cutoff)
-                for x, (va, vb) in enumerate(zip(self.last_grid[y], grid[y]))
+            assert self.last_grid is not None
+            changed = [
+                (y, x)
+                for y, (ra, rb) in enumerate(zip(self.last_grid, grid))
+                for x, (va, vb) in enumerate(zip(ra, rb))
                 if va != vb
+            ]
+            self._update_hud(changed, len(grid), len(grid[0]) if grid else 0, levels)
+            cutoff = max(0, len(grid) - self.HUD_BOTTOM_ROWS)
+            rows, cols = self._hud_mask(grid)
+            self.world_changed = any(
+                y < cutoff and y not in rows and x not in cols for y, x in changed
             )
         self.last_grid = [row[:] for row in grid]
         self.last_grid_levels = levels
