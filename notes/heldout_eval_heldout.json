@@ -1,14 +1,14 @@
 {
- "generated": "2026-10-27 14:11:59",
+ "generated": "2026-10-29 06:06:51",
  "budget": 1500,
  "summary": {
   "split": "heldout",
   "levels": 113,
-  "solved": 0,
-  "level0_solved": 0,
+  "solved": 2,
+  "level0_solved": 1,
   "games": 15,
-  "linear_mean": 0.0,
-  "squared_mean_pct": 0.0,
+  "linear_mean": 0.066,
+  "squared_mean_pct": 0.003,
   "errors": 0
  },
  "results": [
@@ -16,23 +16,23 @@
    "game": "ar25",
    "level": 0,
    "baseline": 32,
-   "solved": false,
-   "actions": 1500,
+   "solved": true,
+   "actions": 1447,
    "error": null,
-   "elapsed_s": 4.6,
-   "linear": 0.0,
-   "squared": 0.0
+   "elapsed_s": 4.4,
+   "linear": 2.21147201105736,
+   "squared": 0.0004890608455690084
   },
   {
    "game": "ar25",
    "level": 1,
    "baseline": 50,
-   "solved": false,
-   "actions": 1500,
+   "solved": true,
+   "actions": 959,
    "error": null,
-   "elapsed_s": 4.8,
-   "linear": 0.0,
-   "squared": 0.0
+   "elapsed_s": 3.3,
+   "linear": 5.213764337851929,
+   "squared": 0.002718333857065656
   },
   {
    "game": "ar25",
@@ -41,7 +41,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.9,
+   "elapsed_s": 6.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -52,7 +52,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.9,
+   "elapsed_s": 5.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -74,7 +74,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.0,
+   "elapsed_s": 7.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -85,7 +85,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.4,
+   "elapsed_s": 8.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -107,7 +107,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 14.5,
+   "elapsed_s": 15.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -118,7 +118,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 18.3,
+   "elapsed_s": 17.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -129,7 +129,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 16.3,
+   "elapsed_s": 14.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -140,7 +140,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.7,
+   "elapsed_s": 12.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -151,7 +151,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.8,
+   "elapsed_s": 11.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -162,7 +162,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 15.5,
+   "elapsed_s": 13.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -173,7 +173,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 20.6,
+   "elapsed_s": 17.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -184,7 +184,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 16.7,
+   "elapsed_s": 15.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -195,7 +195,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 16.4,
+   "elapsed_s": 14.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -206,7 +206,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.5,
+   "elapsed_s": 5.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -217,7 +217,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.0,
+   "elapsed_s": 4.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -228,7 +228,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.7,
+   "elapsed_s": 4.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -239,7 +239,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.8,
+   "elapsed_s": 5.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -250,7 +250,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.7,
+   "elapsed_s": 5.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -261,7 +261,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.5,
+   "elapsed_s": 5.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -272,7 +272,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.0,
+   "elapsed_s": 11.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -283,7 +283,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.9,
+   "elapsed_s": 9.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -292,9 +292,9 @@
    "level": 2,
    "baseline": 67,
    "solved": false,
-   "actions": 439,
+   "actions": 464,
    "error": null,
-   "elapsed_s": 3.6,
+   "elapsed_s": 3.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -305,7 +305,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.7,
+   "elapsed_s": 10.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -316,7 +316,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.7,
+   "elapsed_s": 10.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -327,7 +327,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.8,
+   "elapsed_s": 11.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -336,9 +336,9 @@
    "level": 0,
    "baseline": 43,
    "solved": false,
-   "actions": 493,
+   "actions": 488,
    "error": null,
-   "elapsed_s": 4.1,
+   "elapsed_s": 3.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -349,7 +349,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.3,
+   "elapsed_s": 6.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -360,7 +360,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.0,
+   "elapsed_s": 6.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -371,7 +371,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.8,
+   "elapsed_s": 6.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -380,9 +380,9 @@
    "level": 4,
    "baseline": 65,
    "solved": false,
-   "actions": 661,
+   "actions": 637,
    "error": null,
-   "elapsed_s": 4.0,
+   "elapsed_s": 3.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -393,7 +393,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.3,
+   "elapsed_s": 7.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -404,7 +404,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.5,
+   "elapsed_s": 9.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -415,7 +415,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.0,
+   "elapsed_s": 9.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -426,7 +426,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.8,
+   "elapsed_s": 8.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -437,7 +437,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.5,
+   "elapsed_s": 9.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -448,7 +448,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.1,
+   "elapsed_s": 8.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -459,7 +459,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.6,
+   "elapsed_s": 8.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -470,7 +470,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.4,
+   "elapsed_s": 7.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -479,9 +479,9 @@
    "level": 0,
    "baseline": 32,
    "solved": false,
-   "actions": 1500,
+   "actions": 299,
    "error": null,
-   "elapsed_s": 10.2,
+   "elapsed_s": 2.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -492,7 +492,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.0,
+   "elapsed_s": 8.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -503,7 +503,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.7,
+   "elapsed_s": 9.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -514,7 +514,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.0,
+   "elapsed_s": 9.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -525,7 +525,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.5,
+   "elapsed_s": 9.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -536,7 +536,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.2,
+   "elapsed_s": 9.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -547,7 +547,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 14.6,
+   "elapsed_s": 15.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -558,7 +558,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 16.0,
+   "elapsed_s": 12.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -569,7 +569,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.1,
+   "elapsed_s": 9.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -580,7 +580,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 16.6,
+   "elapsed_s": 12.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -591,7 +591,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.0,
+   "elapsed_s": 5.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -602,7 +602,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.4,
+   "elapsed_s": 4.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -613,7 +613,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.7,
+   "elapsed_s": 4.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -624,7 +624,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.9,
+   "elapsed_s": 5.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -635,7 +635,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.2,
+   "elapsed_s": 6.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -646,7 +646,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.4,
+   "elapsed_s": 5.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -657,7 +657,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.2,
+   "elapsed_s": 5.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -668,7 +668,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.0,
+   "elapsed_s": 10.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -679,7 +679,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.9,
+   "elapsed_s": 7.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -690,7 +690,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.3,
+   "elapsed_s": 8.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -701,7 +701,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.2,
+   "elapsed_s": 8.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -712,7 +712,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.3,
+   "elapsed_s": 8.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -723,7 +723,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.6,
+   "elapsed_s": 15.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -734,7 +734,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.6,
+   "elapsed_s": 16.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -745,7 +745,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.5,
+   "elapsed_s": 14.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -756,7 +756,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.4,
+   "elapsed_s": 14.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -767,7 +767,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.1,
+   "elapsed_s": 5.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -778,7 +778,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.4,
+   "elapsed_s": 6.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -789,7 +789,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.5,
+   "elapsed_s": 6.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -800,7 +800,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 15.0,
+   "elapsed_s": 12.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -811,7 +811,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 15.6,
+   "elapsed_s": 10.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -822,7 +822,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 17.2,
+   "elapsed_s": 10.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -833,7 +833,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.7,
+   "elapsed_s": 8.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -844,7 +844,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.1,
+   "elapsed_s": 9.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -855,7 +855,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.4,
+   "elapsed_s": 9.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -866,7 +866,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 13.7,
+   "elapsed_s": 10.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -877,7 +877,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.4,
+   "elapsed_s": 9.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -888,7 +888,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 13.5,
+   "elapsed_s": 11.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -899,7 +899,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.9,
+   "elapsed_s": 10.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -910,7 +910,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.4,
+   "elapsed_s": 10.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -921,7 +921,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.5,
+   "elapsed_s": 7.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -932,7 +932,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.6,
+   "elapsed_s": 6.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -943,7 +943,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.4,
+   "elapsed_s": 6.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -954,7 +954,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.5,
+   "elapsed_s": 7.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -965,7 +965,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.9,
+   "elapsed_s": 7.4,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -976,7 +976,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.0,
+   "elapsed_s": 8.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -987,7 +987,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 8.6,
+   "elapsed_s": 7.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -998,7 +998,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 10.0,
+   "elapsed_s": 9.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1009,7 +1009,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 9.6,
+   "elapsed_s": 8.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1020,7 +1020,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 5.8,
+   "elapsed_s": 5.9,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1031,7 +1031,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.0,
+   "elapsed_s": 10.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1042,7 +1042,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 14.4,
+   "elapsed_s": 11.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1053,7 +1053,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 13.4,
+   "elapsed_s": 11.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1064,7 +1064,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 14.5,
+   "elapsed_s": 10.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1075,7 +1075,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 15.7,
+   "elapsed_s": 12.2,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1086,7 +1086,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 15.3,
+   "elapsed_s": 11.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1097,7 +1097,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.7,
+   "elapsed_s": 10.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1108,7 +1108,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 15.1,
+   "elapsed_s": 12.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1119,7 +1119,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 17.0,
+   "elapsed_s": 14.0,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1130,7 +1130,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 14.8,
+   "elapsed_s": 12.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1141,7 +1141,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 12.3,
+   "elapsed_s": 10.7,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1152,7 +1152,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 11.9,
+   "elapsed_s": 11.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1163,7 +1163,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 3.4,
+   "elapsed_s": 3.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1174,7 +1174,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.1,
+   "elapsed_s": 4.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1185,7 +1185,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 4.7,
+   "elapsed_s": 5.5,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1196,7 +1196,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.6,
+   "elapsed_s": 7.1,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1207,7 +1207,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.3,
+   "elapsed_s": 6.6,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1229,7 +1229,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 7.8,
+   "elapsed_s": 8.3,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1240,7 +1240,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.9,
+   "elapsed_s": 8.8,
    "linear": 0.0,
    "squared": 0.0
   },
@@ -1251,7 +1251,7 @@
    "solved": false,
    "actions": 1500,
    "error": null,
-   "elapsed_s": 6.8,
+   "elapsed_s": 9.7,
    "linear": 0.0,
    "squared": 0.0
   }

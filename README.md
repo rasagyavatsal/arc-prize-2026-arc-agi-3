@@ -11,7 +11,8 @@ with human-competitive action efficiency.
 |---|---|
 | Explorer v3 (object-layout signature, escalation, scaled patience) | **0.71%** on the 25 public games, all run concurrently (the 1.29% controlled run in `notes/sweep_adaptive.md` does not reproduce) |
 | Leaderboard | **0.09** (2026-09-10 and 2026-10-27). Removing the 270s per-game cap did not change it: the agent does not generalize to unseen games |
-| Held-out evaluation (`sweeps/heldout_eval.py`) | **0/113** levels solved on 15 held-out games vs 7/70 on the 10 tuned (dev) games |
+| Held-out evaluation (`sweeps/heldout_eval.py`) | **2/113** levels solved on 15 held-out games (v3: 0/113), dev **11/70** (v3: 7/70) |
+| Explorer v4 (inferred status-bar mask, per-colour click outcomes) | held-out 0 → **2** levels; dev 7 → 11; leaderboard not yet resubmitted |
 | Kaggle submission pipeline | **validated end-to-end** (official starter kit, notebook pushed) |
 | Submission Readiness Gate | 4 checks (code unity, autonomy, budget, breadth) — passing |
 | Game intelligence | all 25 public games statically profiled |
@@ -72,8 +73,9 @@ ARC-AGI-3-Agents/.venv/bin/python sweeps/heldout_eval.py --split dev       # ~1.
 ```
 
 Baseline (Explorer v3, budget 1500/level, 2026-10-27): held-out **0/113** levels,
-dev **7/70** (results in `notes/heldout_eval_*.json`). The held-out solve count
-is the number to move.
+dev **7/70**. Explorer v4 (2026-10-29): held-out **2/113**, dev **11/70**
+(results in `notes/heldout_eval_*.json`). The held-out solve count is the
+number to move.
 
 ## Kaggle submission
 
