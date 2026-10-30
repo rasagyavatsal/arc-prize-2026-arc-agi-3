@@ -87,9 +87,10 @@ def build(src_dir: Path) -> tuple[dict, dict]:
             raise SystemExit(f"patch text not found once in the {marker!r} cell:\n{old}")
         cell["source"] = src.replace(old, new)
     for cell in cells:
-        cell["outputs"] = []
-        cell["execution_count"] = None if cell["cell_type"] == "code" else cell.get("execution_count")
-        if cell["cell_type"] == "markdown":
+        if cell["cell_type"] == "code":
+            cell["outputs"], cell["execution_count"] = [], None
+        else:  # nbformat rejects outputs on markdown cells
+            cell.pop("outputs", None)
             cell.pop("execution_count", None)
     cells.insert(0, {"cell_type": "code", "metadata": {"trusted": True}, "outputs": [],
                      "execution_count": None, "source": QUICK_CONFIG})

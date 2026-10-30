@@ -14,6 +14,7 @@ with human-competitive action efficiency.
 | Held-out evaluation (`sweeps/heldout_eval.py`) | **4/113** levels solved on 15 held-out games (v3: 0/113), dev **14/70** (v3: 7/70) |
 | Explorer v4 (inferred status-bar mask, per-colour click outcomes) | held-out 0 → 2 levels; dev 7 → 11 |
 | Explorer v4.1 (full probes for click-reached states, inert click targets, RESET-loop fix) | held-out 2 → **4** levels; dev 11 → 14; leaderboard 0.09 → **0.10** |
+| Franzen Milestone 2 solution (Duck harness + Qwen3.8-Flash-Next, `scripts/build_franzen_notebook.py`) | submitted 2026-10-30 (ref 57791901), score pending; ~half the public board scores 22–34 with copies of it |
 | LLM adviser (GPT-OSS-120B via vLLM on the RTX Pro 6000, issue #7) | dev 14 → 16 (within noise; a no-model control gets 15); held-out 4 → **3 and 2**: not submitted, off by default |
 | Kaggle submission pipeline | **validated end-to-end** (official starter kit, notebook pushed) |
 | Submission Readiness Gate | 4 checks (code unity, autonomy, budget, breadth) — passing |
