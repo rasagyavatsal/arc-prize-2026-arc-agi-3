@@ -1,0 +1,1998 @@
+{
+ "generated": "2026-10-29 08:33:34",
+ "budget": 1500,
+ "results": [
+  {
+   "game": "cd82",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 234,
+   "kind": "mixed",
+   "states": 32,
+   "growth_q": [
+    10,
+    12,
+    29,
+    32
+   ],
+   "last_new": 0.92,
+   "untried": 3177,
+   "fine": false,
+   "noop_frac": 0.61,
+   "game_overs": 1,
+   "resets": 2,
+   "click_frac": 0.42,
+   "why": {
+    "frontier probe": 225,
+    "replay to frontier": 7,
+    "reset": 2
+   }
+  },
+  {
+   "game": "cd82",
+   "level": 1,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 116,
+   "growth_q": [
+    47,
+    116,
+    116,
+    116
+   ],
+   "last_new": 0.47,
+   "untried": 12058,
+   "fine": false,
+   "noop_frac": 0.46,
+   "game_overs": 14,
+   "resets": 15,
+   "click_frac": 0.6,
+   "why": {
+    "frontier probe": 1057,
+    "replay to frontier": 312,
+    "inert-click probe": 116,
+    "reset": 15
+   }
+  },
+  {
+   "game": "cd82",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 250,
+   "growth_q": [
+    88,
+    148,
+    212,
+    250
+   ],
+   "last_new": 1.0,
+   "untried": 25204,
+   "fine": false,
+   "noop_frac": 0.41,
+   "game_overs": 14,
+   "resets": 15,
+   "click_frac": 0.43,
+   "why": {
+    "frontier probe": 1429,
+    "replay to frontier": 56,
+    "reset": 15
+   }
+  },
+  {
+   "game": "cd82",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 270,
+   "growth_q": [
+    79,
+    151,
+    216,
+    270
+   ],
+   "last_new": 1.0,
+   "untried": 27198,
+   "fine": false,
+   "noop_frac": 0.41,
+   "game_overs": 14,
+   "resets": 15,
+   "click_frac": 0.4,
+   "why": {
+    "frontier probe": 1428,
+    "replay to frontier": 55,
+    "reset": 15,
+    "inert-click probe": 2
+   }
+  },
+  {
+   "game": "cd82",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 263,
+   "growth_q": [
+    79,
+    135,
+    198,
+    263
+   ],
+   "last_new": 0.99,
+   "untried": 26399,
+   "fine": false,
+   "noop_frac": 0.42,
+   "game_overs": 14,
+   "resets": 15,
+   "click_frac": 0.4,
+   "why": {
+    "frontier probe": 1432,
+    "replay to frontier": 53,
+    "reset": 15
+   }
+  },
+  {
+   "game": "cd82",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 270,
+   "growth_q": [
+    94,
+    152,
+    216,
+    270
+   ],
+   "last_new": 0.98,
+   "untried": 27174,
+   "fine": false,
+   "noop_frac": 0.43,
+   "game_overs": 14,
+   "resets": 14,
+   "click_frac": 0.4,
+   "why": {
+    "frontier probe": 1426,
+    "replay to frontier": 60,
+    "reset": 14
+   }
+  },
+  {
+   "game": "g50t",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 153,
+   "kind": "move",
+   "states": 35,
+   "growth_q": [
+    10,
+    18,
+    22,
+    35
+   ],
+   "last_new": 0.99,
+   "untried": 67,
+   "fine": false,
+   "noop_frac": 0.28,
+   "game_overs": 1,
+   "resets": 1,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 109,
+    "replay to frontier": 43,
+    "reset": 1
+   }
+  },
+  {
+   "game": "g50t",
+   "level": 1,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 247,
+   "growth_q": [
+    120,
+    183,
+    221,
+    247
+   ],
+   "last_new": 0.98,
+   "untried": 503,
+   "fine": false,
+   "noop_frac": 0.26,
+   "game_overs": 8,
+   "resets": 37,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 732,
+    "replay to frontier": 474,
+    "explore walk": 194,
+    "cycle break (least-recently-tried)": 63,
+    "reset": 37
+   }
+  },
+  {
+   "game": "g50t",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 132,
+   "growth_q": [
+    66,
+    112,
+    130,
+    132
+   ],
+   "last_new": 0.79,
+   "untried": 192,
+   "fine": false,
+   "noop_frac": 0.33,
+   "game_overs": 7,
+   "resets": 44,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 572,
+    "frontier probe": 468,
+    "explore walk": 365,
+    "cycle break (least-recently-tried)": 51,
+    "reset": 44
+   }
+  },
+  {
+   "game": "g50t",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 133,
+   "growth_q": [
+    68,
+    99,
+    122,
+    133
+   ],
+   "last_new": 0.89,
+   "untried": 142,
+   "fine": false,
+   "noop_frac": 0.3,
+   "game_overs": 7,
+   "resets": 46,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 598,
+    "frontier probe": 523,
+    "explore walk": 272,
+    "cycle break (least-recently-tried)": 61,
+    "reset": 46
+   }
+  },
+  {
+   "game": "g50t",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 350,
+   "growth_q": [
+    123,
+    197,
+    285,
+    350
+   ],
+   "last_new": 1.0,
+   "untried": 709,
+   "fine": false,
+   "noop_frac": 0.25,
+   "game_overs": 11,
+   "resets": 11,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 1024,
+    "replay to frontier": 465,
+    "reset": 11
+   }
+  },
+  {
+   "game": "g50t",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 180,
+   "growth_q": [
+    95,
+    147,
+    175,
+    180
+   ],
+   "last_new": 0.96,
+   "untried": 239,
+   "fine": false,
+   "noop_frac": 0.24,
+   "game_overs": 10,
+   "resets": 52,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 732,
+    "frontier probe": 638,
+    "reset": 52,
+    "explore walk": 47,
+    "cycle break (least-recently-tried)": 31
+   }
+  },
+  {
+   "game": "g50t",
+   "level": 6,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 440,
+   "growth_q": [
+    146,
+    247,
+    327,
+    440
+   ],
+   "last_new": 1.0,
+   "untried": 1058,
+   "fine": false,
+   "noop_frac": 0.3,
+   "game_overs": 11,
+   "resets": 11,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 1143,
+    "replay to frontier": 346,
+    "reset": 11
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 33,
+   "kind": "click",
+   "states": 5,
+   "growth_q": [
+    1,
+    1,
+    3,
+    5
+   ],
+   "last_new": 0.97,
+   "untried": 510,
+   "fine": false,
+   "noop_frac": 0.88,
+   "game_overs": 0,
+   "resets": 0,
+   "click_frac": 1.0,
+   "why": {
+    "frontier probe": 33
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 1,
+   "solved": false,
+   "end": "gave_up",
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 1092,
+   "kind": "click",
+   "states": 22,
+   "growth_q": [
+    22,
+    22,
+    22,
+    22
+   ],
+   "last_new": 0.05,
+   "untried": 0,
+   "fine": false,
+   "noop_frac": 0.88,
+   "game_overs": 1,
+   "resets": 19,
+   "click_frac": 0.98,
+   "why": {
+    "explore click": 595,
+    "frontier probe": 364,
+    "inert-click probe": 111,
+    "reset": 19,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 2,
+   "solved": false,
+   "end": "gave_up",
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 829,
+   "kind": "click",
+   "states": 26,
+   "growth_q": [
+    26,
+    26,
+    26,
+    26
+   ],
+   "last_new": 0.09,
+   "untried": 0,
+   "fine": false,
+   "noop_frac": 0.86,
+   "game_overs": 1,
+   "resets": 19,
+   "click_frac": 0.98,
+   "why": {
+    "explore click": 483,
+    "frontier probe": 230,
+    "inert-click probe": 94,
+    "reset": 19,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 231,
+   "growth_q": [
+    38,
+    221,
+    231,
+    231
+   ],
+   "last_new": 0.51,
+   "untried": 24825,
+   "fine": true,
+   "noop_frac": 0.12,
+   "game_overs": 8,
+   "resets": 11,
+   "click_frac": 0.99,
+   "why": {
+    "frontier probe": 1384,
+    "inert-click probe": 77,
+    "explore click": 18,
+    "reset": 11,
+    "replay to frontier": 7,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 4,
+   "solved": false,
+   "end": "gave_up",
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 1326,
+   "kind": "click",
+   "states": 38,
+   "growth_q": [
+    38,
+    38,
+    38,
+    38
+   ],
+   "last_new": 0.08,
+   "untried": 0,
+   "fine": false,
+   "noop_frac": 0.76,
+   "game_overs": 3,
+   "resets": 19,
+   "click_frac": 0.99,
+   "why": {
+    "explore click": 625,
+    "frontier probe": 571,
+    "inert-click probe": 108,
+    "reset": 19,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 5,
+   "solved": false,
+   "end": "gave_up",
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 968,
+   "kind": "click",
+   "states": 39,
+   "growth_q": [
+    39,
+    39,
+    39,
+    39
+   ],
+   "last_new": 0.11,
+   "untried": 0,
+   "fine": false,
+   "noop_frac": 0.85,
+   "game_overs": 1,
+   "resets": 19,
+   "click_frac": 0.98,
+   "why": {
+    "explore click": 473,
+    "frontier probe": 353,
+    "inert-click probe": 120,
+    "reset": 19,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 6,
+   "solved": false,
+   "end": "gave_up",
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 925,
+   "kind": "click",
+   "states": 29,
+   "growth_q": [
+    29,
+    29,
+    29,
+    29
+   ],
+   "last_new": 0.09,
+   "untried": 0,
+   "fine": false,
+   "noop_frac": 0.87,
+   "game_overs": 1,
+   "resets": 19,
+   "click_frac": 0.98,
+   "why": {
+    "explore click": 535,
+    "frontier probe": 272,
+    "inert-click probe": 96,
+    "reset": 19,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "lp85",
+   "level": 7,
+   "solved": false,
+   "end": "gave_up",
+   "giveup": "level 0: attempts exhausted, no frontier left (no-effect streak)",
+   "actions": 1082,
+   "kind": "click",
+   "states": 26,
+   "growth_q": [
+    26,
+    26,
+    26,
+    26
+   ],
+   "last_new": 0.06,
+   "untried": 0,
+   "fine": false,
+   "noop_frac": 0.84,
+   "game_overs": 1,
+   "resets": 19,
+   "click_frac": 0.98,
+   "why": {
+    "explore click": 613,
+    "frontier probe": 313,
+    "inert-click probe": 134,
+    "reset": 19,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "ls20",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 299,
+   "kind": "move",
+   "states": 77,
+   "growth_q": [
+    37,
+    54,
+    66,
+    77
+   ],
+   "last_new": 1.0,
+   "untried": 42,
+   "fine": false,
+   "noop_frac": 0.2,
+   "game_overs": 2,
+   "resets": 2,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 239,
+    "replay to frontier": 58,
+    "reset": 2
+   }
+  },
+  {
+   "game": "ls20",
+   "level": 1,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 147,
+   "growth_q": [
+    66,
+    93,
+    120,
+    147
+   ],
+   "last_new": 0.94,
+   "untried": 83,
+   "fine": false,
+   "noop_frac": 0.1,
+   "game_overs": 16,
+   "resets": 26,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 1002,
+    "frontier probe": 469,
+    "reset": 26,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "ls20",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 162,
+   "growth_q": [
+    64,
+    112,
+    133,
+    162
+   ],
+   "last_new": 0.99,
+   "untried": 50,
+   "fine": false,
+   "noop_frac": 0.13,
+   "game_overs": 15,
+   "resets": 27,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 829,
+    "frontier probe": 562,
+    "explore walk": 67,
+    "reset": 27,
+    "cycle break (least-recently-tried)": 15
+   }
+  },
+  {
+   "game": "ls20",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 278,
+   "growth_q": [
+    128,
+    175,
+    228,
+    278
+   ],
+   "last_new": 0.99,
+   "untried": 179,
+   "fine": false,
+   "noop_frac": 0.2,
+   "game_overs": 8,
+   "resets": 13,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 909,
+    "replay to frontier": 575,
+    "reset": 13,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "ls20",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 204,
+   "growth_q": [
+    58,
+    93,
+    156,
+    204
+   ],
+   "last_new": 0.97,
+   "untried": 155,
+   "fine": false,
+   "noop_frac": 0.13,
+   "game_overs": 18,
+   "resets": 34,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 823,
+    "frontier probe": 625,
+    "reset": 34,
+    "cycle break (least-recently-tried)": 12,
+    "explore walk": 6
+   }
+  },
+  {
+   "game": "ls20",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 762,
+   "growth_q": [
+    197,
+    408,
+    610,
+    762
+   ],
+   "last_new": 1.0,
+   "untried": 1610,
+   "fine": false,
+   "noop_frac": 0.23,
+   "game_overs": 7,
+   "resets": 7,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 1410,
+    "replay to frontier": 80,
+    "reset": 7,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "ls20",
+   "level": 6,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 266,
+   "growth_q": [
+    101,
+    173,
+    228,
+    266
+   ],
+   "last_new": 0.94,
+   "untried": 215,
+   "fine": false,
+   "noop_frac": 0.16,
+   "game_overs": 14,
+   "resets": 15,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 799,
+    "replay to frontier": 683,
+    "reset": 15,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "m0r0",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 893,
+   "kind": "mixed",
+   "states": 297,
+   "growth_q": [
+    106,
+    158,
+    246,
+    297
+   ],
+   "last_new": 1.0,
+   "untried": 25017,
+   "fine": false,
+   "noop_frac": 0.34,
+   "game_overs": 5,
+   "resets": 5,
+   "click_frac": 0.41,
+   "why": {
+    "frontier probe": 888,
+    "reset": 5
+   }
+  },
+  {
+   "game": "m0r0",
+   "level": 1,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 340,
+   "growth_q": [
+    136,
+    223,
+    294,
+    340
+   ],
+   "last_new": 1.0,
+   "untried": 1113,
+   "fine": true,
+   "noop_frac": 0.34,
+   "game_overs": 9,
+   "resets": 9,
+   "click_frac": 0.45,
+   "why": {
+    "frontier probe": 1491,
+    "reset": 9
+   }
+  },
+  {
+   "game": "m0r0",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 798,
+   "growth_q": [
+    220,
+    429,
+    618,
+    798
+   ],
+   "last_new": 1.0,
+   "untried": 69303,
+   "fine": false,
+   "noop_frac": 0.21,
+   "game_overs": 9,
+   "resets": 9,
+   "click_frac": 0.03,
+   "why": {
+    "frontier probe": 1491,
+    "reset": 9
+   }
+  },
+  {
+   "game": "m0r0",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 310,
+   "growth_q": [
+    180,
+    268,
+    305,
+    310
+   ],
+   "last_new": 0.82,
+   "untried": 31970,
+   "fine": false,
+   "noop_frac": 0.2,
+   "game_overs": 9,
+   "resets": 9,
+   "click_frac": 0.28,
+   "why": {
+    "frontier probe": 1186,
+    "replay to frontier": 304,
+    "reset": 9,
+    "inert-click probe": 1
+   }
+  },
+  {
+   "game": "m0r0",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 459,
+   "growth_q": [
+    152,
+    234,
+    372,
+    459
+   ],
+   "last_new": 0.98,
+   "untried": 47434,
+   "fine": false,
+   "noop_frac": 0.3,
+   "game_overs": 9,
+   "resets": 9,
+   "click_frac": 0.37,
+   "why": {
+    "frontier probe": 1491,
+    "reset": 9
+   }
+  },
+  {
+   "game": "m0r0",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 407,
+   "growth_q": [
+    201,
+    283,
+    313,
+    407
+   ],
+   "last_new": 1.0,
+   "untried": 8817,
+   "fine": true,
+   "noop_frac": 0.36,
+   "game_overs": 9,
+   "resets": 9,
+   "click_frac": 0.6,
+   "why": {
+    "frontier probe": 1491,
+    "reset": 9
+   }
+  },
+  {
+   "game": "r11l",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 163,
+   "kind": "click",
+   "states": 24,
+   "growth_q": [
+    12,
+    17,
+    21,
+    24
+   ],
+   "last_new": 0.85,
+   "untried": 1502,
+   "fine": false,
+   "noop_frac": 0.76,
+   "game_overs": 2,
+   "resets": 2,
+   "click_frac": 0.99,
+   "why": {
+    "frontier probe": 161,
+    "reset": 2
+   }
+  },
+  {
+   "game": "r11l",
+   "level": 1,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 131,
+   "growth_q": [
+    33,
+    63,
+    91,
+    131
+   ],
+   "last_new": 0.94,
+   "untried": 15140,
+   "fine": false,
+   "noop_frac": 0.62,
+   "game_overs": 66,
+   "resets": 66,
+   "click_frac": 0.96,
+   "why": {
+    "frontier probe": 1399,
+    "reset": 66,
+    "replay to frontier": 34,
+    "inert-click probe": 1
+   }
+  },
+  {
+   "game": "r11l",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 187,
+   "growth_q": [
+    31,
+    83,
+    136,
+    187
+   ],
+   "last_new": 1.0,
+   "untried": 2340,
+   "fine": true,
+   "noop_frac": 0.61,
+   "game_overs": 29,
+   "resets": 29,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 1471,
+    "reset": 29
+   }
+  },
+  {
+   "game": "r11l",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 125,
+   "growth_q": [
+    46,
+    86,
+    115,
+    125
+   ],
+   "last_new": 0.99,
+   "untried": 11624,
+   "fine": false,
+   "noop_frac": 0.54,
+   "game_overs": 25,
+   "resets": 25,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 1467,
+    "reset": 25,
+    "replay to frontier": 8
+   }
+  },
+  {
+   "game": "r11l",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 56,
+   "growth_q": [
+    38,
+    46,
+    51,
+    56
+   ],
+   "last_new": 0.97,
+   "untried": 3726,
+   "fine": false,
+   "noop_frac": 0.25,
+   "game_overs": 24,
+   "resets": 24,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 1476,
+    "reset": 24
+   }
+  },
+  {
+   "game": "r11l",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 186,
+   "growth_q": [
+    41,
+    73,
+    132,
+    186
+   ],
+   "last_new": 1.0,
+   "untried": 19338,
+   "fine": false,
+   "noop_frac": 0.56,
+   "game_overs": 24,
+   "resets": 24,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 1476,
+    "reset": 24
+   }
+  },
+  {
+   "game": "s5i5",
+   "level": 0,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 126,
+   "growth_q": [
+    71,
+    96,
+    117,
+    126
+   ],
+   "last_new": 0.88,
+   "untried": 21038,
+   "fine": false,
+   "noop_frac": 0.18,
+   "game_overs": 29,
+   "resets": 29,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 1341,
+    "replay to frontier": 130,
+    "reset": 29
+   }
+  },
+  {
+   "game": "s5i5",
+   "level": 1,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 340,
+   "growth_q": [
+    150,
+    222,
+    288,
+    340
+   ],
+   "last_new": 0.98,
+   "untried": 41676,
+   "fine": false,
+   "noop_frac": 0.44,
+   "game_overs": 9,
+   "resets": 9,
+   "click_frac": 0.99,
+   "why": {
+    "frontier probe": 1414,
+    "replay to frontier": 75,
+    "reset": 9,
+    "inert-click probe": 2
+   }
+  },
+  {
+   "game": "s5i5",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 108,
+   "growth_q": [
+    53,
+    83,
+    94,
+    108
+   ],
+   "last_new": 0.92,
+   "untried": 14373,
+   "fine": false,
+   "noop_frac": 0.48,
+   "game_overs": 5,
+   "resets": 7,
+   "click_frac": 1.0,
+   "why": {
+    "frontier probe": 1137,
+    "inert-click probe": 237,
+    "replay to frontier": 119,
+    "reset": 7
+   }
+  },
+  {
+   "game": "s5i5",
+   "level": 3,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 1369,
+   "kind": "click",
+   "states": 456,
+   "growth_q": [
+    129,
+    245,
+    336,
+    456
+   ],
+   "last_new": 1.0,
+   "untried": 54222,
+   "fine": false,
+   "noop_frac": 0.37,
+   "game_overs": 13,
+   "resets": 13,
+   "click_frac": 0.99,
+   "why": {
+    "frontier probe": 1342,
+    "replay to frontier": 14,
+    "reset": 13
+   }
+  },
+  {
+   "game": "s5i5",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 427,
+   "growth_q": [
+    131,
+    249,
+    360,
+    427
+   ],
+   "last_new": 0.98,
+   "untried": 53522,
+   "fine": false,
+   "noop_frac": 0.25,
+   "game_overs": 9,
+   "resets": 10,
+   "click_frac": 0.99,
+   "why": {
+    "frontier probe": 1485,
+    "reset": 10,
+    "replay to frontier": 4,
+    "inert-click probe": 1
+   }
+  },
+  {
+   "game": "s5i5",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 51,
+   "growth_q": [
+    8,
+    22,
+    48,
+    51
+   ],
+   "last_new": 0.89,
+   "untried": 7610,
+   "fine": false,
+   "noop_frac": 0.07,
+   "game_overs": 9,
+   "resets": 9,
+   "click_frac": 0.99,
+   "why": {
+    "frontier probe": 1491,
+    "reset": 9
+   }
+  },
+  {
+   "game": "s5i5",
+   "level": 6,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 143,
+   "growth_q": [
+    29,
+    78,
+    114,
+    143
+   ],
+   "last_new": 0.99,
+   "untried": 16679,
+   "fine": false,
+   "noop_frac": 0.45,
+   "game_overs": 7,
+   "resets": 7,
+   "click_frac": 1.0,
+   "why": {
+    "frontier probe": 1493,
+    "reset": 7
+   }
+  },
+  {
+   "game": "s5i5",
+   "level": 7,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 166,
+   "growth_q": [
+    56,
+    108,
+    142,
+    166
+   ],
+   "last_new": 0.99,
+   "untried": 23054,
+   "fine": false,
+   "noop_frac": 0.43,
+   "game_overs": 6,
+   "resets": 7,
+   "click_frac": 1.0,
+   "why": {
+    "frontier probe": 1373,
+    "replay to frontier": 118,
+    "reset": 7,
+    "inert-click probe": 2
+   }
+  },
+  {
+   "game": "sp80",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 346,
+   "kind": "mixed",
+   "states": 70,
+   "growth_q": [
+    27,
+    41,
+    58,
+    70
+   ],
+   "last_new": 0.99,
+   "untried": 4648,
+   "fine": false,
+   "noop_frac": 0.25,
+   "game_overs": 12,
+   "resets": 12,
+   "click_frac": 0.11,
+   "why": {
+    "frontier probe": 281,
+    "replay to frontier": 53,
+    "reset": 12
+   }
+  },
+  {
+   "game": "sp80",
+   "level": 1,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 397,
+   "growth_q": [
+    119,
+    225,
+    319,
+    397
+   ],
+   "last_new": 0.99,
+   "untried": 37652,
+   "fine": false,
+   "noop_frac": 0.16,
+   "game_overs": 32,
+   "resets": 32,
+   "click_frac": 0.17,
+   "why": {
+    "frontier probe": 1227,
+    "replay to frontier": 238,
+    "reset": 32,
+    "inert-click probe": 3
+   }
+  },
+  {
+   "game": "sp80",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 471,
+   "growth_q": [
+    139,
+    259,
+    362,
+    471
+   ],
+   "last_new": 1.0,
+   "untried": 47863,
+   "fine": false,
+   "noop_frac": 0.17,
+   "game_overs": 14,
+   "resets": 14,
+   "click_frac": 0.2,
+   "why": {
+    "frontier probe": 1410,
+    "replay to frontier": 76,
+    "reset": 14
+   }
+  },
+  {
+   "game": "sp80",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 644,
+   "growth_q": [
+    194,
+    327,
+    512,
+    644
+   ],
+   "last_new": 1.0,
+   "untried": 65075,
+   "fine": false,
+   "noop_frac": 0.16,
+   "game_overs": 13,
+   "resets": 13,
+   "click_frac": 0.12,
+   "why": {
+    "frontier probe": 1487,
+    "reset": 13
+   }
+  },
+  {
+   "game": "sp80",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 557,
+   "growth_q": [
+    138,
+    283,
+    414,
+    557
+   ],
+   "last_new": 1.0,
+   "untried": 54928,
+   "fine": false,
+   "noop_frac": 0.11,
+   "game_overs": 14,
+   "resets": 14,
+   "click_frac": 0.09,
+   "why": {
+    "frontier probe": 1409,
+    "replay to frontier": 77,
+    "reset": 14
+   }
+  },
+  {
+   "game": "sp80",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "mixed",
+   "states": 694,
+   "growth_q": [
+    177,
+    356,
+    534,
+    694
+   ],
+   "last_new": 1.0,
+   "untried": 69818,
+   "fine": false,
+   "noop_frac": 0.21,
+   "game_overs": 18,
+   "resets": 18,
+   "click_frac": 0.09,
+   "why": {
+    "frontier probe": 1482,
+    "reset": 18
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 340,
+   "kind": "move",
+   "states": 60,
+   "growth_q": [
+    25,
+    40,
+    47,
+    60
+   ],
+   "last_new": 0.99,
+   "untried": 23,
+   "fine": false,
+   "noop_frac": 0.28,
+   "game_overs": 6,
+   "resets": 6,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 218,
+    "replay to frontier": 116,
+    "reset": 6
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 1,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 192,
+   "kind": "move",
+   "states": 35,
+   "growth_q": [
+    10,
+    24,
+    31,
+    35
+   ],
+   "last_new": 0.99,
+   "untried": 9,
+   "fine": false,
+   "noop_frac": 0.29,
+   "game_overs": 6,
+   "resets": 6,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 132,
+    "replay to frontier": 54,
+    "reset": 6
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 92,
+   "growth_q": [
+    60,
+    91,
+    92,
+    92
+   ],
+   "last_new": 0.5,
+   "untried": 19,
+   "fine": false,
+   "noop_frac": 0.35,
+   "game_overs": 49,
+   "resets": 90,
+   "click_frac": 0.0,
+   "why": {
+    "explore walk": 600,
+    "replay to frontier": 386,
+    "frontier probe": 349,
+    "reset": 90,
+    "cycle break (least-recently-tried)": 75
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 57,
+   "growth_q": [
+    55,
+    57,
+    57,
+    57
+   ],
+   "last_new": 0.29,
+   "untried": 16,
+   "fine": false,
+   "noop_frac": 0.44,
+   "game_overs": 80,
+   "resets": 126,
+   "click_frac": 0.0,
+   "why": {
+    "explore walk": 741,
+    "replay to frontier": 333,
+    "frontier probe": 212,
+    "reset": 126,
+    "cycle break (least-recently-tried)": 88
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 290,
+   "growth_q": [
+    132,
+    208,
+    248,
+    290
+   ],
+   "last_new": 0.99,
+   "untried": 312,
+   "fine": false,
+   "noop_frac": 0.25,
+   "game_overs": 49,
+   "resets": 49,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 848,
+    "replay to frontier": 599,
+    "reset": 49,
+    "cycle break (least-recently-tried)": 4
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 287,
+   "growth_q": [
+    94,
+    179,
+    235,
+    287
+   ],
+   "last_new": 0.99,
+   "untried": 301,
+   "fine": false,
+   "noop_frac": 0.19,
+   "game_overs": 70,
+   "resets": 74,
+   "click_frac": 0.0,
+   "why": {
+    "frontier probe": 847,
+    "replay to frontier": 573,
+    "reset": 74,
+    "cycle break (least-recently-tried)": 6
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 6,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 494,
+   "kind": "move",
+   "states": 43,
+   "growth_q": [
+    22,
+    35,
+    36,
+    43
+   ],
+   "last_new": 0.88,
+   "untried": 11,
+   "fine": false,
+   "noop_frac": 0.14,
+   "game_overs": 37,
+   "resets": 37,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 292,
+    "frontier probe": 162,
+    "reset": 37,
+    "cycle break (least-recently-tried)": 3
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 7,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 809,
+   "kind": "move",
+   "states": 63,
+   "growth_q": [
+    36,
+    45,
+    56,
+    63
+   ],
+   "last_new": 1.0,
+   "untried": 3,
+   "fine": false,
+   "noop_frac": 0.15,
+   "game_overs": 42,
+   "resets": 42,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 508,
+    "frontier probe": 250,
+    "reset": 42,
+    "cycle break (least-recently-tried)": 9
+   }
+  },
+  {
+   "game": "tu93",
+   "level": 8,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "move",
+   "states": 60,
+   "growth_q": [
+    25,
+    40,
+    52,
+    60
+   ],
+   "last_new": 0.98,
+   "untried": 11,
+   "fine": false,
+   "noop_frac": 0.09,
+   "game_overs": 76,
+   "resets": 98,
+   "click_frac": 0.0,
+   "why": {
+    "replay to frontier": 1146,
+    "frontier probe": 229,
+    "reset": 98,
+    "cycle break (least-recently-tried)": 27
+   }
+  },
+  {
+   "game": "vc33",
+   "level": 0,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 112,
+   "kind": "click",
+   "states": 17,
+   "growth_q": [
+    15,
+    15,
+    15,
+    17
+   ],
+   "last_new": 0.96,
+   "untried": 514,
+   "fine": false,
+   "noop_frac": 0.77,
+   "game_overs": 2,
+   "resets": 2,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 110,
+    "reset": 2
+   }
+  },
+  {
+   "game": "vc33",
+   "level": 1,
+   "solved": true,
+   "end": "solved",
+   "giveup": null,
+   "actions": 519,
+   "kind": "click",
+   "states": 78,
+   "growth_q": [
+    23,
+    39,
+    61,
+    78
+   ],
+   "last_new": 0.97,
+   "untried": 8754,
+   "fine": false,
+   "noop_frac": 0.4,
+   "game_overs": 10,
+   "resets": 10,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 442,
+    "replay to frontier": 67,
+    "reset": 10
+   }
+  },
+  {
+   "game": "vc33",
+   "level": 2,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 250,
+   "growth_q": [
+    38,
+    112,
+    181,
+    250
+   ],
+   "last_new": 1.0,
+   "untried": 31606,
+   "fine": false,
+   "noop_frac": 0.52,
+   "game_overs": 18,
+   "resets": 19,
+   "click_frac": 0.99,
+   "why": {
+    "frontier probe": 1442,
+    "replay to frontier": 39,
+    "reset": 19
+   }
+  },
+  {
+   "game": "vc33",
+   "level": 3,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 232,
+   "growth_q": [
+    85,
+    163,
+    194,
+    232
+   ],
+   "last_new": 0.98,
+   "untried": 25698,
+   "fine": false,
+   "noop_frac": 0.51,
+   "game_overs": 28,
+   "resets": 29,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 1418,
+    "replay to frontier": 53,
+    "reset": 29
+   }
+  },
+  {
+   "game": "vc33",
+   "level": 4,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 39,
+   "growth_q": [
+    39,
+    39,
+    39,
+    39
+   ],
+   "last_new": 0.13,
+   "untried": 8171,
+   "fine": false,
+   "noop_frac": 0.68,
+   "game_overs": 7,
+   "resets": 7,
+   "click_frac": 1.0,
+   "why": {
+    "frontier probe": 1493,
+    "reset": 7
+   }
+  },
+  {
+   "game": "vc33",
+   "level": 5,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 120,
+   "growth_q": [
+    64,
+    95,
+    120,
+    120
+   ],
+   "last_new": 0.65,
+   "untried": 9906,
+   "fine": false,
+   "noop_frac": 0.31,
+   "game_overs": 29,
+   "resets": 29,
+   "click_frac": 0.98,
+   "why": {
+    "frontier probe": 1267,
+    "replay to frontier": 192,
+    "reset": 29,
+    "inert-click probe": 12
+   }
+  },
+  {
+   "game": "vc33",
+   "level": 6,
+   "solved": false,
+   "end": "budget",
+   "giveup": null,
+   "actions": 1500,
+   "kind": "click",
+   "states": 96,
+   "growth_q": [
+    62,
+    96,
+    96,
+    96
+   ],
+   "last_new": 0.4,
+   "untried": 14025,
+   "fine": false,
+   "noop_frac": 0.67,
+   "game_overs": 7,
+   "resets": 7,
+   "click_frac": 1.0,
+   "why": {
+    "frontier probe": 1493,
+    "reset": 7
+   }
+  }
+ ]
+}

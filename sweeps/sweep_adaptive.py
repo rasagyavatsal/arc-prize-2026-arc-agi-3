@@ -13,7 +13,7 @@ the scores then include the CPU contention the agent sees on the leaderboard.
 import os, sys, time, json, glob, traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-ROOT = "/Users/rasagyavatsal/arc-prize-2026-arc-agi-3"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.join(ROOT, "ARC-AGI-3-Agents")
 os.chdir(REPO)
 RECORDINGS = os.path.join(ROOT, "sweep_recordings")

@@ -30,6 +30,19 @@ from textwrap import dedent
 # ─────────────────────────────────────────────────────────────────────────────
 ACCELERATOR = "cpu"   # Explorer is deterministic CPU-only; flip to t4/rtx6000 for model-based agents
 
+# LLM adviser (issue #7): serve GPT-OSS-120B with vLLM next to the Explorer and
+# point it there via ADVISER_URL. Needs ACCELERATOR = "rtx6000". The server
+# loads in the background during the rerun; games play plain Explorer until
+# it is healthy, so the first-action deadline is never at risk.
+ADVISER = False
+# The competition's arc_agi_3_wheels are cp312, and Kaggle's default image is
+# now Python 3.13: pin the image of the last scored submission (2026-10-27).
+DOCKER_IMAGE = "gcr.io/kaggle-images/python@sha256:dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9"
+ADVISER_MODEL_SOURCE = "danielhanchen/gpt-oss-120b/Transformers/default/1"
+ADVISER_KERNEL_SOURCE = "philipvonderlind/vllm-deps"  # vLLM wheels + tiktoken files
+# those wheels are cp312: the official template's Python 3.12 image
+ADVISER_DOCKER_IMAGE = "gcr.io/kaggle-images/python@sha256:e5452ce6268c2e8345cfe5141f31ca7ff47032aca46a7ea532bbb87481281d0c"
+
 # Internal mapping; don't edit unless Kaggle adds new options.
 _ACCELERATORS = {
     "cpu":     {"name": "none",            "gpu": False},
@@ -37,6 +50,10 @@ _ACCELERATORS = {
     "p100":    {"name": "nvidiaTeslaP100", "gpu": True},
     "rtx6000": {"name": "nvidiaRtx6000",   "gpu": True},
 }
+# machine_shape names for kernel-metadata.json; Kaggle silently runs a T4 on
+# an unknown name
+_SHAPES = {"t4": "NvidiaTeslaT4", "p100": "NvidiaTeslaP100",
+           "rtx6000": "NvidiaRtxPro6000"}
 
 ROOT = Path(__file__).resolve().parents[1]
 AGENT_SRC = ROOT / "agent" / "my_agent.py"
@@ -133,6 +150,47 @@ def build() -> dict:
     )
     run_cell = code_cell(run_cell_source)
 
+    adviser_cell = code_cell(
+        dedent(
+            """\
+            import os
+            if os.getenv('KAGGLE_IS_COMPETITION_RERUN'):
+                # Start vLLM in the background; the Explorer polls /health and
+                # uses the adviser only once the model is up.
+                import subprocess
+                from pathlib import Path
+                wheels = list(Path('/kaggle/input').rglob('vllm*.whl'))
+                tiktoken = [d for d in Path('/kaggle/input').rglob('*') if d.is_dir()
+                            and (d / 'cl100k_base.tiktoken').exists()
+                            and (d / 'o200k_base.tiktoken').exists()]
+                if wheels and tiktoken:
+                    subprocess.run(['pip', 'install', '-q', '--no-index', '--find-links',
+                                    str(wheels[0].parent),
+                                    # name the CUDA torch: the image's +cpu build
+                                    # satisfies vllm's pin otherwise
+                                    'torch==2.10.0+cu128', 'torchvision==0.25.0+cu128',
+                                    'torchaudio==2.10.0+cu128', 'vllm==0.19.1',
+                                    'openai==2.24.0', 'openai-harmony==0.0.8'])
+                    # the pinned image lacks the host driver's NVML on its path
+                    nvml = '/usr/local/nvidia/lib64'
+                    env = dict(os.environ, TIKTOKEN_ENCODINGS_BASE=str(tiktoken[0]),
+                               VLLM_WORKER_MULTIPROC_METHOD='spawn',
+                               LD_LIBRARY_PATH=nvml + ':' + os.environ.get('LD_LIBRARY_PATH', ''))
+                    subprocess.Popen(
+                        ['vllm', 'serve',
+                         '/kaggle/input/models/danielhanchen/gpt-oss-120b/transformers/default/1',
+                         '--served-model-name', 'gpt-oss-120b', '--host', '127.0.0.1',
+                         '--port', '8000', '--max-num-seqs', '64', '--max-model-len', '8192',
+                         '--kv-cache-dtype', 'fp8', '--enforce-eager'],
+                        stdout=open('/tmp/vllm.log', 'w'), stderr=subprocess.STDOUT, env=env)
+                    os.environ['ADVISER_URL'] = 'http://127.0.0.1:8000/v1'
+                    os.environ['ADVISER_MODEL'] = 'gpt-oss-120b'
+                else:
+                    print('adviser inputs missing: plain Explorer')
+            """
+        )
+    )
+
     dummy_submission_cell = code_cell(
         dedent(
             """\
@@ -157,6 +215,8 @@ def build() -> dict:
             f"{sorted(_ACCELERATORS)}"
         )
     accel = _ACCELERATORS[ACCELERATOR]
+    if ADVISER and ACCELERATOR != "rtx6000":
+        raise SystemExit("ADVISER needs ACCELERATOR = 'rtx6000' (GPT-OSS-120B needs ~80 GB)")
 
     notebook = {
         "metadata": {
@@ -190,6 +250,7 @@ def build() -> dict:
             ),
             install_cell,
             write_agent_cell,
+            *([adviser_cell] if ADVISER else []),
             run_cell,
             dummy_submission_cell,
         ],
@@ -207,11 +268,23 @@ def main() -> None:
     # edit it just to flip CPU ↔ GPU.
     if METADATA_PATH.exists():
         meta = json.loads(METADATA_PATH.read_text())
-        wanted = _ACCELERATORS[ACCELERATOR]["gpu"]
-        if meta.get("enable_gpu") != wanted:
-            meta["enable_gpu"] = wanted
+        wanted = {
+            "enable_gpu": _ACCELERATORS[ACCELERATOR]["gpu"],
+            "kernel_sources": [ADVISER_KERNEL_SOURCE] if ADVISER else [],
+            "model_sources": [ADVISER_MODEL_SOURCE] if ADVISER else [],
+        }
+        wanted["docker_image"] = ADVISER_DOCKER_IMAGE if ADVISER else DOCKER_IMAGE
+        if ACCELERATOR in _SHAPES:
+            wanted["machine_shape"] = _SHAPES[ACCELERATOR]
+        changed = {k: v for k, v in wanted.items() if meta.get(k) != v}
+        if ACCELERATOR not in _SHAPES and "machine_shape" in meta:
+            changed["machine_shape"] = None  # CPU: no shape, as Kaggle's own pushes
+        if changed:
+            meta.update({k: v for k, v in changed.items() if v is not None})
+            for k in [k for k, v in changed.items() if v is None]:
+                meta.pop(k)
             METADATA_PATH.write_text(json.dumps(meta, indent=2) + "\n")
-            print(f"[build_notebook] Synced enable_gpu={wanted} in "
+            print(f"[build_notebook] Synced {changed} in "
                   f"{METADATA_PATH.relative_to(ROOT)}")
 
 

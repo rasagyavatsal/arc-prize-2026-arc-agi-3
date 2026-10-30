@@ -1,0 +1,58 @@
+{
+ "generated": "2026-10-29 UTC",
+ "kernel": "rasagyavatsal/arc-agi-3-adviser-dev v8",
+ "split": "heldout",
+ "note": "summary lines only; per-level held-out results were not downloaded or read",
+ "adviser_config": "defaults after dev tuning: prompt v2, reasoning medium, early call; timeout 30s, budget 240s",
+ "summary": {
+  "baseline": {
+   "split": "heldout",
+   "levels": 113,
+   "solved": 4,
+   "level0_solved": 2,
+   "games": 15,
+   "linear_mean": 0.157,
+   "squared_mean_pct": 0.011,
+   "errors": 0
+  },
+  "control": {
+   "split": "heldout",
+   "levels": 113,
+   "solved": 4,
+   "level0_solved": 2,
+   "games": 15,
+   "linear_mean": 0.155,
+   "squared_mean_pct": 0.011,
+   "errors": 0,
+   "adviser_calls": 288,
+   "adviser_answers": 237,
+   "adviser_s_per_call": 0.0
+  },
+  "adviser": {
+   "split": "heldout",
+   "levels": 113,
+   "solved": 3,
+   "level0_solved": 2,
+   "games": 15,
+   "linear_mean": 0.171,
+   "squared_mean_pct": 0.013,
+   "errors": 0,
+   "adviser_calls": 289,
+   "adviser_answers": 166,
+   "adviser_s_per_call": 20.34
+  },
+  "adviser-repeat": {
+   "split": "heldout",
+   "levels": 113,
+   "solved": 2,
+   "level0_solved": 1,
+   "games": 15,
+   "linear_mean": 0.134,
+   "squared_mean_pct": 0.018,
+   "errors": 0,
+   "adviser_calls": 284,
+   "adviser_answers": 140,
+   "adviser_s_per_call": 19.07
+  }
+ }
+}

@@ -27,7 +27,9 @@ Memory
 A persistent dict (kept across levels) maps ``state signature -> {action key:
 observed delta}`` where a delta records the resulting signature, whether the
 state changed (layout *or* raw diff), the levels_completed delta and the
-resulting game state.
+resulting game state.  A move that lands back on a level's start state from
+mid-level (a step counter ran out and a life was lost) is counted on the edge
+instead of overwriting where the move really goes.
 
 Per step the agent:
 1. RESETs on NOT_PLAYED / GAME_OVER / empty frames (sparing, budgeted).
@@ -47,16 +49,29 @@ Per step the agent:
    honestly.  All patience thresholds scale with the action budget so large
    budgets are actually spent exploring instead of quitting early.
 
-The agent uses no LLM and no network calls; it runs on CPU.
+Adviser (optional)
+------------------
+An ``Adviser`` (a local open-weight model behind an OpenAI-compatible server,
+enabled by ``ADVISER_URL``) may reorder the frontier: at the start of each
+level, and again when exploration plateaus, it gets the frame as an object
+list plus what the agent has learned and names the likely player, goals,
+click targets and moves.  The answer only changes the *order* of untried
+probes; replay, memory and give-up logic are untouched.  A timeout, bad
+output, an exhausted time budget or no adviser at all all mean plain
+Explorer behaviour.  Without ``ADVISER_URL`` the agent makes no network
+calls of its own and runs on CPU.
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 import os
 import random
+import threading
 import time
+import urllib.request
 from collections import Counter, deque
 from typing import Any, Optional
 
@@ -89,6 +104,160 @@ logger = logging.getLogger(__name__)
 _RUN_START = time.time()
 
 
+# ------------------------------------------------------------------- adviser
+
+ADVISER_SYSTEM = (
+    "You advise an agent exploring an unknown turn-based grid game. There are "
+    "no instructions: the agent must find out what it controls and what wins "
+    "a level. Colours are integers 0-15. ACTION1-ACTION5 are simple actions "
+    "(often up, down, left, right, interact); ACTION6 clicks a cell; ACTION7 "
+    "is often undo. You get the current frame as a list of objects and what "
+    "the agent has learned so far. Reply with one JSON object and nothing "
+    'else: {"player": [colours of the objects the agent moves], "goals": '
+    '[ids of objects that look like targets to reach, match or fill], '
+    '"click_first": [ids of objects to click first, best first], '
+    '"move_first": [simple action numbers to try first, best first]}. '
+    "Use empty lists when unsure."
+)
+
+# v2: common game patterns, coordinates explained, short rankings only
+ADVISER_SYSTEM_V2 = (
+    "You advise an agent playing an unknown turn-based grid puzzle game. "
+    "Nothing is explained: the agent must discover what it controls and what "
+    "completes a level. Common patterns: a small player sprite moved by "
+    "ACTION1-ACTION4 (up, down, left, right) to an exit or goal, or pushing "
+    "boxes onto targets; click puzzles (ACTION6) where clicking buttons, "
+    "tiles or switches toggles, rotates or moves things until a pattern "
+    "matches a reference shown elsewhere on screen; ACTION5 often interacts "
+    "or rotates; ACTION7 is often undo. Colours are integers 0-15. Objects "
+    "have an id, a colour, a size in cells and a box [x0, y0, x1, y1] (x "
+    "right, y down). moves_seen says which colours changed when each action "
+    "was tried: a colour that changes on every move is usually the player. "
+    "clicks_by_colour says which clicked colours did anything. Reply with "
+    'one JSON object and nothing else: {"player": [colours], "goals": '
+    '[object ids], "click_first": [object ids, best first, at most 6], '
+    '"move_first": [action numbers, best first, at most 2]}. Rank only what '
+    "you have a reason for and leave the rest out; empty lists are fine."
+)
+ADVISER_PROMPTS = {"1": ADVISER_SYSTEM, "2": ADVISER_SYSTEM_V2}
+
+
+def parse_advice(text: Optional[str]) -> Optional[dict[str, Any]]:
+    """The first JSON object in a model reply, or None."""
+    if not text:
+        return None
+    start, end = text.find("{"), text.rfind("}")
+    if start < 0 or end <= start:
+        return None
+    try:
+        answer = json.loads(text[start : end + 1])
+    except ValueError:
+        return None
+    return answer if isinstance(answer, dict) else None
+
+
+class Adviser:
+    """Answers an object-list prompt with frontier priorities.
+
+    ``advise`` returns the parsed answer, or None on any failure; the
+    Explorer also bounds each call with its own hard timeout.  ``ready``
+    is False while the model is still loading: no call is made then, and
+    none is counted as a failure.
+    """
+
+    def ready(self) -> bool:
+        return True
+
+    def advise(self, prompt: dict[str, Any], timeout_s: float) -> Optional[dict[str, Any]]:
+        raise NotImplementedError
+
+
+class HttpAdviser(Adviser):
+    """An OpenAI-compatible chat endpoint (one vLLM server per notebook).
+
+    The server loads in the background while the games already play, so
+    readiness is polled (shared by every game, at most once per
+    ``READY_POLL_S``) and stays True once seen.
+    """
+
+    READY_POLL_S = 15.0
+    _ready_lock = threading.Lock()
+    _ready: dict[str, tuple[float, bool]] = {}  # health url -> (checked at, ok)
+
+    def __init__(
+        self,
+        url: str,
+        model: str = "gpt-oss-120b",
+        max_tokens: int = 1024,
+        reasoning_effort: str = "medium",
+        system: str = ADVISER_SYSTEM_V2,
+    ) -> None:
+        self.url = url.rstrip("/") + "/chat/completions"
+        # vLLM serves /health next to /v1
+        self.health_url = url.rstrip("/").removesuffix("/v1") + "/health"
+        self.model = model
+        self.max_tokens = max_tokens
+        self.reasoning_effort = reasoning_effort
+        self.system = system
+
+    def ready(self) -> bool:
+        cls = HttpAdviser
+        checked, ok = cls._ready.get(self.health_url, (0.0, False))
+        if ok or time.time() - checked < self.READY_POLL_S:
+            return ok
+        if not cls._ready_lock.acquire(blocking=False):
+            return False  # another game is checking right now
+        try:
+            try:
+                with urllib.request.urlopen(self.health_url, timeout=2.0) as resp:
+                    ok = resp.status == 200
+            except Exception:
+                ok = False
+            cls._ready[self.health_url] = (time.time(), ok)
+            if ok:
+                logger.info(f"adviser ready at {self.health_url}")
+        finally:
+            cls._ready_lock.release()
+        return ok
+
+    def advise(self, prompt: dict[str, Any], timeout_s: float) -> Optional[dict[str, Any]]:
+        body = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": self.system},
+                {"role": "user", "content": json.dumps(prompt, separators=(",", ":"))},
+            ],
+            "max_tokens": self.max_tokens,
+            "temperature": 0,
+            "reasoning_effort": self.reasoning_effort,
+        }
+        req = urllib.request.Request(
+            self.url,
+            data=json.dumps(body).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+                data = json.loads(resp.read())
+            text = data["choices"][0]["message"].get("content")
+        except Exception as e:  # network, HTTP or schema errors: no advice
+            logger.info(f"adviser call failed: {type(e).__name__}: {e}")
+            return None
+        return parse_advice(text)
+
+
+def adviser_from_env() -> Optional[Adviser]:
+    url = os.environ.get("ADVISER_URL")
+    if not url:
+        return None
+    return HttpAdviser(
+        url,
+        os.environ.get("ADVISER_MODEL", "gpt-oss-120b"),
+        reasoning_effort=os.environ.get("ADVISER_REASONING", "medium"),
+        system=ADVISER_PROMPTS.get(os.environ.get("ADVISER_PROMPT", "2"), ADVISER_SYSTEM_V2),
+    )
+
+
 class Explorer(Agent):
     """Persistent-memory frontier explorer (programmatic, CPU-only)."""
 
@@ -114,12 +283,28 @@ class Explorer(Agent):
     EXPLORE_STEPS = 32  # random-walk length when no frontier is reachable (scaled)
     MAX_EXPLORE_RUNS = 2  # fruitless walks per level before a RESET is preferred
     ESCALATE_AFTER = 300  # invisible world changes before a level's identity goes fine
+    HUD_BAND = 4  # outer rows/columns of the frame searched for status bars
+    HUD_MIN_OBS = 12  # same-level transitions observed before status bars are inferred
+    HUD_RATE = 0.6  # an edge line changing on this share of transitions is a status bar
+    CLICK_DEAD_AFTER = 8  # no-effect clicks on a colour before it is probed last
+    TARGET_INERT_AFTER = 1  # no-effect clicks on one target before it is probed last
+    ADVISER_TIMEOUT_S = 30.0  # hard limit per adviser call
+    ADVISER_BUDGET_S = 240.0  # adviser wall time per game, timeouts included
+    ADVISER_MARGIN_S = 1800.0  # no adviser calls this close to RUN_DEADLINE_S
+    ADVISER_MAX_CALLS = 3  # per level: its start, then plateaus
+    # also ask once every move has been tried at the level (with prompt v2 and
+    # medium reasoning: dev 16/70 vs 14 without the adviser, 2026-10-29)
+    ADVISER_EARLY = True
+    ADVISER_MAX_FAILS = 3  # consecutive failed calls (no reply, bad output) before it is dropped
+    ADVISER_PLATEAU = 40  # actions without a new state before asking again (scaled)
+    ADVISER_MAX_OBJECTS = 48  # objects listed in a prompt, smallest first
 
     def __init__(
         self,
         *args: Any,
         budget: int | None = None,
         time_limit_s: float | None = None,
+        adviser: Adviser | None = None,
         **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
@@ -155,6 +340,34 @@ class Explorer(Agent):
         self.MAX_STUCK_LRU = max(self.MAX_STUCK_LRU, min(6, self.MAX_ACTIONS // 400))
         self.EXPLORE_STEPS = max(12, min(48, self.MAX_ACTIONS // 40))
         self.MAX_EXPLORE_RUNS = 2  # fruitless walks per level before a RESET is preferred
+        self.ADVISER_PLATEAU = max(self.ADVISER_PLATEAU, self.MAX_ACTIONS // 30)
+
+        self.adviser = adviser if adviser is not None else adviser_from_env()
+        for name, kind in (
+            ("ADVISER_TIMEOUT_S", float),
+            ("ADVISER_BUDGET_S", float),
+            ("ADVISER_PLATEAU", int),
+            ("ADVISER_MAX_CALLS", int),
+        ):
+            if name in os.environ:
+                try:
+                    setattr(self, name, kind(os.environ[name]))
+                except ValueError:
+                    pass
+        if "ADVISER_EARLY" in os.environ:
+            self.ADVISER_EARLY = os.environ["ADVISER_EARLY"] == "1"
+        self.adviser_spent = 0.0  # seconds spent waiting on the adviser
+        self.adviser_fails = 0  # consecutive failed calls
+        self.adviser_answers = 0  # calls whose answer set priorities
+        self.adviser_log: list[dict[str, Any]] = []  # per call: level, action, answer
+        self.adviser_calls: dict[int, int] = {}  # level -> calls made
+        self.adviser_last_call = -1  # action_counter at the last call
+        # the current level's answer: {"level", "actions", "colours", "points"}
+        self.advice: Optional[dict[str, Any]] = None
+        self.last_new_state = 0  # action_counter when a never-seen state last appeared
+        self.changed_colours: set[int] = set()  # colours in the latest transition's diff
+        # (level, simple action id) -> {"tries", "changed", "colours": Counter}
+        self.action_effects: dict[tuple[int, int], dict[str, Any]] = {}
 
         self.timer: Optional[float] = None
         # signature -> {"avail": [ids], "edges": {key: delta}, "visits": int,
@@ -178,6 +391,23 @@ class Explorer(Agent):
         self.fine_levels: set[int] = set()  # levels switched to grid-hash identity
         self.invisible_changes: dict[int, int] = {}  # level -> changed self-loop count
         self.action_nop_streak: dict[int, int] = {}
+        # Status bars (step counters, energy meters) inferred from play: edge
+        # rows/columns that change on most transitions, whatever the action.
+        self.hud_shape: Optional[tuple[int, int]] = None
+        self.hud_rows: set[int] = set()
+        self.hud_cols: set[int] = set()
+        self.line_changes: Counter[tuple[str, int]] = Counter()
+        self.line_obs = 0
+        # colour under the click -> [tries, effective]: what a colour does when
+        # clicked is shared across states, so dead colours stop eating probes
+        self.click_stats: dict[int, list[int]] = {}
+        # click target (see _click_targets) -> [tries, effective]: a target
+        # that did nothing in one state usually does nothing in the next
+        self.target_stats: dict[tuple, list[int]] = {}
+        # states a level (re)starts in: a move that lands there from elsewhere
+        # usually lost a life (a step counter ran out), not a real edge
+        self.start_sigs: set[str] = set()
+        self.at_start = True
         self._give_up = False
         self.total_levels = 8  # default baseline; updated live from FrameData.win_levels
         logger.info(
@@ -203,6 +433,39 @@ class Explorer(Agent):
         """The settled view of the world is the last rendered layer."""
         return frame.frame[-1] if frame.frame else []
 
+    def _hud_mask(self, grid: list[list[int]]) -> tuple[set[int], set[int]]:
+        """Inferred status-bar rows and columns, if they apply to this grid."""
+        width = len(grid[0]) if grid else 0
+        if self.hud_shape != (len(grid), width):
+            return set(), set()
+        return self.hud_rows, self.hud_cols
+
+    def _foreground(
+        self, grid: list[list[int]], exclude_hud: bool
+    ) -> list[tuple[int, int]]:
+        """Non-background playfield cells, status bars excluded.
+
+        Background = the modal cell value of the playfield (rows above the
+        HUD band, minus inferred status-bar lines).
+        """
+        cutoff = (
+            max(0, len(grid) - self.HUD_BOTTOM_ROWS) if exclude_hud else len(grid)
+        )
+        if cutoff <= 0:
+            return []
+        rows, cols = self._hud_mask(grid)
+        field = [
+            (y, x, v)
+            for y in range(cutoff)
+            if y not in rows
+            for x, v in enumerate(grid[y])
+            if x not in cols
+        ]
+        if not field:
+            return []
+        modal = Counter(v for _, _, v in field).most_common(1)[0][0]
+        return [(y, x) for y, x, v in field if v != modal]
+
     def _segment(
         self, grid: list[list[int]], exclude_hud: bool
     ) -> list[list[tuple[int, int]]]:
@@ -218,18 +481,7 @@ class Explorer(Agent):
         visible to the signature.  With ``exclude_hud`` the bottom HUD rows
         are omitted entirely.
         """
-        cutoff = (
-            max(0, len(grid) - self.HUD_BOTTOM_ROWS) if exclude_hud else len(grid)
-        )
-        if cutoff <= 0:
-            return []
-        modal = Counter(v for row in grid[:cutoff] for v in row).most_common(1)[0][0]
-        cells = [
-            (y, x)
-            for y in range(cutoff)
-            for x, v in enumerate(grid[y])
-            if v != modal
-        ]
+        cells = self._foreground(grid, exclude_hud)
         if not cells:
             return []
         objs: list[list[tuple[int, int]]] = []
@@ -264,18 +516,7 @@ class Explorer(Agent):
         sprites merge, which keeps navigation memories unified in games
         whose objects are drawn as multi-colour composites.
         """
-        cutoff = (
-            max(0, len(grid) - self.HUD_BOTTOM_ROWS) if exclude_hud else len(grid)
-        )
-        if cutoff <= 0:
-            return []
-        modal = Counter(v for row in grid[:cutoff] for v in row).most_common(1)[0][0]
-        cells = [
-            (y, x)
-            for y in range(cutoff)
-            for x, v in enumerate(grid[y])
-            if v != modal
-        ]
+        cells = self._foreground(grid, exclude_hud)
         if not cells:
             return []
         objs: list[list[tuple[int, int]]] = []
@@ -337,16 +578,62 @@ class Explorer(Agent):
         if level in self.fine_levels:
             return
         self.fine_levels.add(level)
-        prefix = f"ob|{level}|"
-        for s in [s for s in self.memory if s.startswith(prefix)]:
-            del self.memory[s]
-        self._seen = {s for s in self._seen if not s.startswith(prefix)}
-        self.plan = []
-        if self.pending is not None and self.pending["sig"].startswith(prefix):
-            self.pending = None
+        self._forget_level(level, ("ob",))
         logger.info(
             f"{self.game_id}: level {level} switched to fine-grained state "
             f"identity after {self.invisible_changes.get(level, 0)} invisible changes"
+        )
+
+    def _forget_level(self, level: int, kinds: tuple[str, ...] = ("ob", "gd")) -> None:
+        """Drop a level's memory nodes whose signatures no longer apply."""
+        prefixes = tuple(f"{k}|{level}|" for k in kinds)
+        for s in [s for s in self.memory if s.startswith(prefixes)]:
+            del self.memory[s]
+        self._seen = {s for s in self._seen if not s.startswith(prefixes)}
+        self.plan = []
+        if self.pending is not None and self.pending["sig"].startswith(prefixes):
+            self.pending = None
+
+    def _update_hud(self, changed: list[tuple[int, int]], height: int, width: int, level: int) -> None:
+        """Mask edge lines that change on most transitions (status bars).
+
+        Step counters and energy meters change on almost every action, so
+        without a mask every move looks like a world change: no action is
+        ever a no-op and every revisit is a new state.  Only lines within
+        ``HUD_BAND`` of the frame edge qualify, so an avatar's corridor in
+        the playfield is never masked.  A mask that grows invalidates the
+        level's signatures, which are rebuilt from the next frame on.
+        """
+        if self.hud_shape != (height, width):
+            self.hud_shape = (height, width)
+            self.hud_rows, self.hud_cols = set(), set()
+            self.line_changes.clear()
+            self.line_obs = 0
+        if height < 4 * self.HUD_BAND or width < 4 * self.HUD_BAND:
+            return  # small grids are all playfield
+        cutoff = height - self.HUD_BOTTOM_ROWS  # rows below are always ignored
+        band_rows = {
+            y for y, _ in changed
+            if y < self.HUD_BAND or height - self.HUD_BAND <= y < cutoff
+        }
+        band_cols = {x for _, x in changed if x < self.HUD_BAND or x >= width - self.HUD_BAND}
+        self.line_changes.update(("r", y) for y in band_rows)
+        self.line_changes.update(("c", x) for x in band_cols)
+        self.line_obs += 1
+        if self.line_obs < self.HUD_MIN_OBS:
+            return
+        need = self.HUD_RATE * self.line_obs
+        rows = {i for (k, i), n in self.line_changes.items() if k == "r" and n >= need}
+        cols = {i for (k, i), n in self.line_changes.items() if k == "c" and n >= need}
+        if rows <= self.hud_rows and cols <= self.hud_cols:
+            return
+        self.hud_rows |= rows
+        self.hud_cols |= cols
+        self._forget_level(level)
+        self.invisible_changes.pop(level, None)  # counted against the unmasked bar
+        logger.info(
+            f"{self.game_id}: status bar rows {sorted(self.hud_rows)} "
+            f"cols {sorted(self.hud_cols)} masked after {self.line_obs} transitions"
         )
 
     def _signature(self, frame: FrameData) -> str:
@@ -371,9 +658,14 @@ class Explorer(Agent):
             layout = ";".join(f"{y}.{x}.{b}" for y, x, b in detail)
             mlayout = ";".join(f"{y}.{x}.{b}" for y, x, b in mixed)
             return f"ob|{levels}|{mlayout}|{layout}"
+        rows, cols = self._hud_mask(grid)
         h = hashlib.sha1()
-        for row in grid[:cutoff]:
-            h.update((";" + ",".join(str(int(v)) for v in row)).encode())
+        for y, row in enumerate(grid[:cutoff]):
+            if y in rows:
+                continue
+            h.update(
+                (";" + ",".join(str(int(v)) for x, v in enumerate(row) if x not in cols)).encode()
+            )
         return f"gd|{levels}|{h.hexdigest()[:16]}"
 
     def _observe_transition(
@@ -395,14 +687,25 @@ class Explorer(Agent):
         )
         if not same_level:
             self.world_changed = False
+            self.changed_colours = set()
         else:
-            cutoff = max(0, min(len(self.last_grid), len(grid)) - self.HUD_BOTTOM_ROWS)
-            self.world_changed = any(
-                self.last_grid[y][x] != grid[y][x]
-                for y in range(cutoff)
-                for x, (va, vb) in enumerate(zip(self.last_grid[y], grid[y]))
+            assert self.last_grid is not None
+            changed = [
+                (y, x)
+                for y, (ra, rb) in enumerate(zip(self.last_grid, grid))
+                for x, (va, vb) in enumerate(zip(ra, rb))
                 if va != vb
-            )
+            ]
+            self._update_hud(changed, len(grid), len(grid[0]) if grid else 0, levels)
+            cutoff = max(0, len(grid) - self.HUD_BOTTOM_ROWS)
+            rows, cols = self._hud_mask(grid)
+            world = [
+                (y, x) for y, x in changed if y < cutoff and y not in rows and x not in cols
+            ]
+            self.world_changed = bool(world)
+            self.changed_colours = {int(self.last_grid[y][x]) for y, x in world} | {
+                int(grid[y][x]) for y, x in world
+            }
         self.last_grid = [row[:] for row in grid]
         self.last_grid_levels = levels
         self.last_grid_full_reset = full_reset
@@ -417,14 +720,71 @@ class Explorer(Agent):
                 "visits": 0,
                 "cands": self._candidates(frame),
                 "stuck": 0,
+                "framed": True,
             }
             self.memory[sig] = node
         else:
+            if not node.get("framed"):
+                # a placeholder made by _record_result holds only the cells
+                # around the click that led here; add the state's own probes
+                known = set(node["cands"])
+                node["cands"] += [c for c in self._candidates(frame) if c not in known]
+                node["framed"] = True
             # available_actions can be state dependent; keep the union.
             node["avail"] = sorted(
                 set(node["avail"]) | {a for a in cur_avail if 0 <= a <= 7}
             )
+        # colour and target under each click candidate, read while standing
+        # in the state
+        colours = node.setdefault("colours", {})
+        targets = node.setdefault("targets", {})
+        grid = self._grid(frame)
+        for x, y in node["cands"]:
+            if (x, y) not in colours and 0 <= y < len(grid) and 0 <= x < len(grid[y]):
+                colours[(x, y)] = int(grid[y][x])
+        missing = [p for p in node["cands"] if p not in targets]
+        if missing:
+            targets.update(self._click_targets(grid, missing))
         return node
+
+    def _click_targets(
+        self, grid: list[list[int]], points: list[tuple[int, int]]
+    ) -> dict[tuple[int, int], tuple]:
+        """What each click point lands on, comparable across states.
+
+        On an object: its colour, its shape and the click's offset within it,
+        so the key follows the object when it moves.  Off objects: the cell
+        position and colour.
+        """
+        height = len(grid)
+        width = len(grid[0]) if grid else 0
+        owner: dict[tuple[int, int], list[tuple[int, int]]] = {}
+        for cluster in self._segment(grid, exclude_hud=height >= 12):
+            for cell in cluster:
+                owner[cell] = cluster
+        out: dict[tuple[int, int], tuple] = {}
+        for x, y in points:
+            if not (0 <= y < height and 0 <= x < width):
+                continue
+            cluster = owner.get((y, x))
+            if cluster is None:
+                out[(x, y)] = ("bg", int(grid[y][x]), x, y)
+                continue
+            oy = min(p[0] for p in cluster)
+            ox = min(p[1] for p in cluster)
+            shape = hash(tuple(sorted((p[0] - oy, p[1] - ox) for p in cluster)))
+            out[(x, y)] = ("obj", int(grid[y][x]), shape, x - ox, y - oy)
+        return out
+
+    def _inert_target(self, target: Optional[tuple]) -> bool:
+        """True once clicks on this target have only ever done nothing."""
+        tries, effective = self.target_stats.get(target, (0, 0)) if target else (0, 0)
+        return tries >= self.TARGET_INERT_AFTER and effective == 0
+
+    def _dead_colour(self, colour: Optional[int]) -> bool:
+        """True once clicks on this colour have repeatedly done nothing."""
+        tries, effective = self.click_stats.get(colour, (0, 0)) if colour is not None else (0, 0)
+        return tries >= self.CLICK_DEAD_AFTER and effective == 0
 
     def _probe_cap(self, width: int, height: int) -> int:
         """Click candidates per state grows with the searchable playfield."""
@@ -532,13 +892,241 @@ class Explorer(Agent):
         except ValueError:
             return None
 
+    # ------------------------------------------------------------------ adviser
+
+    def _prompt_objects(
+        self, grid: list[list[int]]
+    ) -> list[tuple[dict[str, Any], tuple[int, int]]]:
+        """Listed objects (smallest first) with a click point on each."""
+        clusters = self._segment(grid, exclude_hud=len(grid) >= 12)
+        clusters.sort(key=lambda c: (len(c), min(c)))
+        out: list[tuple[dict[str, Any], tuple[int, int]]] = []
+        for i, cluster in enumerate(clusters[: self.ADVISER_MAX_OBJECTS]):
+            ys = [p[0] for p in cluster]
+            xs = [p[1] for p in cluster]
+            cy, cx = sum(ys) / len(ys), sum(xs) / len(xs)
+            py, px = min(cluster, key=lambda p: (p[0] - cy) ** 2 + (p[1] - cx) ** 2)
+            obj = {
+                "id": i,
+                "colour": int(grid[py][px]),
+                "size": len(cluster),
+                "box": [min(xs), min(ys), max(xs), max(ys)],
+            }
+            out.append((obj, (px, py)))
+        return out
+
+    def _advice_prompt(
+        self, frame: FrameData, objects: list[tuple[dict[str, Any], tuple[int, int]]]
+    ) -> dict[str, Any]:
+        """The frame as an object list plus what play has shown so far."""
+        grid = self._grid(frame)
+        levels = int(frame.levels_completed)
+        rows, cols = self._hud_mask(grid)
+        cells = Counter(v for row in grid for v in row)
+        background = int(cells.most_common(1)[0][0]) if cells else None
+        avail = sorted(int(a) for a in (frame.available_actions or []))
+        moves = {}
+        for aid in avail:
+            effect = self.action_effects.get((levels, aid))
+            if effect:
+                moves[f"ACTION{aid}"] = {
+                    "tries": effect["tries"],
+                    "changed": effect["changed"],
+                    "colours_changed": [c for c, _ in effect["colours"].most_common(4)],
+                }
+        return {
+            "level": levels + 1,
+            "levels_total": self.total_levels,
+            "grid_size": [len(grid[0]) if grid else 0, len(grid)],
+            "background": background,
+            "status_bar": {"rows": sorted(rows), "cols": sorted(cols)},
+            "actions": [f"ACTION{a}" for a in avail if a != 0],
+            "objects": [obj for obj, _ in objects],
+            "objects_not_listed": max(0, len(self._segment(grid, len(grid) >= 12)) - len(objects)),
+            "moves_seen": moves,
+            "clicks_by_colour": {
+                str(c): {"tries": t, "changed": e} for c, (t, e) in sorted(self.click_stats.items())
+            },
+            "states_seen_this_level": sum(1 for s in self._seen if f"|{levels}|" in s),
+        }
+
+    def _apply_advice(
+        self,
+        answer: dict[str, Any],
+        sig: str,
+        frame: FrameData,
+        objects: list[tuple[dict[str, Any], tuple[int, int]]],
+    ) -> bool:
+        """Turn an answer into frontier priorities; False if nothing usable."""
+        avail = {int(a) for a in (frame.available_actions or [])}
+
+        def ints(name: str) -> list[int]:
+            raw = answer.get(name)
+            out: list[int] = []
+            for v in raw if isinstance(raw, list) else []:
+                if isinstance(v, str):
+                    v = v.upper().removeprefix("ACTION")
+                try:
+                    out.append(int(v))
+                except (TypeError, ValueError):
+                    continue
+            return out
+
+        by_id = {obj["id"]: (obj, pt) for obj, pt in objects}
+        actions = [
+            a for a in dict.fromkeys(ints("move_first"))
+            if a in avail and (act := self._to_action(a)) and not act.is_complex()
+            and act is not GameAction.RESET
+        ]
+        picked = [by_id[i] for i in dict.fromkeys(ints("click_first") + ints("goals")) if i in by_id]
+        if 6 not in avail:
+            picked = []
+        points = list(dict.fromkeys(pt for _, pt in picked))
+        colours = list(dict.fromkeys(obj["colour"] for obj, _ in picked))
+        if not actions and not points:
+            return False
+        self.advice = {
+            "level": int(frame.levels_completed),
+            "actions": actions,
+            "colours": colours,
+            "points": points,
+            # a point only stays first while the advised object is on it
+            "point_colours": {pt: obj["colour"] for obj, pt in picked},
+        }
+        node = self.memory.get(sig)
+        if node is not None and points:
+            # advised objects may sit past the probe cap: offer them here
+            known = set(node["cands"])
+            node["cands"] = [p for p in points if p not in known] + node["cands"]
+            self._node(sig, frame)  # colours and targets of the new points
+        return True
+
+    def _adviser_due(self, levels: int) -> bool:
+        if self.adviser is None or self.adviser_fails >= self.ADVISER_MAX_FAILS:
+            return False
+        if self.adviser_spent >= self.ADVISER_BUDGET_S:
+            return False
+        if time.time() - _RUN_START >= self.RUN_DEADLINE_S - self.ADVISER_MARGIN_S:
+            return False
+        calls = self.adviser_calls.get(levels, 0)
+        if calls >= self.ADVISER_MAX_CALLS:
+            return False
+        # the start of the level, or a plateau: no new state for a while
+        # and play since the last answer
+        due = (
+            calls == 0
+            or (calls == 1 and self.ADVISER_EARLY and self._moves_tried(levels))
+            or (
+                self.action_counter - self.last_new_state >= self.ADVISER_PLATEAU
+                and self.action_counter - self.adviser_last_call >= self.ADVISER_PLATEAU
+            )
+        )
+        return due and self.adviser.ready()
+
+    def _moves_tried(self, levels: int) -> bool:
+        """True once every simple action at the level has an observed effect.
+
+        Only the second call uses this, so it fires once per level: the
+        model then sees which colours each move changes.
+        """
+        node = self.memory.get(self.last_sig) or {}
+        simple = [
+            a for a in node.get("avail", [])
+            if (act := self._to_action(a)) and not act.is_complex() and act is not GameAction.RESET
+        ]
+        return bool(simple) and all((levels, a) in self.action_effects for a in simple)
+
+    def _maybe_advise(self, sig: str, frame: FrameData) -> None:
+        """Ask the adviser when due; any failure leaves the order as it was."""
+        levels = int(frame.levels_completed)
+        if not self._adviser_due(levels):
+            return
+        self.adviser_calls[levels] = self.adviser_calls.get(levels, 0) + 1
+        self.adviser_last_call = self.action_counter
+        objects = self._prompt_objects(self._grid(frame))
+        prompt = self._advice_prompt(frame, objects)
+        timeout = min(
+            self.ADVISER_TIMEOUT_S,
+            self.ADVISER_BUDGET_S - self.adviser_spent,
+            self.RUN_DEADLINE_S - self.ADVISER_MARGIN_S - (time.time() - _RUN_START),
+        )
+        adviser = self.adviser
+        assert adviser is not None
+        result: list[Optional[dict[str, Any]]] = [None]
+
+        def call() -> None:
+            try:
+                result[0] = adviser.advise(prompt, timeout)
+            except Exception as e:
+                logger.info(f"{self.game_id}: adviser raised {type(e).__name__}: {e}")
+
+        # the hard timeout: a hung call is abandoned on its daemon thread
+        started = time.time()
+        worker = threading.Thread(target=call, daemon=True)
+        worker.start()
+        worker.join(max(0.0, timeout))
+        self.adviser_spent += time.time() - started
+        answer = None if worker.is_alive() else result[0]
+        self.adviser_log.append(
+            {"level": levels, "action": self.action_counter, "answer": answer}
+        )
+        # an answer in the expected shape with nothing usable is the model
+        # being unsure, not a failure: the adviser stays on for later levels
+        answered = answer is not None and any(
+            k in answer for k in ("player", "goals", "click_first", "move_first")
+        )
+        if answered:
+            self.adviser_fails = 0
+        if answered and self._apply_advice(answer, sig, frame, objects):
+            self.adviser_answers += 1
+            logger.info(
+                f"{self.game_id}: level {levels} advice {self.advice} "
+                f"({time.time() - started:.1f}s)"
+            )
+        else:
+            if not answered:
+                self.adviser_fails += 1
+            logger.info(
+                f"{self.game_id}: level {levels} no advice "
+                f"({'timeout' if worker.is_alive() else 'unsure' if answered else 'no usable answer'})"
+            )
+
+    def _advised_order(
+        self, probes: list[tuple[int, Optional[int], Optional[int]]], node: dict[str, Any]
+    ) -> list[tuple[int, Optional[int], Optional[int]]]:
+        """Stable reorder of probes by the current level's advice."""
+        advice = self.advice
+        if not advice or not probes:
+            return probes
+        actions = advice["actions"]
+        points = advice["points"]
+        colours = advice["colours"]
+        point_colours = advice["point_colours"]
+        node_colours = node.get("colours", {})
+
+        def rank(probe: tuple[int, Optional[int], Optional[int]]) -> tuple[int, int]:
+            aid, x, y = probe
+            if x is None:
+                return (0, actions.index(aid)) if aid in actions else (1, 0)
+            colour = node_colours.get((x, y))
+            if (x, y) in point_colours and point_colours[(x, y)] == colour:
+                return (0, points.index((x, y)))
+            return (1, colours.index(colour)) if colour in colours else (2, 0)
+
+        return sorted(probes, key=rank)
+
     # ------------------------------------------------------------- memory query
 
-    def _untried_at(self, sig: str) -> list[tuple[int, Optional[int], Optional[int]]]:
+    def _untried_at(
+        self, sig: str, dead_ok: bool = False
+    ) -> list[tuple[int, Optional[int], Optional[int]]]:
         """Untried (action, x, y) probes at a state, best first.
 
         Simple actions first in id order (ACTION7 before ACTION6, since ACTION7
-        is frequently a cheap undo), then ACTION6 probe coordinates.
+        is frequently a cheap undo), then ACTION6 probe coordinates.  Clicks
+        on colours that have never reacted are left out unless ``dead_ok``:
+        they are only explored once the level offers nothing else, and so
+        are click targets that did nothing whenever they were clicked before.
         """
         node = self.memory.get(sig)
         if not node:
@@ -553,18 +1141,26 @@ class Explorer(Agent):
                 # actions that keep doing nothing are probed last, so a
                 # gravity-style game does not waste two probes per node
                 (deferred if self._demoted(aid) else out).append((aid, None, None))
-        out.extend(deferred)
+        out = self._advised_order(out, node) + deferred
+        clicks: list[tuple[int, Optional[int], Optional[int]]] = []
         for aid in sorted(node["avail"]):
             act = self._to_action(aid)
             if act is None or not act.is_complex():
                 continue
+            colours = node.get("colours", {})
+            targets = node.get("targets", {})
             for x, y in node["cands"]:
-                if self._key(aid, x, y) not in node["edges"]:
-                    out.append((aid, x, y))
-        return out
+                if self._key(aid, x, y) in node["edges"]:
+                    continue
+                if dead_ok or not (
+                    self._dead_colour(colours.get((x, y)))
+                    or self._inert_target(targets.get((x, y)))
+                ):
+                    clicks.append((aid, x, y))
+        return out + self._advised_order(clicks, node)
 
-    def _has_untried(self, sig: str) -> bool:
-        return bool(self._untried_at(sig))
+    def _has_untried(self, sig: str, dead_ok: bool = False) -> bool:
+        return bool(self._untried_at(sig, dead_ok))
 
     def _progress_action(
         self, sig: str
@@ -612,17 +1208,17 @@ class Explorer(Agent):
         """True when the level's memory graph still offers something untried."""
         if sig is None:
             return False
-        if self._untried_at(sig) or self._has_reachable_frontier(sig):
+        if self._untried_at(sig, True) or self._has_reachable_frontier(sig, True):
             return True
         # the reset lands on the level's start state; a frontier known from any
         # previously seen state of this level counts as remaining work
         levels = int(latest.levels_completed)
         for other in self._seen:
-            if f"|{levels}|" in other and self._has_untried(other):
+            if f"|{levels}|" in other and self._has_untried(other, True):
                 return True
         return False
 
-    def _has_reachable_frontier(self, sig: str) -> bool:
+    def _has_reachable_frontier(self, sig: str, dead_ok: bool = False) -> bool:
         node = self.memory.get(sig)
         if not node:
             return False
@@ -631,7 +1227,7 @@ class Explorer(Agent):
         queue: deque[str] = deque([sig])
         while queue:
             cur = queue.popleft()
-            if self._has_untried(cur):
+            if self._has_untried(cur, dead_ok):
                 return True
             for key, edge in self.memory.get(cur, {}).get("edges", {}).items():
                 nxt = edge.get("result")
@@ -664,7 +1260,9 @@ class Explorer(Agent):
             not edge.get("changed") and edge.get("dlevel", 0) == 0 for edge in simple
         )
 
-    def _bfs_plan(self, sig: str, remaining: int) -> Optional[list[dict[str, Any]]]:
+    def _bfs_plan(
+        self, sig: str, remaining: int, dead_ok: bool = False
+    ) -> Optional[list[dict[str, Any]]]:
         """Shortest known path (as action steps) to a state with untried actions."""
         if remaining <= self.RESERVE_ACTIONS + 1:
             return None
@@ -673,7 +1271,7 @@ class Explorer(Agent):
         queue: deque[str] = deque([sig])
         while queue:
             cur = queue.popleft()
-            if cur != sig and self._has_untried(cur):
+            if cur != sig and self._has_untried(cur, dead_ok):
                 steps: list[dict[str, Any]] = []
                 c = cur
                 while c != sig:
@@ -714,6 +1312,21 @@ class Explorer(Agent):
         empty = latest.is_empty()
         changed = sig is not None and (sig != frm or self.world_changed)
         edge["tries"] = int(edge.get("tries", 0)) + 1
+        prev = edge.get("result")
+        if (
+            sig in self.start_sigs
+            and sig != frm
+            and prev
+            and prev != sig
+            and prev not in self.start_sigs
+            and edge.get("state") == GameState.NOT_FINISHED.name
+            and int(latest.levels_completed) == int(pending["levels"])
+        ):
+            # back at the start from mid-level: a life was lost.  Keep the
+            # edge's real result, or the overwrite cuts the level's graph.
+            edge["lost"] = int(edge.get("lost", 0)) + 1
+            self.no_change_streak = 0
+            return
         edge["dlevel"] = int(latest.levels_completed) - int(pending["levels"])
         edge["state"] = latest.state.name
         edge["full_reset"] = bool(latest.full_reset)
@@ -728,9 +1341,29 @@ class Explorer(Agent):
             edge["undo"] = True  # ACTION7 restored a previously seen state
         if empty:
             return
+        colour = pending.get("colour")
+        if colour is not None:
+            stats = self.click_stats.setdefault(colour, [0, 0])
+            stats[0] += 1
+            stats[1] += int(changed or edge["dlevel"] != 0)
+        target = pending.get("target")
+        if target is not None:
+            stats = self.target_stats.setdefault(target, [0, 0])
+            stats[0] += 1
+            stats[1] += int(changed or edge["dlevel"] != 0)
+        aid = self._key_action_id(key)
+        if aid is not None:
+            # what each move changes, by colour: the player's colours shift
+            # on every move (prompt input for the adviser)
+            effect = self.action_effects.setdefault(
+                (int(pending["levels"]), aid), {"tries": 0, "changed": 0, "colours": Counter()}
+            )
+            effect["tries"] += 1
+            if changed:
+                effect["changed"] += 1
+                effect["colours"].update(self.changed_colours)
         if changed or edge["dlevel"] != 0:
             self.no_change_streak = 0
-            aid = self._key_action_id(key)
             if aid is not None:
                 self.action_nop_streak[aid] = 0
             # The world moved but no object did: this level's coarse identity
@@ -765,7 +1398,6 @@ class Explorer(Agent):
                 nxt["cands"] = fresh + list(nxt["cands"])
         else:
             self.no_change_streak += 1
-            aid = self._key_action_id(key)
             if aid is not None:
                 self.action_nop_streak[aid] = self.action_nop_streak.get(aid, 0) + 1
 
@@ -791,6 +1423,13 @@ class Explorer(Agent):
             "levels": int(latest.levels_completed),
             "seen": set(self._seen),
         }
+        grid = self._grid(latest)
+        if x is not None and 0 <= int(y) < len(grid) and 0 <= int(x) < len(grid[int(y)]):
+            self.pending["colour"] = int(grid[int(y)][int(x)])
+            target = self.memory.get(sig, {}).get("targets", {}).get((int(x), int(y)))
+            if target is None:
+                target = self._click_targets(grid, [(int(x), int(y))]).get((int(x), int(y)))
+            self.pending["target"] = target
         return action
 
     def _give_up_now(self, why: str) -> None:
@@ -832,9 +1471,14 @@ class Explorer(Agent):
                 return GameAction.RESET
         if count_attempt:
             self.level_attempts[levels] = attempts + 1
+        self.at_start = True
         self.plan = []
         self.no_change_streak = 0
         self.level_start_action = self.action_counter
+        # each attempt gets fresh walks: a start state whose recorded edges
+        # reach no frontier would otherwise answer every RESET with another
+        self.explore_runs = 0
+        self.explore_left = 0
         logger.info(
             f"{self.game_id}: RESET ({why}); level {levels} attempt "
             f"{self.level_attempts.get(levels, attempts + 1)}"
@@ -947,20 +1591,29 @@ class Explorer(Agent):
                 self.no_change_streak = 0
                 self.level_start_action = self.action_counter
             self.last_levels = levels
+            self.at_start = True
             self.explore_left = 0  # a fresh level is structured-probing territory
             self.explore_runs = 0
+            self.advice = None
+            self.last_new_state = self.action_counter
 
         assert sig is not None
+        if self.at_start:
+            self.start_sigs.add(sig)
+            self.at_start = False
         # A walk that lands on a never-seen state hands control back to the
         # structured logic, which probes the new state's frontier.
-        if sig not in self._seen and self.explore_left > 0:
-            self.explore_left = 0
-            self.explore_runs = 0
+        if sig not in self._seen:
+            self.last_new_state = self.action_counter
+            if self.explore_left > 0:
+                self.explore_left = 0
+                self.explore_runs = 0
         self._seen.add(sig)
         self.recent.append(sig)
         self.last_sig = sig
         node = self._node(sig, latest_frame)
         node["visits"] += 1
+        self._maybe_advise(sig, latest_frame)
 
         remaining = self.MAX_ACTIONS - self.action_counter
         if remaining <= self.RESERVE_ACTIONS:
@@ -1009,6 +1662,18 @@ class Explorer(Agent):
             aid, x, y = self._parse_key(step["key"])
             return self._issue(sig, latest_frame, aid, x, y, why="replay to frontier")
 
+        # 5b) Nothing else left: clicks on colours or targets that never reacted.
+        untried = self._untried_at(sig, dead_ok=True)
+        if untried:
+            aid, x, y = untried[0]
+            return self._issue(sig, latest_frame, aid, x, y, why="inert-click probe")
+        plan = self._bfs_plan(sig, remaining, dead_ok=True)
+        if plan:
+            self.plan = plan
+            step = plan.pop(0)
+            aid, x, y = self._parse_key(step["key"])
+            return self._issue(sig, latest_frame, aid, x, y, why="replay to inert-click probe")
+
         # 6) Stuck / cycling: least-recently-tried retries, then a bounded
         #    random walk off the memory graph (exits on any new state), then a
         #    sparing level RESET, then stop honestly.
@@ -1043,4 +1708,11 @@ class Explorer(Agent):
 # Canonical alias for Kaggle submission pipeline compatibility
 MyAgent = Explorer
 
-__all__ = ["Explorer", "MyAgent"]
+__all__ = [
+    "ADVISER_PROMPTS",
+    "Adviser",
+    "Explorer",
+    "HttpAdviser",
+    "MyAgent",
+    "parse_advice",
+]

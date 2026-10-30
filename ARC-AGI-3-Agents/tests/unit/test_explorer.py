@@ -245,3 +245,122 @@ class TestExplorer:
         f.win_levels = 10
         agent.choose_action([], f)
         assert agent.total_levels == 10
+
+    def test_status_bar_is_masked_out_of_state_identity(self):
+        """A top-row step counter must not make every revisit a new state."""
+        agent = make_agent()
+
+        def grid(step, avatar_x):
+            g = [[0] * 32 for _ in range(32)]
+            g[0][step % 32] = 5  # counter ticks on every action
+            g[16][avatar_x] = 3
+            return g
+
+        sigs = []
+        for step in range(2 * agent.HUD_MIN_OBS):
+            agent.choose_action([], make_frame(grid(step, 8 + step % 2)))
+            sigs.append(agent.last_sig)
+
+        assert agent.hud_rows == {0}
+        # once masked, the avatar's two positions are the only two states
+        assert len(set(sigs[-agent.HUD_MIN_OBS:])) == 2
+        assert agent.world_changed  # the avatar still moved
+
+    def test_each_reset_attempt_gets_fresh_walks(self):
+        """A RESET must not leave the walk budget spent, or the next stuck
+        start state answers it with another RESET (a reset loop)."""
+        agent = make_agent()
+        f = make_frame([[0]])
+        agent.explore_runs = agent.MAX_EXPLORE_RUNS
+        agent.explore_left = 3
+        assert agent._reset_or_giveup(f, "test", sig=agent._signature(f)) is GameAction.RESET
+        assert agent.explore_runs == 0 and agent.explore_left == 0
+
+    def test_playfield_lines_are_never_masked(self):
+        agent = make_agent()
+        for step in range(2 * agent.HUD_MIN_OBS):
+            g = [[0] * 32 for _ in range(32)]
+            g[16][step % 32] = 3  # mid-field object changes every step
+            agent.choose_action([], make_frame(g))
+        assert agent.hud_rows == set() and agent.hud_cols == set()
+
+    def test_clicks_on_dead_colours_are_probed_last(self):
+        agent = make_agent()
+        g = [[0] * 16 for _ in range(16)]
+        g[4][4] = 1  # colour 1: clicks have never reacted
+        g[10][10] = 2  # colour 2: unknown
+        agent.click_stats[1] = [agent.CLICK_DEAD_AFTER, 0]
+        agent.choose_action([], make_frame(g, avail=(6,)))
+        sig = agent.last_sig
+
+        live = {(x, y) for _, x, y in agent._untried_at(sig)}
+        everything = {(x, y) for _, x, y in agent._untried_at(sig, dead_ok=True)}
+        assert (10, 10) in live and (4, 4) not in live
+        assert (4, 4) in everything
+        assert all(agent.memory[sig]["colours"][p] != 1 for p in live)
+
+    def test_state_reached_by_a_click_gets_its_own_probes(self):
+        agent = make_agent()
+        g0 = [[0] * 16 for _ in range(16)]
+        g0[3][3] = 9
+        first = agent.choose_action([], make_frame(g0, avail=(6,)))
+        assert (first.action_data.x, first.action_data.y) == (3, 3)
+
+        g1 = [[0] * 16 for _ in range(16)]
+        g1[12][12] = 9  # the click moved the object across the board
+        agent.choose_action([], make_frame(g1, avail=(6,)))
+        cands = agent.memory[agent.last_sig]["cands"]
+        assert cands[0] in {(3 + dx, 3 + dy) for dx in (-2, -1, 1, 2) for dy in (-2, -1, 1, 2)}
+        assert (12, 12) in cands  # not only the cells around the click
+
+    def test_inert_click_targets_are_deferred_in_other_states(self):
+        agent = make_agent()
+
+        def board(ox, oy):
+            g = [[0] * 16 for _ in range(16)]
+            for dx, dy in ((0, 0), (1, 0), (0, 1)):  # an L-shaped object
+                g[oy + dy][ox + dx] = 4
+            return g
+
+        f = make_frame(board(2, 2), avail=(6,))
+        action = agent.choose_action([], f)
+        point = (action.action_data.x, action.action_data.y)
+        agent.choose_action([], f)  # same frame back: the click did nothing
+        target = agent._click_targets(board(2, 2), [point])[point]
+        assert target[0] == "obj"  # the first probe lands on the object
+        assert agent.target_stats[target] == [1, 0]
+
+        # the same object somewhere else, clicked on the same cell of its shape
+        moved = board(8, 5)
+        agent.pending = None
+        agent.choose_action([], make_frame(moved, avail=(6,)))
+        sig = agent.last_sig
+        shifted = (point[0] + 6, point[1] + 3)
+        assert agent.memory[sig]["targets"][shifted] == target
+        assert shifted not in {(x, y) for _, x, y in agent._untried_at(sig)}
+        assert shifted in {(x, y) for _, x, y in agent._untried_at(sig, dead_ok=True)}
+
+    def test_life_lost_back_at_the_start_keeps_the_real_edge(self):
+        """A step counter that runs out sends the player back to the start;
+        that must not overwrite where the move really goes."""
+        agent = make_agent()
+
+        def board(x):
+            g = [[0] * 8 for _ in range(8)]
+            g[2][x] = 3
+            return g
+
+        agent.choose_action([], make_frame(board(1)))  # start; probes ACTION1
+        start = agent.last_sig
+        agent.choose_action([], make_frame(board(2)))  # moved; probes ACTION1
+        mid = agent.last_sig
+        agent.choose_action([], make_frame(board(3)))
+        far = agent.last_sig
+        assert agent.memory[mid]["edges"]["ACTION1"]["result"] == far
+
+        # the same move again, but the life ran out on it
+        agent.pending = {"sig": mid, "key": "ACTION1", "levels": 0, "seen": set()}
+        agent.choose_action([], make_frame(board(1)))
+        edge = agent.memory[mid]["edges"]["ACTION1"]
+        assert agent.last_sig == start
+        assert edge["result"] == far and edge["lost"] == 1 and edge["tries"] == 2
